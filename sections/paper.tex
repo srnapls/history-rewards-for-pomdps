@@ -1,0 +1,108 @@
+\begin{definition}
+	A POMDP is a tuple $(S, A, \Omega, T, O, r, b_0)$, where
+	\begin{itemize}
+		\item The state space $S$;
+		\item The action space $A$;
+		\item The transition function $T:S\times A \times S \to R$\\
+			$T(s,a,s')=Pr(s'\mid s,a)$
+		\item Observation space $\Omega$
+		\item Observation function $O:S\times A \times \Omega \to R$\\
+		$O(s',a,o)= Pr(o\mid s',a)$
+		\item A reward function $r: S \times A \to R$
+		\item Initial probability distribution over states $b_0$
+	\end{itemize}
+\end{definition}
+
+\towrite{how/why belief mdp are nice}
+\towrite{belief states and how they're updated}
+
+\towrite{definition of $b^{a,o}$}
+
+\begin{definition}
+	A POMDP $(S, A, \Omega, T, O, r, b_0)$ can be written as a belief MDP $(\Delta, A, \tau, \rho)$, where
+	\begin{itemize}
+		\item $\Delta = \Pi(S)$, the set of probability distributions over S;
+		\item action space $A$;
+		\item $\tau : \Delta \times A \times \Delta \to R$, new transition function
+		\item $\rho: \Delta \times A \to R$, new reward function.
+	\end{itemize}
+\end{definition}
+
+\towrite{what is their connection to each other}
+
+the objective is to maximize the cumulative reward by looking for a policy taking the current belief state as input, i.e.
+\begin{equation}
+	\pi^* = \argmax_{\pi\in A^\Delta} J^\pi(b_0)
+\end{equation}
+
+
+
+
+\begin{equation}
+	J^\pi(b_0)=E \big[\sum_{t=0}^{\infty}\gamma \rho_t\mid b_0,\pi\big]
+\end{equation}
+
+
+
+
+\begin{equation}
+	V_n(b)= \max_{a\in A} \big[\rho(b,a) + \gamma\sum_{o} Pr(o\mid a, b) V_{n-1}(b^{a,o}) \big]
+\end{equation}
+
+$J^{\pi^*}(b) = V_{n=H}(b)$ with $H$ the (possibly infinite) horizon of the problem. 
+
+
+\begin{tabular}{l||l}
+	POMDP & $r(s,a)$ \\
+	\hline
+	MDP & $\rho(b,a)=\sum_{s}b(s)r(s,a)$
+\end{tabular}
+
+
+The recursive computation of $V_n$ has the property to generate piecewise-linear and convex value functions for each horizon.
+
+
+If $\Gamma_n$ is the set of vectors representing the value function for horizon $n$, then $V_n(b) = \max_{\alpha\in\Gamma_n}\sum_{s}b(s)\alpha(s)$ where $\alpha(s)$ is the expected reward for state $s$. 
+
+\begin{equation}
+	V_n(b) = \max_{a\in A}\sum_{o}\sum_{s}b(s)\big[\frac{r(s,a)}{|\Omega|}\sum_{s'}T(s,a,s')O(s',a,o)\chi_{n-1}(b^{a,o},s')\big]
+\end{equation}
+
+\begin{equation}
+	\overline{\Gamma_n}^{a,o}=\{ \frac{r^a}{|\Omega|}+P^{a,o}\cdot\alpha_{n-1}\mid\alpha_{n-1}\in\Gamma_{n-1} \}
+\end{equation}
+
+
+Problem:
+a special kind of problem is when the performance criterion incorporates an explicit measure of the agent's knowledge about the system, which is based on the beliefs rather than states.
+
+the reward of a pomdp cannot model this since it's only based on the current state and action.
+we prefer to consider a new way of defining rewards based on the acquired knowledge represented by belief states.
+
+the direct link with pomdps is broken, but we can fix this by generalizing the pomdp framework to a $rho$-baes POMDP $\rho$POMDP, where the reward is not defined as a function $r(s,a)$ but directly as a function $\rho(b,a)$
+
+$\rho(b,a)$ is not restricted to be only an uncertainty measurement, but can be a combination of the expected state-action rewards and an uncertainty or error measurement.
+
+
+
+A belief-based value function is convex. 
+
+If $\rho$ and $V_0$ are convex functions over $\Delta=\Pi(s)$, then the value function $V_n$ of the belief MDP is convex over $\Delta$ at any time step $n$.
+
+Last theorem is based on $\rho(b,a)$ being a convex function over $b$, which is a natural property. A reward function meant to reduce the uncertainty mush provide high payloads near the corners of the simplex and low payloads near its center. Which is why we're only focusing on reward functions that comply with convexity. $V_0$ might be any convex function for infinite-horizon problems, but $V_0=0$ for finite-horizon problems.
+
+
+From now on $\rho$ is a PWLC function, and can thus be represented as several $\Gamma$-sets, one $\Gamma^a_\rho$ for each $a$:
+\begin{equation}
+	\rho(b,a)=\max_{\alpha\in\Gamma^a_\rho}\big[\sum_{s}b(s)\alpha(s)\big]
+\end{equation}
+
+Changes into a new value function
+\begin{equation}
+	V_n(b)= \max_{a\in A}\sum_{s}b(s) \big[\argmax_{\alpha\in\Gamma^a} \rho(b\cdot\alpha) + \sum_{o}\sum_{s'}T(s.a.s')O(s',a,o)\chi_{n-1}(b^{a,o},s') \big]
+\end{equation}
+
+
+\begin{equation}
+	\overline{\Gamma_n}^{a,o}=\{P^{a,o}\cdot\alpha_{n-1}\mid\alpha_{n-1}\in\Gamma_{n-1}\}
+\end{equation}
