@@ -1,5 +1,5 @@
-\begin{definition}
-	A POMDP is a tuple $(S, \mathcal{A}, \Omega, T, O, r, b_0)$, where
+\begin{definition}[Partially Observable Markov Decision Process]
+	A Partially Observable Markov Decision Process, or POMDP, is a tuple $(S, \mathcal{A}, \Omega, T, O, r, b_0)$, where
 	\begin{itemize}
 		\item $S$, the state space;
 		\item $A$, the action space;
@@ -13,20 +13,25 @@
 	\end{itemize}
 \end{definition}
 
+A POMDP is only partially observable, which indicates that we do not know everything about the model. We specifically are unaware of what state a POMDP currently is in. To create a notion of what state we believe to be in, we use belief states.
 
-\towrite{how/why belief mdp are nice}
-\towrite{belief states and how they're updated}
+\begin{definition}[Belief state]
+	Given a POMDP $(S, \mathcal{A}, \Omega, T, O, r, b_0)$, a belief state $b$ is a probability distribution over $S$ called $\Delta$. The probability of the POMDP being in state $s$ according to belief $b$, is denoted by $b(s)$. Logically $\sum_{s\in S}b(s)=1$ and for all states $s$ we have that $b(s)\in[0,1]$.
+\end{definition}
 
-A belief state $b\in\Delta=\Pi(S)$.
+A belief state evolves over time and a POMDP will start in their initial belief state $b_0$.
+The belief state will be updates according to the action that is undertaken and an observation that will be observed after taking said action.
 
-\begin{definition}
-Let $b^{a,o}$ be the probability distribution after performing an action $a$ and then observing observation $o$. The probability of ending in state $s'$ after performing $a$ and observing $o$ then can be calculated as follows, where $Pr(o|a,b)=\sum_{s,s'\in S}O(s'',a,o)T(s,a,s'')b(s)$,
+\begin{definition}[Updated belief state]
+Let $Pr(o|a,b)=\sum_{s,s'\in S}O(s'',a,o)T(s,a,s'')b(s)$. The probability of ending in state $s'$ after performing an action $a$ and then observing observation $o$ is calculated as
 \begin{equation}
 	b^{a,o}(s')=\frac{O(s,a,o)}{Pr(o | a,b)}\sum_{s\in S} T(s,a,s')b(s)
 \end{equation}
 \end{definition}
 
-\begin{definition}
+With the help of belief states, we can create a fully observable continuous space belief MDP representing a POMDP.
+
+\begin{definition}[Belief MDP]
 	A POMDP $(S, A, \Omega, T, O, r, b_0)$ can be written as a belief MDP $(\Delta, \mathcal{A}, \tau, \rho)$, where
 	\begin{itemize}
 		\item $\Delta = \Pi(S)$, the set of probability distributions over S;
@@ -36,23 +41,20 @@ Let $b^{a,o}$ be the probability distribution after performing an action $a$ and
 	\end{itemize}
 \end{definition}
 
-A belief MDP is continuous, so 
-\towrite{what does continutuity have to do w/ it?}
-
-\towrite{why wanna have optimal expected reward}
-
 The objective is to maximize the expected cumulative reward, which is done by looking for an optimal policy. Let $\gamma$ be some discount factor and $\rho_t$ be the expected immediate reward obtained at a certain step $t$, then the expected cumulative reward is defined as
 
 \begin{equation}
 	J^\pi(b)=E \big[\sum_{t=0}^{\infty}\gamma \rho_t\mid b,\pi\big]
 \end{equation}
 
-Then the optimal policy can be calculated as
+With this information, we can calculate the optimal policy 
 \begin{equation}
 \pi^* = \argmax_{\pi\in \mathcal{A}^\Delta} J^\pi(b_0)
 \end{equation}
 
-\begin{definition}
+The value $J^{\pi^*}(b_0)$ can be computed recursively through a value function $V_n$, due to Bellman's principle of optimality\cite{p:bellman}. If we let $H$ be the possible infinite horizon of the problem, the optimal value can be concluded from $J^{\pi^*}(b)=V_{n=H}(b)$.
+
+\begin{definition}[Value function for POMDPs]
 For $b\in\Delta$, let the value function be defined as
 \begin{flalign}
 	V_0(b) & = 0 \nonumber \\
@@ -62,8 +64,6 @@ For $b\in\Delta$, let the value function be defined as
 \end{flalign}
 \end{definition}
 
-The function $J^{\pi^*}$ can be computed recursively through this value function, due to Bellman's principle of optimality\cite{p:bellman}. Let $H$ be the possible infinite horizon of the problem, then$J^{\pi^*}(b)=V_{n=H}(b)$.
-
 Observe that the reward function for a POMDP is based on a state and action through $r(s,a)$, while the reward function for a belief MDP depends on the a belief state and action through $\rho(b,a)$. The belief MDP reward function $\rho$ can be derived from the POMDP reward function $r$ :
 \begin{equation}
 	\label{eqn:reward_belief_mdp}
@@ -72,60 +72,92 @@ Observe that the reward function for a POMDP is based on a state and action thro
 
 When the $\rho$ is defined as in Equation~\ref{eqn:reward_belief_mdp}, the recursive computation in Equation~\ref{eqn:value_fun} has the property to generate piecewise-linear and convex (PWLC) value functions for each horizon\cite{p:pwlc}.  
 
-\begin{definition}
+\begin{definition}[Piecewise-linear function]
 	A function is piecewise-linear if it consists of $n$ linear segments defined over $n$ intervals.
 \end{definition}
 
-\begin{definition}
+\begin{definition}[Convex function]
 	A function $f:A\to B$ is convex if for all $\theta\in[0,1]$ and $x_1,x_2\in A$
 	\begin{equation*}
 		f(\theta x_1 + (1-\theta) x_2)\leq \theta f(x_1) + (1-\theta)f(x_2)
 	\end{equation*}
 \end{definition}
 
+\todo{what write about gamma and overline gamma}
 Let $\Gamma_n$ be the set of vectors representing the value function for horizon $n$, then the value function can be rewritten to $V_n(b)=\max_{\alpha\in\Gamma_n}\sum_{s\in S} b(s)\alpha(s)$. 
 
-Using the PWLC property, Equation~\ref{eqn:value_fun} can be refactored to be able to perform the Bellman update. Let $\chi_n(b)=\arg\max_{\alpha\in \Gamma_n} b\dot\alpha$ and $\chi_n(b,s)=(\chi_n(b))(s)$ in 
+Using the PWLC property, Equation~\ref{eqn:value_fun} can be refactored to be able to perform the Bellman update. Let $\chi_n(b,s)=(\chi_n(b))(s)$ where $\chi_n(b)=\argmax_{\alpha\in \Gamma_n} b\cdot\alpha$ in 
 
 \begin{equation}
-	V_n(b) = \max_{a\in \mathcal{A}}\sum_{o\in O}\sum_{s\in S}b(s)\big[\frac{r(s,a)}{|\Omega|} + \sum_{s'\in S}T(s,a,s')O(s',a,o)\chi_{n-1}(b^{a,o},s')\big]
+	V_n(b) = \max_{a\in \mathcal{A}}\sum_{o\in \Omega}\sum_{s\in S}b(s)\big[\frac{r(s,a)}{|\Omega|} + \sum_{s'\in S}T(s,a,s')O(s',a,o)\chi_{n-1}(b^{a,o},s')\big]
 \end{equation}
 
+\towrite{connection}
+Let $r^a(s)=r(s,a)$ and $P^{a,o}(s,s')=T(s,a,s')O(s',a,o)$ in 
 \begin{equation}
 	\overline{\Gamma_n}^{a,o}=\{ \frac{r^a}{|\Omega|}+P^{a,o}\cdot\alpha_{n-1}\mid\alpha_{n-1}\in\Gamma_{n-1} \}
 \end{equation}
 
-
-Problem:
-a special kind of problem is when the performance criterion incorporates an explicit measure of the agent's knowledge about the system, which is based on the beliefs rather than states.
-
-the reward of a pomdp cannot model this since it's only based on the current state and action.
-we prefer to consider a new way of defining rewards based on the acquired knowledge represented by belief states.
-
-the direct link with pomdps is broken, but we can fix this by generalizing the pomdp framework to a $rho$-baes POMDP $\rho$POMDP, where the reward is not defined as a function $r(s,a)$ but directly as a function $\rho(b,a)$
-
-$\rho(b,a)$ is not restricted to be only an uncertainty measurement, but can be a combination of the expected state-action rewards and an uncertainty or error measurement.
+\begin{equation}
+	\overline{\Gamma_n} = \bigcup_{a\in\mathcal{A}}\bigoplus_{o\in \Omega}\overline{\Gamma_n}^{a,o}
+\end{equation}
+Where $U\oplus W = \{u+w\mid u\in U, w\in W\}$.
 
 
+All problems who only have partial observability tackle a certain issue through getting information about the model or achieving some goal. Most of the time, the concerning problem is tackled through obtaining enough information get an optimal reward. However, some \textit{active sensing} problems (where the objective is acting in a way to acquire knowledge about a part of the model) cannot be resolved this way. For these problems, the performance of an agent incorporates their obtained knowledge of the system. This is based upon beliefs, and not merely on states. \\
 
-A belief-based value function is convex. 
+In Equation~\ref{eqn:reward_belief_mdp}, we observe that the reward of a POMDP is solely based on the current state and action and does not incorporate the obtained knowledge. However, simply putting the entire history of the model in the state, would lead to a combinatorial explosion. \\
 
-If $\rho$ and $V_0$ are convex functions over $\Delta=\Pi(s)$, then the value function $V_n$ of the belief MDP is convex over $\Delta$ at any time step $n$.
+To tackle this issue, we propose a new method of defining rewards based on the acquired knowledge through the usage of belief states. Since we will use a different definition that the one described in Equation~\ref{eqn:reward_belief_mdp}, the direct link with POMDPs is broken. Luckily, a lot of the components of a POMDP are still usable. For this we use a generalization of the POMDP framework, where the reward is directly defined as a function $\rho(b,a)$.
 
-Last theorem is based on $\rho(b,a)$ being a convex function over $b$, which is a natural property. A reward function meant to reduce the uncertainty mush provide high payloads near the corners of the simplex and low payloads near its center. Which is why we're only focusing on reward functions that comply with convexity. $V_0$ might be any convex function for infinite-horizon problems, but $V_0=0$ for finite-horizon problems.
+\begin{definition}[$\rho$POMDP]
+	A $\rho-$based POMDP ($\rho$POMDP) is a tuple $(S,\mathcal{A},T,O,\rho,b_0)$, where
+		\begin{itemize}
+		\item $S$, the state space;
+		\item $A$, the action space;
+		\item $\Omega$, the observation space;
+		\item $T:S\times \mathcal{A} \times S \to [0,1]$, the transition function where
+		$T(s,a,s')=Pr(s'\mid s,a)$;
+		\item $O:S\times \mathcal{A} \times \Omega \to [0,1]$, the observation function where
+		$O(s',a,o)= Pr(o\mid s',a)$;
+		\item $\rho: \Delta \times \mathcal{A} \to \mathds{R}$, the reward function, and ;
+		\item $b_0 : S \to [0,1]$, the initial probability distribution over states.
+	\end{itemize}
+\end{definition}
 
+We see that $\rho$ is often just some uncertainty or error measure, but it can also be combined with some expected state-reward.\\
 
-From now on $\rho$ is a PWLC function, and can thus be represented as several $\Gamma$-sets, one $\Gamma^a_\rho$ for each $a$:
+Observe that the belief-based value function for POMDPs is convex (Equation~\ref{eqn:value_fun}), because $r(s,a)$ is linear in Equation~\ref{eqn:reward_belief_mdp}. The value function for $\rho$-POMDPs is also convex, if $rho(b,a)$ is convex.
+
+\begin{theorem}
+	If $\rho$ and $V_0$ are convex functions over $\delta$, then the value function $V_n$ of the belief MDP is convex over $\Delta$ at any time step $n$.
+\end{theorem}
+
+Note that $\rho(b,a)$ being convex over $\Delta$ is due to the fact that uncertainty measures are naturally convex\cite{p:belief-dependent-rewards}. We will only be focusing on reward functions that are convex. The initial value function $V_0=0$ for finite-horizon problems, but can be any convex function for infinite-horizon problems.\\
+
+Assume that $\rho$ is a PWLC function. Therefore it can be represented as several $\Gamma$-sets; one $\Gamma^a_\rho$ for each action in $\mathcal{A}$:
 \begin{equation}
 	\rho(b,a)=\max_{\alpha\in\Gamma^a_\rho}\big[\sum_{s}b(s)\alpha(s)\big]
 \end{equation}
 
-Changes into a new value function
+Let $\chi_\rho^a(b)=\argmax_{\alpha\in\Gamma^a_\rho}(b\cdot\alpha)$ in $\chi_\rho^a(b,s) = (\chi_\rho^a(b))(s)$. This creates a new value function for $\rho$POMDPs as follows:
 \begin{equation}
-	V_n(b)= \max_{a\in A}\sum_{s}b(s) \big[\argmax_{\alpha\in\Gamma^a} \rho(b\cdot\alpha) + \sum_{o}\sum_{s'}T(s.a.s')O(s',a,o)\chi_{n-1}(b^{a,o},s') \big]
+	V_n(b)= \max_{a\in \mathcal{A}}\sum_{s\in S}b(s) \big[\chi_\rho^a(b,s) + \sum_{o\in \Omega}\sum_{s'\in S}T(s,a,s')O(s',a,o)\chi_{n-1}(b^{a,o},s') \big]
 \end{equation}
 
-
+This new value function uses $\Gamma_\rho^a$ and generates $|\Omega|\times|\mathcal{A}|$ $\Gamma$-sets, where $P^{a,o}(s,s')=T(s,a,s')O(s',a,o)$:
 \begin{equation}
 	\overline{\Gamma_n}^{a,o}=\{P^{a,o}\cdot\alpha_{n-1}\mid\alpha_{n-1}\in\Gamma_{n-1}\}
 \end{equation}
+
+Just like for POMDPs, we can use exact algorithms for $\rho$POMDPs. The difference is that now the cross-sum to calculate $\overline{\Gamma_n}$ now includes 
+\begin{itemize}
+	\item one $\alpha^{a,o}$ for each observation $\Gamma$-set $\overline{\Gamma_n}^{a,o}$, and
+	\item one $\alpha_\rho$ from the $\Gamma$-set $\Gamma_\rho^a$ corresponding to the reward.
+\end{itemize}
+This results in the new cross-sum 
+\begin{equation}
+	\overline{\Gamma_n}=\bigcup_{a\in\mathcal{A}}\big[\bigoplus_{o\in \Omega}\overline{\Gamma_n}^{a,o}\oplus\Gamma_\rho^a\big]
+\end{equation}
+
+This equates for $|R|$ times more vectors than with a regular POMDP. Let $|R|$ be the number of $\alpha$-vectors specifying the $\rho(b,a)$ functions. Note that $|R|$ depends on the considered action taken. 
