@@ -1,0 +1,49 @@
+\section{Definitions}
+
+\begin{definition}[Parametric MDP]
+ $M=(S,s_I,\mathcal{A},V,\mathcal{P})$ where
+ \begin{itemize}
+ 	\item $S$, the state space;
+ 	\item $s_I$, the initial state;
+ 	\item $\mathcal{A}$, the action space;
+ 	\item $V$, the parameter space;
+ 	\item $\mathcal{P}:S\times \mathcal{A} \times S \to \mathbb{Q}[V]$, the transition function.
+ 	\towrite{polynomial notation and stuff}
+ \end{itemize}
+\end{definition}
+
+Let $A(s)$ denote the available actions, i.e. $A(s)=\{a\in \mathcal{A} \mid \exists s'\in S: \mathcal{P}(s,a,s')\neq 0 \}.
+
+\begin{definition}[MDP]
+	A MDP is a pMDP where 
+	\begin{itemize}
+		\item $\mathcal{P}:S\times\mathcal{A}\times S \to [0,1]\subseteq\mathbb{R}$
+		\item for all states $s\in S, a\in\mathcal{A},\sum_{s'\in S}\mathcal{P}(s,a,s')=1$
+	\end{itemize}
+\end{definition}
+
+\begin{definition}[pMC]
+	A (parametric) Markov Chain is a (parametric) MDP where $|A(s)|=1$ for all $s\in S$.  Usually denoted as $D=(S,s_I,V,\mathcal{P})$, where $\mathcal{P}:S\times S\to \mathbb{Q}[V]$ because the actions are irrelevant. 
+\end{definition}
+
+\begin{definition}[Strategy]
+	A strategy $\sigma$ for a (p)MDP is a function that takes a finite path corresponding to $M$ and returns a distribution over actions, $\sigma:\text{Paths}^M_{fin}\to \Pi(\mathcal{A})$. These strategies need to comply with $supp(\sigma(\pi))\subseteq A(last(\pi))$.
+\end{definition}
+\towrite{last, pi notation of paths, and supp}
+
+\begin{definition}[Finite State Controller]
+	FSC $F=(N,n_I,\gamma,\delta)$ where
+	\begin{itemize}
+		\item $N$, the set of memory nodes
+		\item $n_I$, the initial memory node
+		\item $\gamma:N\times \Omega \to \Pi(\mathcal{A})$, the action mapping
+		\item $\delta:N\times \Omega \to \mathcal{A} \to \Pi(N)$, the memory update. 
+	\end{itemize}
+\end{definition}
+	
+
+\section{Modelling MDPs with FSC}
+
+\section{Modelling POMDPs with FSC}
+
+\section{Belief-based Rewards}
