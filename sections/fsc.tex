@@ -12,7 +12,7 @@
  \end{itemize}
 \end{definition}
 
-Let $A(s)$ denote the available actions, i.e. $A(s)=\{a\in \mathcal{A} \mid \exists s'\in S: \mathcal{P}(s,a,s')\neq 0 \}.
+Let $A(s)$ denote the available actions, i.e. $A(s)=\{a\in \mathcal{A} \mid \exists s'\in S: \mathcal{P}(s,a,s')\neq 0 \}.$
 
 \begin{definition}[MDP]
 	A MDP is a pMDP where 
@@ -26,10 +26,27 @@ Let $A(s)$ denote the available actions, i.e. $A(s)=\{a\in \mathcal{A} \mid \exi
 	A (parametric) Markov Chain is a (parametric) MDP where $|A(s)|=1$ for all $s\in S$.  Usually denoted as $D=(S,s_I,V,\mathcal{P})$, where $\mathcal{P}:S\times S\to \mathbb{Q}[V]$ because the actions are irrelevant. 
 \end{definition}
 
+
 \begin{definition}[Strategy]
 	A strategy $\sigma$ for a (p)MDP is a function that takes a finite path corresponding to $M$ and returns a distribution over actions, $\sigma:\text{Paths}^M_{fin}\to \Pi(\mathcal{A})$. These strategies need to comply with $supp(\sigma(\pi))\subseteq A(last(\pi))$.
 \end{definition}
 \towrite{last, pi notation of paths, and supp}
+
+\begin{definition}[POMDP]
+	A POMDP $\mathcal{M}$ can also be seen as a tuple $(M,\Omega,Obs)$ where
+	\begin{itemize}
+		\item $M=(S,s_I,\mathcal{A},\mathcal{P})$, the underlying MDP;
+		\item $\Omega$, the finite set of observations;
+		\item $Obs: S\to\Omega$, the observation function.
+	\end{itemize}
+\end{definition}
+
+If for all states $s,s'\in S: Obs(s)=Obs(s')$, then $A(s)=A(s')$.
+If $O(s)=z$, then $A(z)=A(s)$.
+
+\begin{definition}[Observation-based Strategy]
+	An observation-based strategy is $\sigma:\text{Paths}^M_{fin}\to \Pi(\mathcal{A})$ for an underlying MDP $M$ such that if for all paths $\pi,\pi'\in\text{Paths}^M_{fin}$ where $Obs(\pi)=Obs(\pi')$ we claim that $\omega(\pi)=\omega(\pi')$.
+\end{definition}
 
 \begin{definition}[Finite State Controller]
 	FSC $F=(N,n_I,\gamma,\delta)$ where

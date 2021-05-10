@@ -1,0 +1,50 @@
+\begin{definition}
+	A labeled Markov Decision Process (labeled MDP) is a tuple $M=(S,s_I,Act,T,\mathcal{P},L)$ where 
+	\begin{itemize}
+		\item $S$, the finite set of states;
+		\item $s_I$, the initial state;
+		\item $Act$, the finite set of actions;
+		\item $T:S\times A\to \Pi(S)$, the probabilistic transition function;
+		\item $\mathcal{P}$, a set of propositional values;
+		\item $L:S\times Act\times S\to 2^\mathcal{P}$, the labeling function.
+	\end{itemize}
+\end{definition}
+
+
+\begin{definition}
+	A labeled partially observable MDP (labeled POMDP) is a tuple $\mathcal{M}=(M, Z, O, R_k)$ where 
+	\begin{itemize}
+		\item $M=(S,s_I,Act,T,\mathcal{P},L)$, the hidden MDP;
+		\item $Z$, the finite set of observations;
+		\item $O:S\to Z$, the observation function;
+		\item $R_k:(S\times Act)^k\times S \to \mathbb{R}$, the history-based reward function.
+	\end{itemize}
+\end{definition}
+
+\begin{definition}
+	A reward finite-state controller (R-FSC) for a reward function of a POMDP $\mathcal{M}$ is a tuple $\mathcal{F}=(N,n_I,\delta,\mathcal{R})$ where
+	\begin{itemize}
+		\item $N$, the finite set of memory nodes;
+		\item $n_I$, the initial memory node;
+		\item $\delta: N \times Z \times Act \to \Pi(N)$, the memory update;
+		\item $\mathcal{R}: N \times Z \times Act\times N \to \mathbb{R}$, the reward update. 
+	\end{itemize}
+\end{definition}
+
+$\delta(n,o,a,n')=\delta(n,o,a)(n') = q^{o,n}_{a,n'}$
+
+\begin{definition}
+	The induced Reward Machine for R-FSC on a labeled POMDP is a tuple $\mathcal{A}=(V,v_I,2^{\mathcal{P}},\mathbb{R},\hat{\delta},\sigma)$ where 
+	\begin{itemize}
+		\item $V=S\times N$, the finite set of states;
+		\item $v_I=(s_I,0)$, the initial state;
+		\item $2^{\mathcal{P}}$, the input set;
+		\item $\mathbb{R}$, the output set;
+		\item $\hat{\delta}:V\times 2^{\mathcal{P}} \to V$, the transition function. \\
+			$\hat{\delta}((s,n),l)=(s',n')$ where $a\in Act,s'\in S,n'\in N: L(s,a,s')=l$ and $q^{O(s),n}_{a,n'}>0$. \todo{what if multiple actions allow for the specific label}
+		\item \item $\sigma:V\times 2^{\mathcal{P}} \to \mathbb{R}$, the output function. \\
+		$\sigma((s,n),l)=\mathcal{R}(n,O(s),a,n')$ where $a\in Act,s'\in S,n'\in N: L(s,a,s')=l$ and $q^{O(s),n}_{a,n'}>0$. \todo{what if multiple actions allow for the specific label}
+	\end{itemize}
+\end{definition}
+
+We say that a reward machine encodes the reward function $R_k$ of a labeled POMDP if for every trajectory and the corresponding label sequence the reward sequence equals $\mathcal{A}(l_0\dots l_k)$.
