@@ -1,0 +1,28 @@
+\begin{definition}
+	\label{def:reward_machine}
+	The induced Reward Machine for R-FSC on a labeled POMDP is a tuple $\mathcal{A}=(V,v_I,\mathbb{R},\hat{\delta})$ where 
+	\begin{itemize}
+		\item $V=S\times N$, the finite set of states;
+		\item $v_I=\langle s_I,n_I\rangle $, the initial state;
+		\item $\mathbb{R}$, the output alphabet;
+		\item $\hat{\delta}:V\times Act \to (V,\mathbb{R})$, the transition function.\\
+		$ \hat{\delta}(\langle s_1,n_1\rangle,a) = (\langle s_2,n_2\rangle,r) $ where 
+		\begin{itemize}
+			\item $o=O(s_1)$
+			\item $s_2$ obtained with probability $T(s_1,a,s_2)$
+			\item $n_2$ obtained with probability $\delta(n_1,o,a,n_2)$
+			\item $r= \mathcal{R}(n_1,o,a,n_2)$
+		\end{itemize}
+	\end{itemize}
+\end{definition}
+%todo: question if its V x S x Act or V x Z x Act, since policy is not just act-based  
+%-- I think this is a choice. 
+% obtain info form V?
+
+
+After obtaining the reward machine, you can use known methods to obtain the optimal policy. 
+
+\begin{corollary}
+	Given a POMDP $\mathcal{M}$ and the R-FSC $\mathcal{F}$ obtained through the history-based reward function $R_k$ of $\mathcal{M}$, we create the Reward Machine $\mathbb{A}$ with the help of \defref{def:reward_machine}. The expected reward of $\mathcal{A}$ is the same as the expected reward of $\mathcal{M}$. 
+	%todo: this doesn't make sense right?
+\end{corollary}

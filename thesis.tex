@@ -13,6 +13,10 @@
 \usepackage{hyperref}           % page numbers and '\ref's become clickable
 \usepackage{ dsfont }
 \usepackage{ stmaryrd }
+\usepackage{float} 
+\usepackage{tikz}
+\usetikzlibrary{automata, positioning, arrows}
+\input{commands}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -111,17 +115,31 @@
 	
 	\newpage
 	
+	\chapter*{Abstract}
+	\input{sections/abstract.tex}
+	
 	\chapter{Introduction}
 	\input{sections/introduction.tex}
-	\chapter{Belief-based Rewards}
-	\input{sections/beliefbasedrewards.tex}
 	
-	\chapter{Finite State Controllers}
-	\input{sections/fsc.tex}
+	\chapter{Preliminaries}
+	\input{sections/prelim.tex}
+	
+	\chapter{Background}
+	\input{sections/definitions.tex}
+	
+	\chapter{Reward Finite State Controllers}
+	\input{sections/rfsc.tex}
+	
+	\chapter{Obtaining policy}
+	\input{sections/reward-machine.tex}
+	
+	
+	%\chapter{Belief-based Rewards}
+	%\input{sections/beliefbasedrewards.tex}
+	
+	%\chapter{Finite State Controllers}
+	%\input{sections/fsc.tex}
 	%\input{reference.tex}
-	\chapter{Using Reward-FSC }
-	\input{sections/reward-fsc.tex}
-	
 	
 	
 

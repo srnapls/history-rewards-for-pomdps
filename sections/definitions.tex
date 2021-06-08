@@ -1,0 +1,77 @@
+\section*{Markov decision processes}
+
+\towrite{explain in words what an mdp is}
+\begin{definition}[MDP]
+	A Markov decision process is a tuple $M=(S,s_I,Act,P)$ where 
+	\begin{itemize}
+		\item $S$, the finite set of states;
+		\item $s_I$, the initial state;
+		\item $Act$, the finite set of actions;
+		\item $T:S\times A\to \Pi(S)$, the probabilistic transition function.
+	\end{itemize}
+\end{definition}
+
+Note that given $s\in S,a\in Act$, we assign a probability distribution over $S$ through $T(s,a)$. To obtain the probability of ending up in a certain state $s'$ when starting in state $s$ and performing action $a$, we simply calculate $T(s,a,s')$ which we obtain through $T(s,a)(s')$.\\
+
+The \textit{available actions} for a state $s$ are given by $Act(s)=\{a\in Act\mid \exists s'\in S: T(s,a,s')>0\}$. We can give the \textit{possible successors} of state $s$ in a similar matter through $Succ(s)=\{s\in S|\exists a\in Act : T(s,a,s')>0\}$.
+
+A finite \textit{trajectory} or \textit{run} $\pi$ of an MDP is realization of the stochastic process performed by the MDP denoted by the finite sequence $s_1 a_1 s_2 a_2\dots s_{n-1} a_{n-1} s_n \in (S\times Act)^*\times S$. To obtain the last state of a trajectory we can use the following \[last(\pi)=last(s_1 a_1 s_2 a_2\dots s_{n-1} a_{n-1} s_n)=s_n\]
+\towrite{Set notation for finite trajectories}
+
+\subsection*{Reward function}
+We can extend MDPs with a \textit{reward function} $R$ which assign a reward - usually in $\mathbb{R}$ for taking a certain action $a$ in a state $s$. 
+
+\towrite{Intuitive explanation for reward function - including cost function}
+
+Let us look at \textit{Markovian reward functions}, which can determine a reward based on the current state, action and obtained state, independent of its history. The most conventional notation is $R:S\times Act\to \mathbb{R}$, where we consider the current state and the taken action. Another possible definition is $R:S\times Act\times S\to\mathbb{R}$, where  in $R(s,a,s')$ we consider the specific transition from $s$ to $s'$ by using action $a$, or $R:Act\to\mathbb{R}$ where in $R(a)$ we only consider the action taken. 
+
+\towrite{Real life example of markovian reward function}
+
+A reward function wich is dependent of its history is called a \textit{Non-Markovian reward function}. There are a number of different reward functions possible
+\begin{itemize}
+	\item $R:Act^*\to\mathbb{R}$ - which only needs all the finite actions used, or;
+	\item $R:S^*\to\mathbb{R}$ - which only looks at the finite states visited, or;
+	\item $R:(S\times Act)^*\to\mathbb{R}$ - which looks at the finite (sub)trajectory without the last state, or;
+	\item $R:(S\times Act)^*\times S\to \mathbb{R}$ - which looks at the finite (sub)trajectory.
+\end{itemize}
+All of these reward functions can be extended to the infinite sequences. \todo{infinite needed?}
+
+The reward function we will be using is the Non-Markovian reward function which looks at trajectories of specific length $k$, namely $R_k:(S\times Act)^k\to\mathbb{R}$. 
+
+\towrite{Increasing k creates increased reward}
+
+
+\subsection*{Policy}
+As stated above, we use reward functions over a MDP to usually argue over an optimized expected reward. After retrieving such an optimum, the question remains on how to actually obtain this value. We wish to know what strategy to apply path to take to obtain this value. For this we use strategies, or often called policies. 
+
+\begin{definition}
+	A policy for a MDP $M$ is a function $\sigma:(S\times Act)^*\times S \to \Pi(Act)$, which maps a trajectory $\pi$ to a probability distribution over all actions. 
+\end{definition}
+
+We call a policy \textit{memoryless} if the function only considers $last(\pi)$. The notation $\sigma_k:(S\times Act)^{k-1}\times S\to \Pi(S)$, gives a probability distribution when given the trajectory of length $k$, which includes the $k$ visited states and $k-1$ actions. $\sigma_k(\pi,a)=\sigma_k(\pi)(a)$ gives the probability of using action $a$ after the trajectory $\pi$.
+
+\towrite{induced markov chain for removing non-determinism??}
+
+\section*{Partial observability}
+\towrite{Introduce pomdp}
+
+\begin{definition}[POMDP]
+	A partially observable Markov decision process (POMDP) is a tuple $\mathcal{M}=(M, Z, O)$ where 
+	\begin{itemize}
+		\item $M=(S,s_I,Act,T)$, the hidden MDP;
+		\item $Z$, the finite set of observations;
+		\item $O:S\to Z$, the observation function. %or use O: S x A -> Z ?
+	\end{itemize}
+\end{definition}
+
+Without loss of generality we assume that states with the same observations have the same set of available actions, thus $O(s_1)=O(s_2)\Rightarrow Act(s_1)=A(s_2)$.
+
+Since the actual states in a trajectory of the hidden MDP are not visible to the observes, we argue about an \textit{obversed trajectory} of the POMDP $\mathcal{M}$. This is not consist of a sequence of states and actions, but instead a sequence of observations are actions, thus an element of $(Z\times Act)^*\times Z$. The set of all possible finite observed trajectories of will be denoted as $ObsSeq^{\mathcal{M}}$.
+
+We can argue about the observed trajectory through the observation function, which will be extended over trajectories, like so
+\[O(\pi)=O(s_1 a_1 s_2 a_2\dots s_{n-1} a_{n-1} s_n) = O(s_1) a_1 O(s_2) a_2\dots O(s_{n-1}) a_{n-1} O(s_n)\]
+
+\section*{Policy}
+\begin{definition}
+	An observation-based strategy of a POMDP $\mathcal{M}$ is a function $\sigma:ObsSeq^{\mathcal{M}}\to\Pi(Act)$ such that $supp(\sigma(O(\pi)))\subseteq Act (last(\pi))\ \forall \pi\in(S\times Act)^*\times S$.
+\end{definition}

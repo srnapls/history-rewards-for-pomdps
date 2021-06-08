@@ -1,0 +1,42 @@
+\section{Definition}
+Idea: transform the history-based reward function into something more tangible. Problem: we can only work with the observations, since we are working with a pomdp.\\
+
+
+Based on the history-based reward function $R_k:(S\times Act)^k\to\mathbb{R}$ of a POMDP $\mathcal{M}$, we build a finite-state controller that mimics its behavior.
+
+\begin{definition}
+	A reward finite-state controller (R-FSC) for a reward function of a POMDP $\mathcal{M}$ is a tuple $\mathcal{F}=(N,n_I,\delta,\mathcal{R})$ where
+	\begin{itemize}
+		\item $N$, the finite set of memory nodes;
+		\item $n_I$, the initial memory node;
+		\item $\delta: N \times Z \times Act \to \Pi(N)$, the memory update;
+		\item $\mathcal{R}: N \times Z \times Act\times N \to \mathbb{R}$, the reward update. 
+	\end{itemize}
+\end{definition}
+
+\towrite{explain $\mathcal{R}$}
+%explain: what does \mathcal{R} mean?
+
+We use the notation $\delta(n,o,a,n')$ for the probability of ending up in the memory node $n'$ starting in the memory node $n$, showing observation $o$ and performing action $a$. Thus, $\delta(n,o,a,n')=\delta(n,o,a)(n') $.\\
+
+When working with the sequence $s_0 a_0 s_1 a_1 \dots s_{k-1} a_{k-1} s_k\in(S\times Act)^k\times S$ we also obtain two sequences from the connected R-FSC $\mathcal{F}$. First we obtain the memory sequence $n_0 n_1 \dots n_{k-1}$, where $n_0=n_I$ and $n_{i+1}$ is obtained with probability $\delta(n_i,O(n_i),a_i,n_{i+1})$. Second, we obtain the reward sequence $r_0 r_1 \dots r_{k-1}$. In this reward sequence we claim that $r_i=R(n_i,O(s_i),a_i,n_{i+1})$. \\
+
+Since $\mathcal{F}$ simulates $R_k$ of $\mathcal{M}$, we want the reward of $R_k$ and of $\mathcal{F}$ to be the same when using the same trajectory. Thus $R_k(s_1 a_1 \dots s_{k} a_{k}) = \mathcal{R}(n_{k-1},O(s_{k}),a_{k},n_{k}) = r_{k}$.\\
+
+\section{Obtaining a R-FSC}
+Starting from a fully known $R_k$ and POMDP $\mathcal{M}$ 
+
+\subsection*{Example}
+Let $R_k$ be defined over the following sequences
+\begin{itemize}
+	\item $\square\ a\ \square\ b\ \square\ a$
+	\item $\square\ b\ \square\ a\ \blacksquare\ d$
+	\item $\square\ b\ \blacksquare\ c\ \blacksquare\ d$
+\end{itemize}
+
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{img/r-fsc1.PNG}
+\includegraphics[width=\textwidth]{img/r-fsc2.PNG}
+\end{figure}
