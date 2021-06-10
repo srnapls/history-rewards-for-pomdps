@@ -1,8 +1,7 @@
-\documentclass{report}
+\documentclass[12pt,twoside]{report}
+\usepackage[a4paper,width=150mm,top=25mm,bottom=25mm]{geometry}
 \usepackage[utf8]{inputenc}     % for éô
 \usepackage[english]{babel}     % for proper word breaking at line ends
-\usepackage[a4paper, left=1.5in, right=1.5in, top=1.5in, bottom=1.5in]{geometry}
-% for page size and margin settings
 \usepackage{graphicx}           % for ?
 \usepackage{amsmath,amssymb}    % for better equations
 \usepackage{amsthm}             % for better theorem styles
@@ -15,7 +14,11 @@
 \usepackage{ stmaryrd }
 \usepackage{float} 
 \usepackage{tikz}
-\usetikzlibrary{automata, positioning, arrows}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+\graphicspath{{D:/Thesis/img/}}
+\usetikzlibrary{automata, positioning, arrows}
+
 \input{commands}
 
 
@@ -127,7 +130,7 @@
 	\chapter{Background}
 	\input{sections/definitions.tex}
 	
-	\chapter{Reward Finite State Controllers}
+	\chapter{Reward Controllers}
 	\input{sections/rfsc.tex}
 	
 	\chapter{Obtaining policy}

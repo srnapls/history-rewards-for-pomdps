@@ -1,28 +1,54 @@
+\towrite{introduction for why/what reward mdp is needed}
+create product of reward controller and pomdp
+known:
+- read sequences of length k
+- only know observations
+
+do:
+- instead of history reward, we encode the reward in the new model per step, so that $R:V\times A\to \mathbb{R}$ instead of $R_k:(Z\times A)^k\to \mathbb{R}$. this allows us to use traditional methods for solving it.
+- create a limited belief state mdp, since we know $s_0$ 
+
 \begin{definition}
 	\label{def:reward_machine}
-	The induced Reward Machine for R-FSC on a labeled POMDP is a tuple $\mathcal{A}=(V,v_I,\mathbb{R},\hat{\delta})$ where 
+	The induced Reward Markov Decision Process for reward controller $\mathbb{F}=(N, n_I, A, \mathbb{R}, \delta, \lambda)$ on a POMDP $\mathcal{M}=(M,Z,O)$ where $M=(S,s_I,A,T_{M})$ extended with $R_k$ is a tuple $\mathcal{A}=(V,v_I,A,T_\mathcal{A},\mathcal{R})$ where 
 	\begin{itemize}
-		\item $V=S\times N$, the finite set of states;
-		\item $v_I=\langle s_I,n_I\rangle $, the initial state;
-		\item $\mathbb{R}$, the output alphabet;
-		\item $\hat{\delta}:V\times Act \to (V,\mathbb{R})$, the transition function.\\
-		$ \hat{\delta}(\langle s_1,n_1\rangle,a) = (\langle s_2,n_2\rangle,r) $ where 
-		\begin{itemize}
-			\item $o=O(s_1)$
-			\item $s_2$ obtained with probability $T(s_1,a,s_2)$
-			\item $n_2$ obtained with probability $\delta(n_1,o,a,n_2)$
-			\item $r= \mathcal{R}(n_1,o,a,n_2)$
+		\item $V=Z\times N$, the finite set of states;
+		\item $v_I=\langle O(s_I),n_I\rangle $, the initial state;
+		\item $A$, the available actions;
+		\item $T_\mathcal{A}: V \times A\to \Pi(V)$ where
+		\begin{equation*}
+			T_\mathcal{A}(\langle o, n\rangle,a)(\langle o',n'\rangle)=
+			\begin{cases}
+				\frac{\sum\limits_{s\in O^{-1}(o)}\sum\limits_{s'\in O^{-1}(o')}T_{\mathcal{M}}(s,a,s')}{\sum\limits_{s\in O^{-1}(o)}\sum\limits_{s'\in S}T_{\mathcal{M}}(s,a,s')} &\text{if } \delta(n,o,a)=n' \\
+				\, 0 & \text{otherwise}
+			\end{cases}
+		\end{equation*}
+	\item $\mathcal{R}:V\times A\to\mathbb{R}$ defined as
+		$\mathcal{R}(\langle o, n \rangle, a) = \lambda(n,(o,a))$
 		\end{itemize}
-	\end{itemize}
 \end{definition}
-%todo: question if its V x S x Act or V x Z x Act, since policy is not just act-based  
-%-- I think this is a choice. 
-% obtain info form V?
+%todo: is it Z x N or S x N
+\todo{The different transitions to the final state are irrelevant, since the reward is encoded in the action, not including the obtained state}
 
+After obtaining this reward MDP, which now has a Markovian reward function since it's only dependent of the state it's in and the action following, we can now find and optimal policy through known methods as discussed in .
 
-After obtaining the reward machine, you can use known methods to obtain the optimal policy. 
+\towrite{After obtaining this, we can obtain an optimal policy}
 
 \begin{corollary}
-	Given a POMDP $\mathcal{M}$ and the R-FSC $\mathcal{F}$ obtained through the history-based reward function $R_k$ of $\mathcal{M}$, we create the Reward Machine $\mathbb{A}$ with the help of \defref{def:reward_machine}. The expected reward of $\mathcal{A}$ is the same as the expected reward of $\mathcal{M}$. 
+	Given a POMDP $\mathcal{M}$ and the reward controller $\mathcal{F}$ obtained through the history-based reward function $R_k$ of $\mathcal{M}$, we create the Reward Machine $\mathbb{A}$ with the help of \defref{def:reward_machine}. 
+	The expected optimal reward of $\mathcal{A}$ is the same as of $\mathcal{M}$
 	%todo: this doesn't make sense right?
 \end{corollary}
+
+\section*{Example}
+Given the reward controller as found in \figureref{fig:simple_rc} and the POMDP with $Z=\{\square,\blacksquare\}$ as seen in \figureref{fig:mdp2}, we can create the induced reward MDP.
+\begin{figure}[H]\includegraphics{mdp2.PNG}
+	\label{fig:mdp2}
+\end{figure}
+
+\begin{figure}[H]
+	\includegraphics[width=1.2\textwidth]{reward-dfa.PNG}
+\end{figure}
+
+\towrite{explain the transitions}
+\towrite{explain that the missing transitions are self-loops/deadlock/not needed}

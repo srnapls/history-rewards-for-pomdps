@@ -2,41 +2,118 @@
 Idea: transform the history-based reward function into something more tangible. Problem: we can only work with the observations, since we are working with a pomdp.\\
 
 
-Based on the history-based reward function $R_k:(S\times Act)^k\to\mathbb{R}$ of a POMDP $\mathcal{M}$, we build a finite-state controller that mimics its behavior.
+Based on the history-based reward function $R_k:(S\times A)^k\to\mathbb{R}$ of a POMDP $\mathcal{M}$, we build a reward controller that mimics its behavior.
+
+%todo: basically a mealy machine where the language sigma is (Z\times A)
 
 \begin{definition}
-	A reward finite-state controller (R-FSC) for a reward function of a POMDP $\mathcal{M}$ is a tuple $\mathcal{F}=(N,n_I,\delta,\mathcal{R})$ where
+	A reward controller $\mathcal{F}$ is a Mealy Machine $(N,n_I, Z\times A, \mathbb{R}, \delta, \lambda)$, where
 	\begin{itemize}
 		\item $N$, the finite set of memory nodes;
 		\item $n_I$, the initial memory node;
-		\item $\delta: N \times Z \times Act \to \Pi(N)$, the memory update;
-		\item $\mathcal{R}: N \times Z \times Act\times N \to \mathbb{R}$, the reward update. 
+		\item $Z\times A$, the input alphabet;
+		\item $\mathbb{R}$, the output alphabet;
+		\item $\delta: N \times Z \times A \to N$, the memory update;
+		\item $\lambda: N \times Z \times A \to \mathbb{R}$, the reward update. 
 	\end{itemize}
 \end{definition}
 
-\towrite{explain $\mathcal{R}$}
-%explain: what does \mathcal{R} mean?
 
-We use the notation $\delta(n,o,a,n')$ for the probability of ending up in the memory node $n'$ starting in the memory node $n$, showing observation $o$ and performing action $a$. Thus, $\delta(n,o,a,n')=\delta(n,o,a)(n') $.\\
+When starting in memory node $n$, where we observe observation $o$ and then perform Aion $a$ we will end up in the new memory node $\delta(n,o,a)$.
 
-When working with the sequence $s_0 a_0 s_1 a_1 \dots s_{k-1} a_{k-1} s_k\in(S\times Act)^k\times S$ we also obtain two sequences from the connected R-FSC $\mathcal{F}$. First we obtain the memory sequence $n_0 n_1 \dots n_{k-1}$, where $n_0=n_I$ and $n_{i+1}$ is obtained with probability $\delta(n_i,O(n_i),a_i,n_{i+1})$. Second, we obtain the reward sequence $r_0 r_1 \dots r_{k-1}$. In this reward sequence we claim that $r_i=R(n_i,O(s_i),a_i,n_{i+1})$. \\
+When working with the sequence $s_0 a_0 s_1 a_1 \dots s_{k-1} a_{k-1} s_k\in(S\times A)^k\times S$ we also obtain two sequences from the connected R-FSC $\mathcal{F}$. First we obtain the memory sequence $n_0 n_1 \dots n_{k-1}$, where $n_0=n_I$ and $n_{i+1}$ is obtained with probability $\delta(n_i,O(n_i),a_i,n_{i+1})$. Second, we obtain the reward sequence $r_0 r_1 \dots r_{k-1}$. In this reward sequence we claim that $r_i=R(n_i,O(s_i),a_i,n_{i+1})$. \\
 
 Since $\mathcal{F}$ simulates $R_k$ of $\mathcal{M}$, we want the reward of $R_k$ and of $\mathcal{F}$ to be the same when using the same trajectory. Thus $R_k(s_1 a_1 \dots s_{k} a_{k}) = \mathcal{R}(n_{k-1},O(s_{k}),a_{k},n_{k}) = r_{k}$.\\
 
-\section{Obtaining a R-FSC}
-Starting from a fully known $R_k$ and POMDP $\mathcal{M}$ 
+\section{Creating a reward controller}
+Starting from a fully known $R_k$ and POMDP $\mathcal{M}$, we know that $R_k$ is defined over a number of sequences of elements in $Z\times A$ with length $k$.
+
+Given all the sequences over which the Non-Markovian reward function is defined, let us create a reward controller through the following procedure.
+\begin{algorithm}[H]
+	\begin{algorithmic}[1]
+		\Procedure{CreateRewardController}{sequences, $R_k$}
+		\Require sequences $\in 2^{(Z\times A)^k}$
+		\Require $R_k \in 2^{(Z\times A)^k\to \mathbb{R}}$
+		\State $n_I = $ \code{new Node()} \Comment{initial node}
+		\State $n_F = $ \code{new Node()} \Comment{''final'' node}
+		\State $N=\{n_I,n_F\}$
+		\ForAll{$\pi=\pi_1\pi_2\dots\pi_k$ in sequences}
+			\State $n = n_I$
+			\For{$i=1$ to $k-1$}
+				\If{$\delta(n,\pi_i)$ is undefined}
+					\State $n'=$ \code{new Node()} \Comment{create new memory node}
+					\State $N = N \cup \{n'\}$		
+					\State $\delta(n,\pi_i) = n'$	
+				\EndIf 
+				\State $n = \delta(n,\pi_i)$     \Comment{update memory node}
+			\EndFor
+			\State $\delta(n,\pi_k) = n_F$ \Comment{set final transitions}
+			\State $\lambda(n,\pi_k) = R_k(\pi)$ \Comment{set reward}
+		\EndFor
+		\ForAll{$n\in N$} \Comment{makes $\delta$ and $\lambda$ deterministic}
+			\ForAll{$(o,a)\in(Z\times A)$}
+				\If{$\delta(n,(o,a))$ is undefined} \Comment{self-loop}
+					\State $\delta(n,(o,a)) = n$
+				\EndIf
+				\If{$\lambda(n,(o,a))$ is undefined} \ref{l:set_zero}
+					\State $\delta(n,(o,a)) = 0 $
+				\EndIf
+			\EndFor
+		\EndFor
+		\State \Return $(N,n_I,(Z\times A),\mathbb{R},\delta,\lambda)$
+		\EndProcedure
+	\end{algorithmic}
+	\caption{Procedure for turning a list of sequences into a reward controller}
+\end{algorithm}
+%todo: obsolete transitions, self-loop?
+
+- Every path should have an unique transition to $n_F$, for that is the transition in which the reward is encoded.
+- we assume all paths are unique, so for every sequence we will create at least one new node.
+- if sequences share the first few entries, only from the moment they differ a new node will appear. 
+
+
+\towrite{In words what happens}
 
 \subsection*{Example}
 Let $R_k$ be defined over the following sequences
 \begin{itemize}
-	\item $\square\ a\ \square\ b\ \square\ a$
-	\item $\square\ b\ \square\ a\ \blacksquare\ d$
-	\item $\square\ b\ \blacksquare\ c\ \blacksquare\ d$
+	\item $\square\ a\ \square\ b\ \square\ c$
+	\item $\square\ b\ \square\ a\ \blacksquare\ c$
+	\item $\square\ b\ \blacksquare\ c\ \blacksquare\ c$
 \end{itemize}
 
+\towrite{Notes for the model: missing actions/states}
+For this model, everywhere where the red lines are, is an transition towards the node it originated from.
+- the highlighted green line contains the reward.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=\textwidth]{img/r-fsc1.PNG}
-\includegraphics[width=\textwidth]{img/r-fsc2.PNG}
+\includegraphics[width=\textwidth]{r-fsc2.PNG}
 \end{figure}
+
+
+Or more simplified
+- only the transitions to $n_7$ are encoded with the reward, the rest remain zero as stated in \lineref{l:set_zero}
+\begin{figure}[H]
+	\centering
+		\begin{tikzpicture}[node distance=3cm,on grid,auto]
+			\node[initial,state] (1) 				{$n_I$};
+			\node[state] (2) [above right=of 1]		{$n_2$};
+			\node[state] (3) [below right=of 1]		{$n_3$};
+			\node[state] (5) [above right=of 3]		{$n_5$};
+			\node[state] (6) [below right=of 3]		{$n_6$};
+			\node[state] (4) [above=of 5]			{$n_4$};
+			\node[state] (7) [right=of 5]			{$n_7$};
+			\path[->] 	(1) edge[bend left] 	node [left] {$\square,a$}			(2)
+							edge[bend right] 	node [left] {$\square,b$}			(3)
+						(2) edge 				node [above] {$\square,b$}			(4)
+						(3) edge[bend left] 	node [left] {$\square,a$}   		(5)
+							edge[bend right] 	node [left] {$\blacksquare,c$}    (6)
+						(4) edge[bend left] 	node [left] {$\square,b$}			(7)
+						(5) edge 				node [above] {$\blacksquare,c$}	(7)
+						(6)	edge[bend right] 	node [left] {$\blacksquare,c$}	(7);
+	\end{tikzpicture}
+\label{fig:simple_rc}
+\caption{Simplified reward controller}
+\end{figure}
+
