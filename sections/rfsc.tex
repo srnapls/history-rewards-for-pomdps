@@ -1,78 +1,80 @@
 \section{Definition}
-Idea: transform the history-based reward function into something more tangible. Problem: we can only work with the observations, since we are working with a pomdp.\\
 
 
-Based on the history-based reward function $R_k:(S\times A)^k\to\mathbb{R}$ of a POMDP $\mathcal{M}$, we build a reward controller that mimics its behavior.
+\towrite{introduction}
+The idea is to transform the history-based reward function into something more tangible. We transform it is so that we can obtain the reward per step instead of only at the end of a sequence.
 
-%todo: basically a mealy machine where the language sigma is (Z\times A)
+
+Based on the history-based reward function $R_k:(\Omega\times A)^k\to\mathbb{R}$ of a POMDP $\mathcal{M}$, we build a reward controller that mimics its behavior.
+
+%todo: basically a mealy machine where the language sigma is (\Omega\times A)
 
 \begin{definition}
-	A reward controller $\mathcal{F}$ is a Mealy Machine $(N,n_I, Z\times A, \mathbb{R}, \delta, \lambda)$, where
+	A reward controller $\mathcal{F}$ is a reward machine $(N,n_I, \Omega\times A, \mathbb{R}, \delta, \lambda)$, where
 	\begin{itemize}
 		\item $N$, the finite set of memory nodes;
-		\item $n_I$, the initial memory node;
-		\item $Z\times A$, the input alphabet;
+		\item $n_I\in N$, the initial memory node;
+		\item $\Omega\times A$, the input alphabet;
 		\item $\mathbb{R}$, the output alphabet;
-		\item $\delta: N \times Z \times A \to N$, the memory update;
-		\item $\lambda: N \times Z \times A \to \mathbb{R}$, the reward update. 
+		\item $\delta: N \times \Omega \times A \to N$, the memory update;
+		\item $\lambda: N \times \Omega \times A \to \mathbb{R}$, the reward update. 
 	\end{itemize}
 \end{definition}
 
 
-When starting in memory node $n$, where we observe observation $o$ and then perform Aion $a$ we will end up in the new memory node $\delta(n,o,a)$.
-
-When working with the sequence $s_0 a_0 s_1 a_1 \dots s_{k-1} a_{k-1} s_k\in(S\times A)^k\times S$ we also obtain two sequences from the connected R-FSC $\mathcal{F}$. First we obtain the memory sequence $n_0 n_1 \dots n_{k-1}$, where $n_0=n_I$ and $n_{i+1}$ is obtained with probability $\delta(n_i,O(n_i),a_i,n_{i+1})$. Second, we obtain the reward sequence $r_0 r_1 \dots r_{k-1}$. In this reward sequence we claim that $r_i=R(n_i,O(s_i),a_i,n_{i+1})$. \\
-
-Since $\mathcal{F}$ simulates $R_k$ of $\mathcal{M}$, we want the reward of $R_k$ and of $\mathcal{F}$ to be the same when using the same trajectory. Thus $R_k(s_1 a_1 \dots s_{k} a_{k}) = \mathcal{R}(n_{k-1},O(s_{k}),a_{k},n_{k}) = r_{k}$.\\
+When starting in memory node $n$, where we observe observation $o$ and then perform action $a$ we will end up in the new memory node $\delta(n,o,a)$.
 
 \section{Creating a reward controller}
-Starting from a fully known $R_k$ and POMDP $\mathcal{M}$, we know that $R_k$ is defined over a number of sequences of elements in $Z\times A$ with length $k$.
+Starting from a fully known $R_k$ and POMDP $\mathcal{M}$, we know that $R_k$ is defined over a number of sequences of elements in $\Omega\times A$ with length $k$. Since the reward of a sequence is only obtained after running through the entire sequence, we encode the reward of that specific sequence into the last transition. The idea is to make sure that every unique sequence has an unique path to the final state, so that their own reward is obtained.
 
 Given all the sequences over which the Non-Markovian reward function is defined, let us create a reward controller through the following procedure.
 \begin{algorithm}[H]
 	\begin{algorithmic}[1]
 		\Procedure{CreateRewardController}{sequences, $R_k$}
-		\Require sequences $\in 2^{(Z\times A)^k}$
-		\Require $R_k \in 2^{(Z\times A)^k\to \mathbb{R}}$
-		\State $n_I = $ \code{new Node()} \Comment{initial node}
-		\State $n_F = $ \code{new Node()} \Comment{''final'' node}
-		\State $N=\{n_I,n_F\}$
+		\Require sequences $\in 2^{(\Omega\times A)^k}$
+		\Require $R_k \in 2^{(\Omega\times A)^k\to \mathbb{R}}$
+		\State $n_I \gets $ \code{new Node()} \Comment{initial node} \label{l:initial_node}
+		\State $n_F \gets $ \code{new Node()} \Comment{''final'' node} \label{l:final_node}
+		\State $N\gets\{n_I,n_F\}$
 		\ForAll{$\pi=\pi_1\pi_2\dots\pi_k$ in sequences}
-			\State $n = n_I$
-			\For{$i=1$ to $k-1$}
+			\State $n \gets n_I$
+			\For{$i\gets1$ to $k-1$}
 				\If{$\delta(n,\pi_i)$ is undefined}
-					\State $n'=$ \code{new Node()} \Comment{create new memory node}
-					\State $N = N \cup \{n'\}$		
-					\State $\delta(n,\pi_i) = n'$	
+					\State $n'\gets$ \code{new Node()} \Comment{create new memory node}
+					\State $N \gets N \cup \{n'\}$		
+					\State $\delta(n,\pi_i) \gets n'$	\label{l:set_transition}
 				\EndIf 
-				\State $n = \delta(n,\pi_i)$     \Comment{update memory node}
+				\State $n \gets \delta(n,\pi_i)$     \Comment{update memory node}
 			\EndFor
-			\State $\delta(n,\pi_k) = n_F$ \Comment{set final transitions}
-			\State $\lambda(n,\pi_k) = R_k(\pi)$ \Comment{set reward}
+			\State $\delta(n,\pi_k) \gets n_F$ \Comment{set final transitions} \label{l:set_final_transition}
+			\State $\lambda(n,\pi_k) \gets R_k(\pi)$ \Comment{set reward} \label{l:set_reward}
 		\EndFor
 		\ForAll{$n\in N$} \Comment{makes $\delta$ and $\lambda$ deterministic}
-			\ForAll{$(o,a)\in(Z\times A)$}
+			\ForAll{$(o,a)\in(\Omega\times A)$}
 				\If{$\delta(n,(o,a))$ is undefined} \Comment{self-loop}
-					\State $\delta(n,(o,a)) = n$
+					\State $\delta(n,(o,a)) \gets n$ \label{l:self_loop}
 				\EndIf
-				\If{$\lambda(n,(o,a))$ is undefined} \ref{l:set_zero}
-					\State $\delta(n,(o,a)) = 0 $
+				\If{$\lambda(n,(o,a))$ is undefined} \label{l:set_zero}
+					\State $\delta(n,(o,a)) \gets 0 $
 				\EndIf
 			\EndFor
 		\EndFor
-		\State \Return $(N,n_I,(Z\times A),\mathbb{R},\delta,\lambda)$
+		\State \Return $(N,n_I,(\Omega\times A),\mathbb{R},\delta,\lambda)$
 		\EndProcedure
 	\end{algorithmic}
 	\caption{Procedure for turning a list of sequences into a reward controller}
+	\label{procedure:into_reward_controller}
 \end{algorithm}
-%todo: obsolete transitions, self-loop?
 
-- Every path should have an unique transition to $n_F$, for that is the transition in which the reward is encoded.
-- we assume all paths are unique, so for every sequence we will create at least one new node.
-- if sequences share the first few entries, only from the moment they differ a new node will appear. 
+We start by making an initial and final node in Lines~\ref{l:initial_node} and~\ref{l:final_node}. When reading a sequence we walk through it until we come across an undefined transition. This indicates that the sequence from that point on is unique again. For this transition we create a new node and connect it through \lineref{l:set_transition}.
+
+When we get to the end of the transition (so when $i=k-1$), we ensure that the final transition is connected to the final node $n_F$ in \lineref{l:set_final_transition}. This is also where we encode the actual reward value through \lineref{l:set_reward} by calling upon the reward value given by $R_k$.
+
+Since all functions of the reward controller need to be deterministic, we need to set the remaining values. All the memory nodes that have not been defined yet, will point towards themselves and thereby ensuring a dead-end through \lineref{l:self_loop}. After all, when reading a sequence and if the transition ends up in a state with a self-loop, there is already a deviation from the sequences over which the reward function is defined. Which in turn means that there will be no reward connected to it. Furthermore, since we only encode the reward in the final transition all the other transitions do not contribute to the final reward. This is solved by simple setting the reward value to zero in \lineref{l:set_zero}.
 
 
-\towrite{In words what happens}
+We observe that the amount of memory nodes $|N|$ of the newly created reward controller $\mathcal{F}$ is bounded by $|\Omega|\times|A|\times k$.\\
+
 
 \subsection*{Example}
 Let $R_k$ be defined over the following sequences
@@ -83,17 +85,16 @@ Let $R_k$ be defined over the following sequences
 \end{itemize}
 
 \towrite{Notes for the model: missing actions/states}
-For this model, everywhere where the red lines are, is an transition towards the node it originated from.
-- the highlighted green line contains the reward.
+Following the procedure~\ref{procedure:into_reward_controller} we can create the reward controller as seen in \figureref{f:elaborated_rc}. Note that everywhere where the red lines are depicted, those paths are obsolete. And following the procedure those end-markings should be transitions towards the memory node they originated from. The green highlighted are the rewards that are set in \lineref{l:set_reward}. The elaborated version shown in the figure first checks the observation and then check the action to then direct it to a new memory node. A more compact version can be seen in \figureref{f:simple_rc}, where the observation and the action are condensed into one transition. Note that in this figure, the self-loops are also not shown. 
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{r-fsc2.PNG}
+\label{f:elaborated_rc}
+\caption{Elaborated reward controller}
 \end{figure}
 
 
-Or more simplified
-- only the transitions to $n_7$ are encoded with the reward, the rest remain zero as stated in \lineref{l:set_zero}
 \begin{figure}[H]
 	\centering
 		\begin{tikzpicture}[node distance=3cm,on grid,auto]
@@ -113,7 +114,10 @@ Or more simplified
 						(5) edge 				node [above] {$\blacksquare,c$}	(7)
 						(6)	edge[bend right] 	node [left] {$\blacksquare,c$}	(7);
 	\end{tikzpicture}
-\label{fig:simple_rc}
-\caption{Simplified reward controller}
+\label{f:simple_rc}
+\caption{Compact reward controller}
 \end{figure}
 
+\begin{corollary}
+	For every path $\pi\in(\Omega\times A)^k$ that is defined for $R_k$, we have that $R_k(\pi)=\code{FinalReward}(n_I,\pi)$
+\end{corollary}
