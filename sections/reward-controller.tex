@@ -1,0 +1,123 @@
+\section{Definition}
+
+
+\towrite{introduction}
+The idea is to transform the history-based reward function into something more tangible. We transform it is so that we can obtain the reward per step instead of only at the end of a sequence.
+
+
+Based on the history-based reward function $R:\Omega^*\to\mathbb{R}$ of a POMDP $\mathcal{M}$, we build a reward controller that mimics its behavior.
+
+%todo: basically the same as a moore machine
+
+%idea: when the word is done reading, you then obtain the reward. Normally when using a Moore machine you get the reward every time you enter it. However, since we won't be using the reward controller as a usual moore machine, it's fine to encode it in the state. We will see in the next chapter how we then obtain the reward.
+
+\begin{definition}
+	A reward controller $\mathcal{F}$ is a reward machine $(N,n_I, \Omega, \mathbb{R}, \delta, \lambda)$, where
+	\begin{itemize}
+		\item $N$, the finite set of memory nodes;
+		\item $n_I\in N$, the initial memory node;
+		\item $\Omega\times A$, the input alphabet;
+		\item $\mathbb{R}$, the output alphabet;
+		\item $\delta: N \times \Omega \times A \to N$, the memory update;
+		\item $\sigma: N \times \Omega \to \mathbb{R}$, the reward output. 
+	\end{itemize}
+\end{definition}
+
+
+\section{Creating a reward controller from a list of sequences}
+\todo{dit kan wel, maar moet aangepast worden voor gegeven reeks inputs}
+Starting from a fully known $R_k$ and POMDP $\mathcal{M}$, we know that $R_k$ is defined over a number of sequences of elements in $\Omega\times A$ with length $k$. Since the reward of a sequence is only obtained after running through the entire sequence, we encode the reward of that specific sequence into the last transition. The idea is to make sure that every unique sequence has an unique path to the final state, so that their own reward is obtained.
+\todo{rewrite entire section lmao}
+
+Given all the sequences over which the Non-Markovian reward function is defined, let us create a reward controller through the following procedure.
+\begin{algorithm}[H]
+	\begin{algorithmic}[1]
+		\Procedure{CreateRewardController}{sequences, $R$}
+		\Require sequences
+		\Require $R : \Omega^* \to \mathbb{R}$
+		\State $n_I \gets $ \code{new Node()} \Comment{initial node} \label{l:initial_node}
+		\State $n_F \gets $ \code{new Node()} \Comment{dump node} \todo{other name?} \label{l:dump_node}
+		\State $N\gets\{n_I,n_F\}$
+		\State $\sigma(n_I),\sigma(n_F)\gets 0$ \todo{notation?}
+		\ForAll{$\pi=\pi_1\pi_2\dots\pi_k$ in sequences}
+			\State $n \gets n_I$
+			\For{$i\gets1$ to $k$}
+				\If{$\delta(n,\pi_i)$ is undefined}
+					\State $n'\gets$ \code{new Node()} \Comment{create new memory node}
+					\State $\sigma(n) \gets 0$
+					\State $N \gets N \cup \{n'\}$		
+					\State $\delta(n,\pi_i) \gets n'$	\label{l:set_transition}
+				\EndIf 
+				\State $n \gets \delta(n,\pi_i)$     \Comment{update memory node}
+			\EndFor
+			\State $\sigma(n) \gets \sigma(n) + R(\pi)$ \Comment{set reward} \label{l:set_reward}
+		\EndFor
+		\ForAll{$n\in N$} \Comment{makes $\delta$ and $\sigma$ deterministic}
+			\ForAll{$o\in\Omega$}
+				\If{$\delta(n,o)$ is undefined} \Comment{useless transition}
+					\State $\delta(n,o) \gets n_F$ \label{l:self_loop}
+				\EndIf
+			\EndFor
+		\EndFor
+		\State \Return $(N,n_I,\Omega,\mathbb{R},\delta,\sigma)$
+		\EndProcedure
+	\end{algorithmic}
+	\caption{Procedure for turning a list of sequences into a reward controller}
+	\label{procedure:into_reward_controller}
+\end{algorithm}
+
+We start by making an initial and dump\todo{??} node in Lines~\ref{l:initial_node} and~\ref{l:final_node}. When reading a sequence we walk through it until we come across an undefined transition. This indicates that the sequence from that point on is unique again. For this transition we create a new node and connect it through \lineref{l:set_transition}.
+
+When we get to the end of the transition (so when $i=k-1$), we ensure that the final transition is connected to the final node $n_F$ in \lineref{l:set_final_transition}. This is also where we encode the actual reward value through \lineref{l:set_reward} by calling upon the reward value given by $R_k$.
+
+Since all functions of the reward controller need to be deterministic, we need to set the remaining values. All the memory nodes that have not been defined yet, will point towards themselves and thereby ensuring a dead-end through \lineref{l:self_loop}. After all, when reading a sequence and if the transition ends up in a state with a self-loop, there is already a deviation from the sequences over which the reward function is defined. Which in turn means that there will be no reward connected to it. Furthermore, since we only encode the reward in the final transition all the other transitions do not contribute to the final reward. This is solved by simple setting the reward value to zero in \lineref{l:set_zero}.
+
+
+We observe that the number of memory nodes $|N|$ of the newly created reward controller $\mathcal{F}$ is bounded by $\Omega^k$, where $k=\max_{seq\in sequences} |seq|$.\\
+
+
+\subsection*{Example}
+Let $R$ be defined over the following sequences
+\begin{itemize}
+	\item $\square\ a\ \square\ b\ \square\ c$
+	\item $\square\ b\ \square\ a\ \blacksquare\ c$
+	\item $\square\ b\ \blacksquare\ c\ \blacksquare\ c$
+\end{itemize}
+
+\towrite{Notes for the model: missing actions/states}
+Following the procedure~\ref{procedure:into_reward_controller} we can create the reward controller as seen in \figureref{f:elaborated_rc}. Note that everywhere where the red lines are depicted, those paths are obsolete. And following the procedure those end-markings should be transitions towards the memory node they originated from. The green highlighted are the rewards that are set in \lineref{l:set_reward}. The elaborated version shown in the figure first checks the observation and then check the action to then direct it to a new memory node. A more compact version can be seen in \figureref{f:simple_rc}, where the observation and the action are condensed into one transition. Note that in this figure, the self-loops are also not shown. 
+
+\begin{figure}[H]
+	\centering
+		\begin{tikzpicture}[node distance=3cm,on grid,auto]
+			\node[initial,state] (1) 				{$n_I$};
+			\node[state] (2) [above right=of 1]		{$n_2$};
+			\node[state] (3) [below right=of 1]		{$n_3$};
+			\node[state] (5) [above right=of 3]		{$n_5$};
+			\node[state] (6) [below right=of 3]		{$n_6$};
+			\node[state] (4) [above=of 5]			{$n_4$};
+			\node[state] (7) [right=of 5]			{$n_7$};
+			\path[->] 	(1) edge[bend left] 	node [left] {$\square,a$}			(2)
+							edge[bend right] 	node [left] {$\square,b$}			(3)
+						(2) edge 				node [above] {$\square,b$}			(4)
+						(3) edge[bend left] 	node [left] {$\square,a$}   		(5)
+							edge[bend right] 	node [left] {$\blacksquare,c$}    (6)
+						(4) edge[bend left] 	node [left] {$\square,b$}			(7)
+						(5) edge 				node [above] {$\blacksquare,c$}	(7)
+						(6)	edge[bend right] 	node [left] {$\blacksquare,c$}	(7);
+	\end{tikzpicture}
+\label{f:simple_rc}
+\caption{Compact reward controller}
+\end{figure}
+
+\begin{corollary}
+	For every path $\pi\in(\Omega\times A)^k$ that is defined for $R_k$, we have that $R_k(\pi)=\code{FinalReward}(n_I,\pi)$
+\end{corollary}
+
+\section{Creating a Reward Controller from a sequence of regular expressions}
+
+Given a number of expressions over which $R$ is defined as $\[e_1,e_2,\dots,e_n\]$. 
+
+
+
+

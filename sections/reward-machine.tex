@@ -1,86 +1,43 @@
-The next step is defining the MDP with a new reward function based on the given POMDP together with it's reward controller. Since the reward function of the POMDP is bound by length $k$, we can define a Markov decision process limited to $k$ steps. The reward function will be presented as a Markovian reward function, since the reward controller bound the rewards per step instead of over the entire history through it's construction. 
+\towrite{introduction}
+%add extra final state, in which we encode the actual transitions, the end state will be used to marked you are done. 
 
 \begin{definition}
 	\label{def:reward-mdp}
-	The induced Reward Markov Decision Process for reward controller $\mathbb{F}=(N, n_I, A, \mathbb{R}, \delta, \lambda)$ on a POMDP $\mathcal{M}=(M,\Omega,O)$ where $M=(S,s_I,A,T_{M})$ extended with $R_k$ is a tuple $\mathcal{A}=(V,v_I,A,T_\mathcal{A},\mathcal{R})$ where 
+	The induced POMDP for reward controller $\mathcal{F}=(N, n_I, \Omega, \mathcal{R}, \delta, \lambda)$ on a POMDP $\mathcal{M}=(M,\Omega,Obs)$ where $M=(S,s_I,A,T_{M})$ is a tuple $\mathcal{M'}=(M',\Omega',Obs')$ where 
 	\begin{itemize}
-		\item $V=\Omega\times N$, the finite set of states;
-		\item $v_I=\langle O(s_I),n_I\rangle $, the initial state;
-		\item $A$, the available actions;
-		\item $T_\mathcal{A}: V \times A\to \Pi(V)$ where
-		\begin{equation*}
-			T_\mathcal{A}(\langle o, n\rangle,a)(\langle o',n'\rangle)=
-			\begin{cases}
-				\frac{\sum\limits_{s\in O^{-1}(o)}\sum\limits_{s'\in O^{-1}(o')}T_{\mathcal{M}}(s,a,s')}{\sum\limits_{s\in O^{-1}(o)}\sum\limits_{s'\in S}T_{\mathcal{M}}(s,a,s')} &\text{if } \delta(n,o,a)=n' \\
-				\, 0 & \text{otherwise}
-			\end{cases}
-		\end{equation*}
-	\item $\mathcal{R}:V\times A\to\mathbb{R}$ defined as
-		$\mathcal{R}(\langle o, n \rangle, a) = \lambda(n,(o,a))$
+		\item $M' = (S',s'_I,A',T_{M'},\mathcal{R})$, the hidden MDP defined as follows
+		\begin{itemize}
+			\item $S'=S\times N \cup \{s_F\}$
+			\item $s'_I = \langle s_I, \delta(n_I, O(s_I))\rangle$
+			\item $A'=A\cup \{\texttt{end}\}$
+			\item $T_{M'}:S'\times A \to \Pi(S)$ where
+				\begin{align*}
+					T_{M'}(\langle s,n\rangle,a,\langle s',n'\rangle) &= \begin{cases}
+						T_M(s,a,s') & \text{if } \delta(n,O(s')=n') \\
+						0 & \text{otherwise}
+					\end{cases}\\
+					T_{M'}(s,\texttt{end},s_F) &= 1 \text{ for all} s\in S'
+				\end{align*}
+			\item $R:S'\times A'\times S' \to \mathcal{R}$ where 
+                \begin{align*}
+					R(s',\texttt{end},s_F) &= 
+					\begin{cases}
+						\sigma(n) & \text{ if } s'=\langle s,n\rangle \\
+						0         & \text{ if } s'=s_F
+					\end{cases}
+					\\
+					R(s,a,s') &= 0 \text{ for all } s'\in S'\setminus \{s_F\}
+				\end{align*}
+		\end{itemize}
+		\item $\Omega'=\Omega \cup \{o_F\}$, the observation state
+		\item $Obs:S'\to \Omega'$ where 
+			\begin{equation*}
+				Obs'(s)= \begin{cases}
+				Obs(s') & \text{if } s=\langle s',n\rangle\\
+				o_F & \text{if } s=s_F
+				\end{cases}
+			\end{equation*}
 		\end{itemize}
 \end{definition}
-\todo{The different transitions to the final state are irrelevant, since the reward is encoded in the action, not including the obtained state}
 
-Since we have now obtained an MDP with a reward function that is only dependent of it's current state and the action, we can use known methods to compute an optimal policy.
-
-\begin{corollary}
-	Given a POMDP $\mathcal{M}$ and the reward controller $\mathcal{F}$ obtained through the history-based reward function $R_k$ of $\mathcal{M}$, we create the Reward Machine $\mathbb{A}$ with the help of \defref{def:reward-mdp}. Given a policy $\sigma$, applying this to $\mathcal{M}$ will give the same expected reward as applying it to $\mathcal{A}$.
-\end{corollary}
-
-\section*{Example}
-Given the reward controller as found in \figureref{fig:simple_rc} and the POMDP in \figureref{fig:mdp2}, we can create the induced reward MDP. Note that there are a number of missing self-loop transitions. Since there are irrelevant to the final product, they are not shown.
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.5\textwidth]{mdp2.PNG}
-	\label{fig:mdp2}
-	\caption{POMDP where $\Omega=\{\square,\blacksquare\}$}
-\end{figure}
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.85\textwidth]{reward-dfa.PNG}
-	\caption{Resulting reward MDP}
-\end{figure}
-
-A few of the transitions calculated:
-\begin{flalign*}
-	 T_\mathcal{A}(\langle \square, n_I\rangle,a)(\langle \square, n_2\rangle) & =
-		\frac{\sum\limits_{s\in O^{-1}(\square)}\sum\limits_{s'\in O^{-1}(\square)}T_{\mathcal{M}}(s,a,s')}{\sum\limits_{s\in O^{-1}(\square)}\sum\limits_{s'\in S}T_{\mathcal{M}}(s,a,s')}\\ & = \frac{T(s_0,a,s_0)+T(s_0,a,s_1)+T(s_1,a,s_0)T(s_1,a,s_1)}{2} \\& = \frac{0,5+0+0+0,25}{2}=0,375\\
-	T_\mathcal{A}(\langle \square, n_I\rangle,a)(\langle \blacksquare, n_2\rangle) & =
-	\frac{\sum\limits_{s\in O^{-1}(\square)}\sum\limits_{s'\in O^{-1}(\blacksquare)}T_{\mathcal{M}}(s,a,s')}{\sum\limits_{s\in O^{-1}(\square)}\sum\limits_{s'\in S}T_{\mathcal{M}}(s,a,s')}\\ & = \frac{T(s_0,a,s_2)+T(s_1,a,s_2)}{2} \\& = \frac{0,5+0,75}{2}=0,625\\
-	T_\mathcal{A}(\langle \square, n_I\rangle,b)(\langle \square, n_3\rangle) & =
-	\frac{\sum\limits_{s\in O^{-1}(\square)}\sum\limits_{s'\in O^{-1}(\square)}T_{\mathcal{M}}(s,a,s')}{\sum\limits_{s\in O^{-1}(\square)}\sum\limits_{s'\in S}T_{\mathcal{M}}(s,b,s')}\\ & = \frac{T(s_0,b,s_0)+T(s_0,b,s_1)+T(s_1,b,s_0)T(s_1,b,s_1)}{2} \\& = \frac{0+0,25+0,75+0,25}{2}=0,6255\\
-	T_\mathcal{A}(\langle \square, n_I\rangle,b)(\langle \blacksquare, n_3\rangle) & =
-	\frac{\sum\limits_{s\in O^{-1}(\blacksquare)}\sum\limits_{s'\in O^{-1}(\square)}T_{\mathcal{M}}(s,a,s')}{\sum\limits_{s\in O^{-1}(\square)}\sum\limits_{s'\in S}T_{\mathcal{M}}(s,b,s')}\\ & = \frac{T(s_0,b,s_2)+T(s_1,b,s_2)}{2} \\& = \frac{0,75+0}{2}=0,375\\	
-	T_\mathcal{A}(\langle \blacksquare, n_3\rangle,c)(\langle \square, n_6\rangle) & = \frac{\sum\limits_{s\in O^{-1}(\square)}\sum\limits_{s'\in O^{-1}(\square)}T_{\mathcal{M}}(s,c,s')}{\sum\limits_{s\in O^{-1}(\square)}\sum\limits_{s'\in S}T_{\mathcal{M}}(s,c,s')}\\ & = \frac{T(s_2,c,s_0)+T(s_2,c,s_1)}{1} \\& = \frac{0+0,1}{1}=0,1\\
-	T_\mathcal{A}(\langle \blacksquare, n_3\rangle,c)(\langle \blacksquare, n_6\rangle) & =
-	\frac{\sum\limits_{s\in O^{-1}(\blacksquare)}\sum\limits_{s'\in O^{-1}(\blacksquare)}T_{\mathcal{M}}(s,c,s')}{\sum\limits_{s\in O^{-1}(\square)}\sum\limits_{s'\in S}T_{\mathcal{M}}(s,c,s')}\\ & = \frac{T(s_2,c,s_2)}{1} \\& = \frac{0,9}{1}=0,9
-\end{flalign*}
-
-
-\section{Important Note}
-I noted a bit too late that the reward function was $(\Omega\times A)^k\to\mathbb{R}$ instead of the more generic $(S\times A)^k\to \mathbb{R}$. From the top of my head, everything should still work, save for a few changes: 
-\begin{itemize}
-	\item Definition of the reward controller $\mathcal{F}$ we change $\Omega$ to $S$.
-	\item Procedure~\ref{procedure:into_reward_controller}, change $\Omega$ to $S$
-	\item The induced MDP in Definition~\ref{def:reward-mdp} should change to  $\mathcal{A}=(V,v_I,A,T_\mathcal{A},\mathcal{R})$ where 
-	\begin{itemize}
-		\item $V=S\times N$, the finite set of states;
-		\item $v_I=\langle s_I,n_I\rangle $, the initial state;
-		\item $A$, the available actions;
-		\item $T_\mathcal{A}: V \times A\to \Pi(V)$ where $o_1=O(s)$ and $o_2=O(s')$ in
-		\begin{equation*}
-			T_\mathcal{A}(\langle s, n\rangle,a)(\langle s',n'\rangle)=
-			\begin{cases}
-				\frac{\sum\limits_{s_1\in O^{-1}(o_1)}\:\sum\limits_{s_2\in O^{-1}(o_2))}T_{\mathcal{M}}(s_1,a,s_2)}{\sum\limits_{s_1\in O^{-1}(o_1)}\sum\limits_{s_{2}\in S}T_{\mathcal{M}}(s,a,s')} &\text{if } \delta(n,s,a)=n' \\
-				\, 0 & \text{otherwise}
-			\end{cases}
-		\end{equation*}
-		\item $\mathcal{R}:V\times A\to\mathbb{R}$ defined as
-		$\mathcal{R}(\langle s, n \rangle, a) = \lambda(n,(s,a))$
-	\end{itemize}
-\end{itemize}
-
-I haven't changed it yet, because I wasn't completely sure. 
 
