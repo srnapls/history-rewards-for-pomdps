@@ -7,7 +7,7 @@
 		\item $S$, the finite set of states;
 		\item $s_I\in S$, the initial state;
 		\item $A$, the finite set of actions;
-		\item $T_{M}:S\times A\to \Pi(S)$, the probabilistic transition function.
+		\item $T:S\times A\to \Pi(S)$, the probabilistic transition function.
 	\end{itemize}
 \end{definition}
 
@@ -23,13 +23,12 @@ We can extend MDPs with a \textit{reward function} $R$ which assign a reward - u
 
 \towrite{Intuitive explanation for reward function - including cost function, including a real-world example}
 
-Let us look at \textit{Markovian reward functions}, which can determine a reward based on the current state, action and obtained state, independent of its history. The most conventional notation is $R:S\times A\to \mathbb{R}$, where we consider the current state and the taken action. Another possible definition is $R:S\times A\times S\to\mathbb{R}$, where  in $R(s,a,s')$ we consider the specific transition from $s$ to $s'$ by using action $a$, or $R:A\to\mathbb{R}$ where in $R(a)$ we only consider the action taken. 
+Let us look at \textit{Markovian reward functions}, which can determine a reward based on the current state, action and obtained state, independent of its history. The most conventional notation is $R:S\times A\to \mathbb{R}$, where we consider the current state and the taken action. Another possible definition is $R:S\times A\times S\to\mathbb{R}$, where  in $R(s,a,s')$ we consider the specific transition from $s$ to $s'$ by using action $a$, or $R:S\to\mathbb{R}$ where in $R(s)$ we only consider the states visited.
 
 \towrite{Real life example of reward function with history}
 
-A reward function wich is dependent of its history is called a \textit{Non-Markovian reward function}. There are a number of different reward functions possible
+A reward function which is dependent of its history is called a \textit{Non-Markovian reward function}. There are a number of different reward functions possible
 \begin{itemize}
-	\item $R:A^*\to\mathbb{R}$ - which only needs all the finite actions used, or;
 	\item $R:S^*\to\mathbb{R}$ - which only looks at the finite states visited, or;
 	\item $R:(S\times A)^*\to\mathbb{R}$ - which looks at the finite (sub)trajectory without the last state, or;
 	\item $R:(S\times A)^*\times S\to \mathbb{R}$ - which looks at the finite (sub)trajectory.
@@ -117,6 +116,7 @@ Based on the definition as presented in \cite{p:mealy}.
 \end{figure}
 
 \section{Reward machine}
+\todo{This is obsolete, since we make the Reward Controller a specific instance of a Mealy Machine where the output character is just a subset of $\mathbb{R}$}
 Based on the definition found in \cite{p:jirp}.
 \begin{definition}
 	A reward machine $(V,v_I,\Sigma,\mathbb{R},\delta,\sigma)$ consists of
@@ -131,12 +131,13 @@ Based on the definition found in \cite{p:jirp}.
 \end{definition}
 A reward machine is a special type of Mealy machine where the output alphabet consist of real values. Instead of simple transforming the input alphabet into an output alphabet, we obtain rewards for making transitions. After reading the input word, the final reward is the sum of all the rewards gathered from the transitions.
 
-The obtained reward after reading a sequence $w\in\Sigma^*$ for an reward machine $(V,v_I,\Sigma,\mathbb{R},\delta,\sigma)$ can be obtained by calculating $\code{FinalReward}(v_I,w)$
+\todo{This can stay, maybe slighty adjusteD?}
+The obtained reward after reading a sequence $w\in\Sigma^*$ for a reward machine $(V,v_I,\Sigma,\mathbb{R},\delta,\sigma)$ can be obtained by calculating $\code{FinalReward}(v_I,w)$
 \begin{equation*} 
 	\code{FinalReward}(v, w) = 
 \begin{cases}
 	\sigma(v,a_0) + \code{FinalReward}(\delta(v,a_0),a_1\dots a_k) & \text{if }w=a_0 a_1 \dots a_k \\
-	\: 0 & \text{if } w=\lambda
+	\: 0 & \text{if } |w|=0
 \end{cases}
 \end{equation*}
 \towrite{Example}

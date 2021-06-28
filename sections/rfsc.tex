@@ -73,7 +73,7 @@ When we get to the end of the transition (so when $i=k-1$), we ensure that the f
 Since all functions of the reward controller need to be deterministic, we need to set the remaining values. All the memory nodes that have not been defined yet, will point towards themselves and thereby ensuring a dead-end through \lineref{l:self_loop}. After all, when reading a sequence and if the transition ends up in a state with a self-loop, there is already a deviation from the sequences over which the reward function is defined. Which in turn means that there will be no reward connected to it. Furthermore, since we only encode the reward in the final transition all the other transitions do not contribute to the final reward. This is solved by simple setting the reward value to zero in \lineref{l:set_zero}.
 
 
-We observe that the amount of memory nodes $|N|$ of the newly created reward controller $\mathcal{F}$ is bounded by $|\Omega|\times|A|\times k$.\\
+We observe that the amount of memory nodes $|N|$ of the newly created reward controller $\mathcal{F}$ is bounded by $(|\Omega|\times|A|)^k$.\\
 
 
 \subsection*{Example}
