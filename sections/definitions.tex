@@ -1,3 +1,36 @@
+\section{Finite Automata}
+\towrite{introduction to dfa}
+
+\begin{definition}[DFA]
+A Deterministic Finite Automata is a tuple $D=(Q,q_0,\Sigma,\delta,F)$ where 
+\begin{itemize}
+\item $Q$, the finite set of states;
+\item $q_0$, the initial state;
+\item $\Sigma$ the input alphabet;
+\item $\delta: Q\times\Sigma\to Q$, the deterministic transition function;
+\item $F\subseteq Q$, the set of final states.
+\end{itemize}
+\end{definition}
+
+\towrite{introduction to lambda star}
+\begin{definition}
+We define $\delta^*:Q\times\Sigma^*\to Q$ where $\delta^*(q,w)$ denotes the state we end up after reading word $w$ starting from state $q$ as follows
+\begin{equation*}
+\delta^*(q,w)=\begin{cases}
+	q &\text{if } w=\epsilon \\
+	\delta^*(\delta(q,a_1),a_2\dots a_n) & \text{if } w=a_1a_2\dots a_n
+	\end{cases}
+\end{equation*}
+\end{definition}
+
+\towrite{introduction to accepted words}
+
+\begin{definition}
+We say the language accepted by a DFA $D=(Q,q_0,\Sigma,\delta,F)$ consists of all the words that start in the begin state and finish in any final state. Thus $L(D)=\{w\in\Sigma^*\mid \delta^*(q_0,w)\in F$.
+\end{definition}
+
+
+
 \section{Markov decision processes}
 
 \towrite{introduction to MDP}
@@ -15,15 +48,14 @@ Note that given $s\in S,a\in A$, we assign a probability distribution over $S$ t
 
 The \textit{available actions} for a state $s$ are given by $A(s)=\{a\in A\mid \exists s'\in S: T(s,a,s')>0\}$. We can give the \textit{possible successors} of state $s$ in a similar matter through $Succ(s)=\{s\in S\mid\exists a\in A : T(s,a,s')>0\}$.
 
-A finite \textit{trajectory} or \textit{run} $\pi$ of an MDP is realization of the stochastic process performed by the MDP denoted by the finite sequence $s_1 a_1 s_2 a_2\dots s_{n-1} a_{n-1} s_n \in (S\times A)^*\times S$. To obtain the last state of a trajectory we can use the following \[last(\pi)=last(s_1 a_1 s_2 a_2\dots s_{n-1} a_{n-1} s_n)=s_n\]
-\towrite{Set notation for finite trajectories}
+A finite \textit{trajectory} or \textit{run} $\pi$ of an MDP is realization of the stochastic process performed by the MDP denoted by the finite sequence $s_1 a_1 s_2 a_2\dots s_{n-1} a_{n-1} s_n \in (S\times A)^*\times S$. To obtain the last state of a trajectory we can use the following \[last(\pi)=last(s_1 a_1 s_2 a_2\dots s_{n-1} a_{n-1} s_n)=s_n\].
 
 \subsection*{Reward function}
 We can extend MDPs with a \textit{reward function} $R$ which assign a reward - usually in $\mathbb{R}$ for taking a certain action $a$ in a state $s$. 
 
 \towrite{Intuitive explanation for reward function - including cost function, including a real-world example}
 
-Let us look at \textit{Markovian reward functions}, which can determine a reward based on the current state, action and obtained state, independent of its history. The most conventional notation is $R:S\times A\to \mathbb{R}$, where we consider the current state and the taken action. Another possible definition is $R:S\times A\times S\to\mathbb{R}$, where  in $R(s,a,s')$ we consider the specific transition from $s$ to $s'$ by using action $a$, or $R:S\to\mathbb{R}$ where in $R(s)$ we only consider the states visited.
+Let us look at \textit{Markovian reward functions}, which can determine a reward based on the current state, action and obtained state, independent of its history. The most conventional notation is $R:S\times A\to \mathbb{R}$, where we consider the current state and the taken action. Another possible definition is $R:S\times A\times S\to\mathbb{R}$, where  in $R(s,a,s')$ we consider the specific transition from $s$ to $s'$ by using action $a$, or $R:S\to\mathbb{R}$ where in $R(s)$ we only consider the visited state $s$. 
 
 \towrite{Real life example of reward function with history}
 
@@ -46,17 +78,9 @@ As stated above, we use reward functions over a MDP to usually argue over an opt
 	A policy for a MDP $M$ is a function $\sigma:(S\times A)^*\times S \to \Pi(A)$, which maps a trajectory $\pi$ to a probability distribution over all actions. 
 \end{definition}
 
-We call a policy \textit{memoryless} if the function only considers $last(\pi)$. The notation $\sigma_k:(S\times A)^{k-1}\times S\to \Pi(S)$, gives a probability distribution when given the trajectory of length $k$ - the $k$ visited states and $k-1$ actions. $\sigma_k(\pi,a)=\sigma_k(\pi)(a)$ gives the probability of using action $a$ after the trajectory $\pi$.
+We call a policy \textit{memoryless} if the function only considers $last(\pi)$. 
 
 \towrite{induced markov chain for removing non-determinism}
-
-\section{Solve for optimal policy}
-\todo{Explain here or refer to paper(s)?}
-\subsection*{Value Iteration}
-
-\subsection*{Policy Iteration}
-
-\subsection*{Linear Programming}
 
 \section{Partial observability}
 \towrite{Introduce pomdp}
@@ -70,7 +94,7 @@ We call a policy \textit{memoryless} if the function only considers $last(\pi)$.
 	\end{itemize}
 \end{definition}
 
-Let $O^{-1}:\Omega\to 2^S$ be the inverse function of the observation function, like so $O^{-1}(o)=\{s\in \mid O(s)=o\}$ in which we simply obtain all states in $S$ that have observation $o$.
+Let $O^{-1}:\Omega\to 2^S$ be the inverse function of the observation function - $O^{-1}(o)=\{s\in \mid O(s)=o\}$ - in which we simply obtain all states in $S$ that have observation $o$.
 Without loss of generality we assume that states with the same observations have the same set of available actions, thus $O(s_1)=O(s_2)\Rightarrow A(s_1)=A(s_2)$.
 
 Since the actual states in a trajectory of the hidden MDP are not visible to the observes, we argue about an \textit{observed trajectory} of the POMDP $\mathcal{M}$. This is not consist of a sequence of states and actions, but instead a sequence of observations are actions, thus an element of $(\Omega\times A)^*\times \Omega$. The set of all possible finite observed trajectories of will be denoted as $ObsSeq^{\mathcal{M}}$.
@@ -83,7 +107,7 @@ We can argue about the observed trajectory through the observation function, whi
 	An observation-based strategy of a POMDP $\mathcal{M}$ is a function $\sigma:ObsSeq^{\mathcal{M}}\to\Pi(A)$ such that $supp(\sigma(O(\pi)))\subseteq A (last(\pi))\ \forall \pi\in(S\times A)^*\times S$.
 \end{definition}
 
-\subsection*{Belief MDP}
+\section{Belief MDP}
 
 
 

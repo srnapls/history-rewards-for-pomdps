@@ -1,0 +1,199 @@
+\section{Given a list of sequences and rewards}
+\towrite{it's a choice that you only get one reward after an input. if a seperate reward sequence is a strict substring of another sequence, they are not added. this can be done by adding the reward to every following node in the created sequence.!!!!!}
+Let's say we are designing a model for an engineer and they want certain observation sequences to connect to a reward. Thus we are given a number of observation sequences $\pi_1,\pi_2,\dots,\pi_n$ together with their associated real valued rewards $r_1,r_2,\dots,r_n$. 
+\begin{definition}
+Given the observation sequences $\pi_1,\pi_2,\dots,\pi_n$ and their associated rewards $r_1,r_2,\dots,r_n$ we define the history-based reward function $R:\Omega^*\to\mathbb{R}$, which we create as follows
+\[R(w) = \begin{cases}
+	r_i &\text{ if } w=\pi_i \text { for } i\in \{1,\dots,n\} \\
+	0   &\text{ otherwise}
+	\end{cases}\]
+	\label{d:created_reward_function}
+\end{definition}
+In $R$ we simply connect the observation sequence $\pi_i$ to their respective reward $r_i$ and every other sequence is connected to zero.\\
+
+We only want to obtain any of the rewards if their associated observation sequence has been observed. Thus we create a reward controller in which we encode the reward in the state. The idea is as follows: if we read the observation sequence and we end up in a certain state $n$, we obtain the reward $\sigma(n)$ in that state. 
+
+Given all the sequences over which the Non-Markovian reward function is defined, let us create a reward controller through the following procedure. Note that we assume that all the sequences are unique.
+\begin{algorithm}[H]
+	\begin{algorithmic}[1]
+		\Procedure{CreateRewardController}{sequences, $R$}
+		\Require sequences
+		\Require $R : \Omega^* \to \mathbb{R}$
+		\State $n_I \gets $ \code{new Node()} \Comment{initial node} \label{l:initial_node}
+		\State $n_F \gets $ \code{new Node()} \Comment{dump node}  \label{l:dump_node}
+		\State \texttt{path}$(n_I)=\epsilon$ \label{l:empty_path}
+		\State $N\gets\{n_I,n_F\}$
+		\ForAll{$\pi=o_1 o_2\dots o_k$ in sequences}
+			\State $n \gets n_I$
+			\For{$i\gets 1,\dots, k$}
+				\If{$\delta(n,o_i)$ is undefined}
+					\State $n'\gets$ \code{new Node()} \Comment{create new memory node} \label{l:new_transition}
+					\State \texttt{path}$(n)=o_1\dots o_i$
+					\State $N \gets N \cup \{n'\}$		
+					\State $\delta(n,o_i) \gets n'$	\label{l:set_transition}
+				\EndIf 
+				\State $n \gets \delta(n,o_i)$     \Comment{update memory node}
+			\EndFor
+			\State $\sigma(n) \gets R(\pi)$ \Comment{set reward} \label{l:set_reward}
+		\EndFor
+		\ForAll{$n\in N$} \Comment{makes $\delta$ and $\sigma$ deterministic}
+			\ForAll{$o\in\Omega$}
+				\If{$\delta(n,o)$ is undefined} \Comment{useless transition}
+					\State $\delta(n,o) \gets n_F$ \label{l:self_loop}
+				\EndIf
+			\EndFor
+			\If{$\sigma(n)$ is undefined}
+				\State $\sigma(n) \gets 0$ \label{l:set_zero}
+			\EndIf
+		\EndFor
+		\State \Return $(N,n_I,\Omega,\mathbb{R},\delta,\sigma)$
+		\EndProcedure
+	\end{algorithmic}
+	\caption{Procedure for turning a list of sequences into a reward controller}
+	\label{procedure:into_reward_controller}
+\end{algorithm}
+
+We start by creating an initial node in \lineref{l:initial_node} and a dump node in \lineref{l:dump_node}. The idea is that, since the reward controller is deterministic, if we need to determine the reward of a sequence that is (for example) longer than a known sequence (with reward), we don't want to end in the state in which the reward is encoded. Thus these zero-reward sequences are passed along to a node which will only consist of self-loops and will have a reward of zero encoded to them.
+
+Then for every sequence which we are given, we walk through it. If we then come across a transition which isn't defined yet, we define it by making a new memory node in \lineref{l:new_transition}, adding it to $N$, and setting the transition to this new node. If the transition already existed, we simply update the memory node. After we are done with reading the sequence, we simply encode the reward into the state itself in \lineref{l:set_reward}.
+
+Then since the reward controller needs to be deterministic, we set the other undefined values. Every other transition that hasn't been made yet, will be transferred to the dump node as mentioned above in \lineref{l:self_loop}. Furthermore, there are still nodes in which the reward is undefined. None of the given sequences ended up in these states, so per \defref{d:created_reward_function} we encode those to zero in \lineref{l:set_zero}.
+
+We observe that the number of memory nodes $|N|$ of the newly created reward controller $\mathcal{F}$ is bounded by $\Omega^k$, where $k=\max_{seq\in sequences} |seq|$.\\
+
+Note that the set of nodes $N$ without $n_F$ together with the memory update function is represents a directed acyclic graph. This indicates for every node $n$ there is an unique path from the initial node $n_I$ to node $n$. This unique path is encoded in the function \texttt{path}$:N\setminus n_F\to\Omega^*$. This function is well-defined, since it's defined for $n_I$ in \lineref{l:empty_path}. Every other time a new node is neccesary, it is created in \lineref{l:new_transition}, and \texttt{path} is then immediately defined for the new node. This \texttt{path} function is needed for proving the following lemma. 
+
+
+\begin{lemma}
+\todo{let maarten read this}
+For any sequence $\pi\in\Omega^*$, let $r=R(\pi)$ be its associated reward. Then $\sigma(\delta^*(n_I,\pi))=r$.
+\begin{proof}
+Let us state that after reading $\pi$, we end up in state $n$, so $n = \delta^*(n_I,\pi)$. \\
+Now if $n=n_F$, we know that the associated reward is zero since $\sigma(n_F)=0$. A sequence can only end up in $n_F$ if it was not a part of the pre-defined sequences and following \defref{d:created_reward_function} the reward is then zero. \\
+If $n\in N\setminus n_F$, we can obtain the unique path to node $n$ through $\texttt{path}(n)$. We know that this is equal to $\pi$, so the associated reward is thus $R(\texttt{path}(n))=R(\pi)=r$.
+\end{proof}
+\end{lemma}
+
+
+\subsection*{Example}
+Say we are given the following sequences and rewards
+\begin{enumerate}
+	\item $\square\ \square\  $ with a reward of 15
+	\item $\blacksquare\ \square\ \blacksquare\ $ with a reward of 20
+	\item $\square\ \square\ \blacksquare\ \square\ $ with a reward of 12
+	\item  $\blacksquare\ $ with a reward of 2
+\end{enumerate}
+
+Following the procedure~\ref{procedure:into_reward_controller} we create the associated reward controller. To show how the procedure works, we will show you the intermediate reward controller after processing every sequence. 
+
+\subsubsection*{After sequence (1)}
+\begin{figure}[H]
+	\centering
+		\begin{tikzpicture}[node distance=3cm,on grid,auto,shorten >=1pt,thick]
+			\node[initial,state] (1) 				{$n_I$};
+			\node[state] (2) [above right=of 1]		{$n_1$};
+			\node[state] (3) [above right=of 2]		{$n_2/15$};
+			\node[state] (9) [right=of 3]            {$n_F$};
+			\path[->] 	(1) edge 	node [above] {$\square$}			(2)
+						(2) edge 	node [above] {$\square$}			(3);
+	\end{tikzpicture}
+\caption{Reward controller after sequence (1)}
+\end{figure}
+
+\subsubsection*{After sequence (2)}
+\begin{figure}[H]
+	\centering
+		\begin{tikzpicture}[node distance=3cm,on grid,auto,shorten >=1pt]
+			\node[initial,state] (0) 				{$n_I$};
+			\node[state] (1) [above right=of 0]		{$n_1$};
+			\node[state] (2) [above right=of 1]		{$n_2/15$};
+			\node[state] (3) [below right=of 0]      {$n_3$};
+			\node[state] (4) [above right=of 3]      {$n_4$};
+			\node[state] (5) [below right=of 4]      {$n_5/20$};
+			\node[state] (8) [right=of 5]            {$n_F$};
+			\path[->] 	(0) edge 	node [above] {$\square$}			(1)
+							edge    node [above] {$\blacksquare$}	(3)
+						(1) edge 	node [above] {$\square$}			(2)
+						(3) edge    node [above] {$\square$}        	(4)
+						(4) edge		node [above] {$\blacksquare$}	(5);
+	\end{tikzpicture}
+\caption{Reward controller after sequence (1) and (2)}
+\end{figure}
+
+\subsubsection*{After sequence (3)}
+\begin{figure}[H]
+	\centering
+		\begin{tikzpicture}[node distance=3cm,on grid,auto,shorten >=1pt]
+			\node[initial,state] (0) 				{$n_I$};
+			\node[state] (1) [above right=of 0]		{$n_1$};
+			\node[state] (2) [above right=of 1]		{$n_2/15$};
+			\node[state] (3) [below right=of 0]      {$n_3$};
+			\node[state] (4) [above right=of 3]      {$n_4$};
+			\node[state] (5) [below right=of 4]      {$n_5/20$};
+			\node[state] (6) [below right=of 2]      {$n_6$};
+			\node[state] (7) [above right=of 6]      {$n_7/12$};
+			\node[state] (8) [right=of 7]            {$n_F$};
+			\path[->] 	(0) edge 	node [above] {$\square$}			(1)
+							edge    node [above] {$\blacksquare$}	(3)
+						(1) edge 	node [above] {$\square$}			(2)
+						(2) edge		node [above] {$\blacksquare$}	(6)
+						(3) edge    node [above] {$\square$}        	(4)
+						(4) edge		node [above] {$\blacksquare$}	(5)
+						(6) edge		node [above] {$\square$}			(7)
+						;
+	\end{tikzpicture}
+\caption{Reward controller after sequence (1), (2) and (3)}
+\end{figure}
+
+\subsubsection*{After sequence (4)}
+\begin{figure}[H]
+	\centering
+		\begin{tikzpicture}[node distance=3cm,on grid,auto,shorten >=1pt]
+			\node[initial,state] (0) 				{$n_I$};
+			\node[state] (1) [above right=of 0]		{$n_1$};
+			\node[state] (2) [above right=of 1]		{$n_2/15$};
+			\node[state] (3) [below right=of 0]      {$n_3/2$};
+			\node[state] (4) [above right=of 3]      {$n_4$};
+			\node[state] (5) [below right=of 4]      {$n_5/20$};
+			\node[state] (6) [below right=of 2]      {$n_6$};
+			\node[state] (7) [above right=of 6]      {$n_7/12$};
+			\node[state] (8) [right=of 7]            {$n_F$};
+			\path[->] 	(0) edge 	node [above] {$\square$}			(1)
+							edge    node [above] {$\blacksquare$}	(3)
+						(1) edge 	node [above] {$\square$}			(2)
+						(2) edge		node [above] {$\blacksquare$}	(6)
+						(3) edge    node [above] {$\square$}        	(4)
+						(4) edge		node [above] {$\blacksquare$}	(5)
+						(6) edge		node [above] {$\square$}			(7)
+						;
+	\end{tikzpicture}
+\caption{Reward controller after sequence (1), (2) and (3)}
+\end{figure}
+
+\subsubsection*{Finalized Reward Controller}
+\begin{figure}[H]
+	\centering
+		\begin{tikzpicture}[node distance=3cm,on grid,auto,shorten >=1pt]
+			\node[initial,state] (0) 				{$n_I$};
+			\node[state] (1) [above right=of 0]		{$n_1$};
+			\node[state] (2) [above right=of 1]		{$n_2/15$};
+			\node[state] (3) [below right=of 0]      {$n_3/2$};
+			\node[state] (4) [above right=of 3]      {$n_4$};
+			\node[state] (5) [below right=of 4]      {$n_5/20$};
+			\node[state] (6) [below right=of 2]      {$n_6$};
+			\node[state] (7) [above right=of 6]      {$n_7/12$};
+			\node[state] (8) [right=of 7]            {$n_F$};
+			\path[->] 	(0) edge 	node [above] {$\square$}			(1)
+							edge    node [above] {$\blacksquare$}	(3)
+						(1) edge 	node [above] {$\square$}			(2)
+						(2) edge		node [above] {$\blacksquare$}	(6)
+						(3) edge    node [above] {$\square$}        	(4)
+						(4) edge		node [above] {$\blacksquare$}	(5)
+						(6) edge		node [above] {$\square$}			(7)
+						;
+			\path[->,dashed] (1) edge		node [above] {} (8);
+	\end{tikzpicture}
+\caption{Reward controller after sequence (1), (2) and (3)}
+\end{figure}
+\todo{finish this}
+
