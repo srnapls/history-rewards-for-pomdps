@@ -21,12 +21,14 @@ We define $\delta^*:Q\times\Sigma^*\to Q$ where $\delta^*(q,w)$ denotes the stat
 	\delta^*(\delta(q,a_1),a_2\dots a_n) & \text{if } w=a_1a_2\dots a_n
 	\end{cases}
 \end{equation*}
+\label{d:delta_star}
 \end{definition}
 
 \towrite{introduction to accepted words}
 
 \begin{definition}
-We say the language accepted by a DFA $D=(Q,q_0,\Sigma,\delta,F)$ consists of all the words that start in the begin state and finish in any final state. Thus $L(D)=\{w\in\Sigma^*\mid \delta^*(q_0,w)\in F$.
+We say the language accepted by a DFA $D=(Q,q_0,\Sigma,\delta,F)$ consists of all the words that start in the begin state and finish in any final state. Thus $L(D)=\{w\in\Sigma^*\mid \delta^*(q_0,w)\in F\}$.
+\label{d:accepted_language}
 \end{definition}
 
 
