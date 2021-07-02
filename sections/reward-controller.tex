@@ -9,7 +9,7 @@ Based on the history-based reward function $R:\Omega^*\to\mathbb{R}$ of a POMDP 
 
 %todo: basically the same as a moore machine
 
-%idea: when the word is done reading, you then obtain the reward. Normally when using a Moore machine you get the reward every time you enter it. However, since we won't be using the reward controller as a usual moore machine, it's fine to encode it in the state. We will see in the next chapter how we then obtain the reward.
+%idea: when the word is done reading, you then obtain the reward. Normally when using a Moore machine you get the reward every time you enter it. However, since we won't be using the reward controller as a usual moore machine, it's fine to encodew it in the state. We will see in the next chapter how we then obtain the reward.
 
 \begin{definition}
 	A reward controller $\mathcal{F}$ is a reward machine $(N,n_I, \Omega, \mathbb{R}, \delta, \lambda)$, where
@@ -23,7 +23,18 @@ Based on the history-based reward function $R:\Omega^*\to\mathbb{R}$ of a POMDP 
 	\end{itemize}
 \end{definition}
 
-\towrite{define $\delta^*$ just like DFA}
+\towrite{transition to delta star}
+
+\begin{definition}
+We define $\delta^*:N\times\Omega^*\to N$ where $\delta^*(n,w)$ denotes the state we end up after reading word $\pi$ starting from state $n$ as follows
+\begin{equation*}
+\delta^*(n,\pi)=\begin{cases}
+	n &\text{if } \pi=\epsilon \\
+	\delta^*(\delta(n,o_1),o_2\dots o_n) & \text{if } \pi=o_1 o_2\dots o_n
+	\end{cases}
+\end{equation*}
+\label{d:delta_star_rc}
+\end{definition}
 
 
 \input{sections/reward-controller/sequences.tex}

@@ -1,6 +1,5 @@
 \section{Given a list of sequences and rewards}
-\towrite{it's a choice that you only get one reward after an input. if a seperate reward sequence is a strict substring of another sequence, they are not added. this can be done by adding the reward to every following node in the created sequence.!!!!!}
-Let's say we are designing a model for an engineer and they want certain observation sequences to connect to a reward. Thus we are given a number of observation sequences $\pi_1,\pi_2,\dots,\pi_n$ together with their associated real valued rewards $r_1,r_2,\dots,r_n$. 
+Let's say we are designing a model for an engineer and they want certain observation sequences to connect to a reward. Thus we are given a number of observation sequences $\pi_1,\pi_2,\dots,\pi_n$ together with their associated real valued rewards $r_1,r_2,\dots,r_n$.
 \begin{definition}
 Given the observation sequences $\pi_1,\pi_2,\dots,\pi_n$ and their associated rewards $r_1,r_2,\dots,r_n$ we define the history-based reward function $R:\Omega^*\to\mathbb{R}$, which we create as follows
 \[R(w) = \begin{cases}
@@ -11,7 +10,7 @@ Given the observation sequences $\pi_1,\pi_2,\dots,\pi_n$ and their associated r
 \end{definition}
 In $R$ we simply connect the observation sequence $\pi_i$ to their respective reward $r_i$ and every other sequence is connected to zero.\\
 
-We only want to obtain any of the rewards if their associated observation sequence has been observed. Thus we create a reward controller in which we encode the reward in the state. The idea is as follows: if we read the observation sequence and we end up in a certain state $n$, we obtain the reward $\sigma(n)$ in that state. 
+We only want to obtain any of the rewards if their associated observation sequence has been observed in its entirety. Thus we create a reward controller in which we encode the reward in the state we end up in after reading the entire sequence. The idea is as follows: if we read the observation sequence and we end up in a certain state $n$, we obtain the reward $\sigma(n)$ in that state. It's important to note that if we, for example, have $R(\blacksquare\blacksquare)=2$ and $R(\blacksquare\blacksquare\square)=3$ and we read $\blacksquare\blacksquare\square$ we will only obtain reward $3$. 
 
 Given all the sequences over which the Non-Markovian reward function is defined, let us create a reward controller through the following procedure. Note that we assume that all the sequences are unique.
 \begin{algorithm}[H]
@@ -59,18 +58,18 @@ Then for every sequence which we are given, we walk through it. If we then come 
 
 Then since the reward controller needs to be deterministic, we set the other undefined values. Every other transition that hasn't been made yet, will be transferred to the dump node as mentioned above in \lineref{l:self_loop}. Furthermore, there are still nodes in which the reward is undefined. None of the given sequences ended up in these states, so per \defref{d:created_reward_function} we encode those to zero in \lineref{l:set_zero}.
 
-We observe that the number of memory nodes $|N|$ of the newly created reward controller $\mathcal{F}$ is bounded by $\Omega^k + 1$, where $k=\max\limits_{seq\in sequences} |seq|$.\\
+We observe that the number of memory nodes $|N|$ of the newly created reward controller $\mathcal{F}$ is bounded by $|\Omega|^k + 1$, where $k=\max\limits_{seq\in sequences} |seq|$.\\
 
-Note that the set of nodes $N$ without $n_F$ together with the memory update function is represents a directed acyclic graph. This indicates for every node $n$ there is an unique path from the initial node $n_I$ to node $n$. This unique path is encoded in the function \texttt{path}$:N\setminus n_F\to\Omega^*$. This function is well-defined, since it's defined for $n_I$ in \lineref{l:empty_path}. Every other time a new node is neccesary, it is created in \lineref{l:new_transition}, and \texttt{path} is then immediately defined for the new node. This \texttt{path} function is needed for proving the following lemma. 
+Note that the set of nodes $N$ without $n_F$ together with the memory update function is represents a directed acyclic graph. This indicates for every node $n$ there is an unique path from the initial node $n_I$ to node $n$. This unique path is encoded in the function \texttt{path}$:N\setminus\{n_F\}\to\Omega^*$. This function is well-defined, since it's defined for $n_I$ in \lineref{l:empty_path}. Every other time a new node is neccesary, it is created in \lineref{l:new_transition}, and \texttt{path} is then immediately defined for the new node. This \texttt{path} function is needed for proving the following lemma. 
 
 
 \begin{lemma}
 \todo{let maarten read this}
 For any sequence $\pi\in\Omega^*$, let $r=R(\pi)$ be its associated reward. Then $\sigma(\delta^*(n_I,\pi))=r$.
 \begin{proof}
-Let us state that after reading $\pi$, we end up in state $n$, so $n = \delta^*(n_I,\pi)$. \\
-Now if $n=n_F$, we know that the associated reward is zero since $\sigma(n_F)=0$. A sequence can only end up in $n_F$ if it was not a part of the pre-defined sequences and following \defref{d:created_reward_function} the reward is then zero. \\
-If $n\in N\setminus n_F$, we can obtain the unique path to node $n$ through $\texttt{path}(n)$. We know that this is equal to $\pi$, so the associated reward is thus $R(\texttt{path}(n))=R(\pi)=r$.
+Let us state that after reading $\pi$, we end up in state $n$, i.e. $n = \delta^*(n_I,\pi)$. \\
+Now if $n=n_F$, we know that the associated reward is zero since $\sigma(n_F)=0$ per construction. A sequence can only end up in $n_F$ if it was not a part of the pre-defined sequences and following \defref{d:created_reward_function} the reward is then zero. \\
+If $n\in N\setminus \{n_F\}$, we can obtain the unique path to node $n$ through $\texttt{path}(n)$. We know that this is equal to $\pi$, so the associated reward is thus $R(\texttt{path}(n))=R(\pi)=r$.
 \end{proof}
 \end{lemma}
 
@@ -174,15 +173,15 @@ Following the procedure~\ref{procedure:into_reward_controller} we create the ass
 \begin{figure}[H]
 	\centering
 		\begin{tikzpicture}[node distance=3cm,on grid,auto,shorten >=1pt]
-			\node[initial,state] (0) 				{$n_I$};
-			\node[state] (1) [above right=of 0]		{$n_1$};
+			\node[initial,state] (0) 				{$n_I/0$};
+			\node[state] (1) [above right=of 0]		{$n_1/0$};
 			\node[state] (2) [above right=of 1]		{$n_2/15$};
 			\node[state] (3) [below right=of 0]      {$n_3/2$};
-			\node[state] (4) [above right=of 3]      {$n_4$};
+			\node[state] (4) [above right=of 3]      {$n_4/0$};
 			\node[state] (5) [below right=of 4]      {$n_5/20$};
-			\node[state] (6) [below right=of 2]      {$n_6$};
+			\node[state] (6) [below right=of 2]      {$n_6/0$};
 			\node[state] (7) [above right=of 6]      {$n_7/12$};
-			\node[state] (8) [right=of 7]            {$n_F$};
+			\node[state] (8) [right=of 7]            {$n_F/0$};
 			\path[->] 	(0) edge 	node [above] {$\square$}			(1)
 							edge    node [above] {$\blacksquare$}	(3)
 						(1) edge 	node [above] {$\square$}			(2)

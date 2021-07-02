@@ -17,9 +17,11 @@
 \usepackage{algorithm}
 \usepackage{caption}
 \usepackage{subcaption}
+\usepackage{cleveref}
 \usepackage[noend]{algpseudocode}
 \graphicspath{{D:/Thesis/img/}}
 \usetikzlibrary{automata, positioning, arrows}
+\captionsetup[subfigure]{labelfont=rm}
 
 \input{commands}
 
@@ -82,7 +84,7 @@
 	\input{sections/reward-controller.tex}
 	
 	\chapter{Obtaining policy}
-	\input{sections/reward-machine.tex}
+	\input{sections/induced_pomdp.tex}
 	
 	
 	%\chapter{Belief-based Rewards}

@@ -80,7 +80,7 @@ As stated above, we use reward functions over a MDP to usually argue over an opt
 	A policy for a MDP $M$ is a function $\sigma:(S\times A)^*\times S \to \Pi(A)$, which maps a trajectory $\pi$ to a probability distribution over all actions. 
 \end{definition}
 
-We call a policy \textit{memoryless} if the function only considers $last(\pi)$. 
+We call a policy \textit{memoryless} if the function only considers $last(\pi)$ in deciding the actions. 
 
 \towrite{induced markov chain for removing non-determinism}
 
@@ -123,7 +123,7 @@ Based on the definition as presented in \cite{p:moore}.
 		\item $\Sigma$, the finite set of input characters - the input alphabet;
 		\item $O$, the finite set of output characters - the output alphabet;
 		\item $\delta: Q\times \Sigma\to Q$, the input transition function, and;
-		\item $\sigma : Q\times O$, the output transition function.
+		\item $\sigma : Q\to O$, the output transition function.
 	\end{itemize}
 \end{definition}
 \subsection*{Example}
