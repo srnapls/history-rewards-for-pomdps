@@ -1,41 +1,10 @@
-\section{Definition}
+The problem with history-based rewards is that we have to remember all the previous observations and only then calculate the associated reward, instead of simply calculating the reward per transition. 
 
+In this chapter we are going to take the history-based reward function and transform it into something more tangible. We are going to transform it into an abstract machine that keeps track of its history and rewards associated. 
 
-\towrite{introduction}
-The idea is to transform the history-based reward function into something more tangible. We transform it is so that we can obtain the reward per step instead of only at the end of a sequence.
+First we'll give a formal definition of the machine we are using to represent the reward function. In \secref{sec:rc-sequences} we will describe how to obtain such a machine given a list of observation sequences together with their rewards and in \secref{sec:rc-regex} we do the same but for a series of regular expressions. 
 
-
-Based on the history-based reward function $R:\Omega^*\to\mathbb{R}$ of a POMDP $\mathcal{M}$, we build a reward controller that mimics its behavior.
-
-%todo: basically the same as a moore machine
-
-%idea: when the word is done reading, you then obtain the reward. Normally when using a Moore machine you get the reward every time you enter it. However, since we won't be using the reward controller as a usual moore machine, it's fine to encodew it in the state. We will see in the next chapter how we then obtain the reward.
-
-\begin{definition}
-	A reward controller $\mathcal{F}$ is a reward machine $(N,n_I, \Omega, \mathbb{R}, \delta, \lambda)$, where
-	\begin{itemize}
-		\item $N$, the finite set of memory nodes;
-		\item $n_I\in N$, the initial memory node;
-		\item $\Omega$, the input alphabet;
-		\item $\mathbb{R}$, the output alphabet;
-		\item $\delta: N \times \Omega \to N$, the memory update;
-		\item $\sigma: N \to \mathbb{R}$, the reward output. 
-	\end{itemize}
-\end{definition}
-
-\towrite{transition to delta star}
-
-\begin{definition}
-We define $\delta^*:N\times\Omega^*\to N$ where $\delta^*(n,w)$ denotes the state we end up after reading word $\pi$ starting from state $n$ as follows
-\begin{equation*}
-\delta^*(n,\pi)=\begin{cases}
-	n &\text{if } \pi=\epsilon \\
-	\delta^*(\delta(n,o_1),o_2\dots o_n) & \text{if } \pi=o_1 o_2\dots o_n
-	\end{cases}
-\end{equation*}
-\label{d:delta_star_rc}
-\end{definition}
-
+\input{sections/reward-controller/definition.tex}
 
 \input{sections/reward-controller/sequences.tex}
 

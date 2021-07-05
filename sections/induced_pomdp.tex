@@ -1,9 +1,11 @@
 \towrite{introduction}
 %add extra final state, in which we encode the actual transitions, the end state will be used to marked you are done. 
 
+%if take product construction over only S and N without the s_f, o_f and and, we would get a reward every time we go accross that specific state, but! we only want reward when we are done.
+
 \begin{definition}
 	\label{def:reward-mdp}
-	The induced POMDP for reward controller $\mathcal{F}=(N, n_I, \Omega, \mathcal{R}, \delta, \lambda)$ on a POMDP $\mathcal{M}=(M,\Omega,Obs)$ where $M=(S,s_I,A,T_{M})$ is a tuple $\mathcal{M_\mathcal{F}}=(M_\mathcal{F},\Omega',Obs')$ where 
+	The induced POMDP for reward controller $\mathcal{F}=(N, n_I, \Omega, \mathcal{R}, \delta, \lambda)$ on a POMDP $\mathcal{M}=(M,\Omega,O)$ where $M=(S,s_I,A,T_{M})$ is a tuple $\mathcal{M_\mathcal{F}}=(M_\mathcal{F},\Omega',O')$ where 
 	\begin{itemize}
 		\item $M_\mathcal{F} = (S',s'_I,A',T_{M_\mathcal{F}},\mathcal{R})$, the hidden MDP defined as follows
 		\begin{itemize}
@@ -26,15 +28,48 @@
 					\end{cases}
 				\end{equation*}
 		\end{itemize}
-		\item $\Omega'=\Omega \cup \{o_F\}$, the observation spate
-		\item $Obs':S'\to \Omega'$ where 
+		\item $\Omega'=\Omega \cup \{o_F\}$, the Oervation spate
+		\item $O':S'\to \Omega'$ where 
 			\begin{equation*}
-				Obs'(s)= \begin{cases}
-				Obs(s') & \text{if } s=\langle s',n\rangle\\
+				O'(s)= \begin{cases}
+				O(s') & \text{if } s=\langle s',n\rangle\\
 				o_F & \text{if } s=s_F
 				\end{cases}
 			\end{equation*}
 		\end{itemize}
 \end{definition}
+
+
+\section{Example}
+\begin{figure}[H]
+	\centering
+		\begin{tikzpicture}[node distance=1cm,on grid,auto]
+			\node[initial,state] (0) 			{$s_0$};
+			\node[dot]  (0a) [below=of 0] {};
+			\node[dot]  (0b) [right=of 0] {};
+			\node[state] (1) [right= 7cm of 0]		{$s_1$};
+			\node[dot] (1a) [below=of 1] {};
+			\node[dot] (1b) [above=of 1] {};
+			\node[state,fill=black,text=white] (2) [below right= 5 cm of 0]		{$s_2$};
+			\node[dot] (2c) [above=of 2] {};
+			\path[-]    (0) edge [] node[right] {$a$} (0a)
+                            edge [] node[above] {$b$} (0b)
+                        (1) edge [] node[left]  {$a$} (1a)
+                            edge [] node[left]  {$b$} (1b)
+                        (2) edge [] node[right] {$c$} (2c);
+			\path[->] (0a)  edge[bend left] 	node [left] {$0.5$}  (0)
+			                edge[bend right] node [below] {$0.5$}  (2)
+			          (0b)  edge[]              node [above] {$0.25$} (1)
+			                edge[bend right]    node [right] {$0.75$} (2)
+			          (1a)  edge[bend right]     node [right] {$0.25$} (1)
+			                edge[bend left]    node [left]  {$0.75$} (2)
+			          (1b)  edge[bend left]    node [right] {$0.25$} (1)
+			                edge[bend right]     node [above] {$0.75$} (0)
+			          (2c)  edge[bend right]     node [left] {$0.9$}  (2)
+			                edge[]    node [right] {$0.1$}  (1);
+	\end{tikzpicture}
+\caption{POMDP with $\Omega=\{\square,\blacksquare\}$}
+	\label{f:pomdp}
+\end{figure}
 
 

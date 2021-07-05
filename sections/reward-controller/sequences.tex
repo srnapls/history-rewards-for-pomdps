@@ -1,4 +1,5 @@
-\section{Given a list of sequences and rewards}
+\section{From a list of sequences}
+\label{sec:rc-sequences}
 Let's say we are designing a model for an engineer and they want certain observation sequences to connect to a reward. Thus we are given a number of observation sequences $\pi_1,\pi_2,\dots,\pi_n$ together with their associated real valued rewards $r_1,r_2,\dots,r_n$.
 \begin{definition}
 Given the observation sequences $\pi_1,\pi_2,\dots,\pi_n$ and their associated rewards $r_1,r_2,\dots,r_n$ we define the history-based reward function $R:\Omega^*\to\mathbb{R}$, which we create as follows
@@ -71,6 +72,7 @@ Let us state that after reading $\pi$, we end up in state $n$, i.e. $n = \delta^
 Now if $n=n_F$, we know that the associated reward is zero since $\sigma(n_F)=0$ per construction. A sequence can only end up in $n_F$ if it was not a part of the pre-defined sequences and following \defref{d:created_reward_function} the reward is then zero. \\
 If $n\in N\setminus \{n_F\}$, we can obtain the unique path to node $n$ through $\texttt{path}(n)$. We know that this is equal to $\pi$, so the associated reward is thus $R(\texttt{path}(n))=R(\pi)=r$.
 \end{proof}
+\label{lem:reward_sequence}
 \end{lemma}
 
 
@@ -170,6 +172,8 @@ Following the procedure~\ref{procedure:into_reward_controller} we create the ass
 \end{figure}
 
 \subsubsection*{Finalized Reward Controller}
+Now we complete the reward controller by completing the rest of the transitions. Note that \texttt{path} was only used for proving \lemref{lem:reward_sequence}, so it is not included in any of the figures. 
+In \figureref{f:final_reward_controller_regex} the dashed line denotes all the other possible letters for which the transition function $\lambda$ wasn't defined. 
 \begin{figure}[H]
 	\centering
 		\begin{tikzpicture}[node distance=3cm,on grid,auto,shorten >=1pt]
@@ -201,7 +205,4 @@ Following the procedure~\ref{procedure:into_reward_controller} we create the ass
 \caption{Final reward controller}
 \label{f:final_reward_controller_regex}
 \end{figure}
- In \figureref{f:final_reward_controller_regex} the dashed line denotes all the other possible letters for which the transition function $\lambda$ wasn't defined. 
-
-\todo{finish this}
 

@@ -1,8 +1,9 @@
 \section{Finite Automata}
-\towrite{introduction to dfa}
+\subsection{Deterministic Finite Automata}
+Simple deterministic processes can be easily modeled with the help of a finite-state machine. Specifically, if we are interested in wether an input string should be accepted, we can use Deterministic Finite Automata.
 
 \begin{definition}[DFA]
-A Deterministic Finite Automata is a tuple $D=(Q,q_0,\Sigma,\delta,F)$ where 
+A deterministic finite automaton is a tuple $D=(Q,q_0,\Sigma,\delta,F)$ where 
 \begin{itemize}
 \item $Q$, the finite set of states;
 \item $q_0$, the initial state;
@@ -12,7 +13,26 @@ A Deterministic Finite Automata is a tuple $D=(Q,q_0,\Sigma,\delta,F)$ where
 \end{itemize}
 \end{definition}
 
-\towrite{introduction to lambda star}
+
+\subsection*{Example}
+\begin{figure}[H]
+	\centering
+		\begin{tikzpicture}[node distance=3cm,on grid,auto,shorten >=1pt]
+			\node[initial,state,accepting] (0) 				{$q_0$};
+			\node[state] (1) [above right=of 0]		{$q_1$};
+			\node[state] (2) [below right=of 0]		{$q_2$};
+			\path[->] 	(0) edge 	node [below] {$a$}	(1)
+							edge [bend right]   node [below] {$b$}	(2)
+						(1) edge 	node [left] {$a$}	(2)
+							edge [bend right]    node [above] {$b$}	(0)
+						(2) edge 	node [above] {$a$}	(0)
+							edge [bend right]    node [right] {$b$}	(1);
+	\end{tikzpicture}
+\caption{DFA over $\Sigma=\{a,b\}$ which accepts words if the number of $a$'s and $b$'s are equal modulo $3$.}
+\end{figure}
+
+Since we are interested in wether an input string should be accepted or not, we are specifically interested in how a DFA handles certain words and where a DFA will finish after reading a word. Since DFAs are deterministic, this can be easily described. 
+
 \begin{definition}
 We define $\delta^*:Q\times\Sigma^*\to Q$ where $\delta^*(q,w)$ denotes the state we end up after reading word $w$ starting from state $q$ as follows
 \begin{equation*}
@@ -24,16 +44,37 @@ We define $\delta^*:Q\times\Sigma^*\to Q$ where $\delta^*(q,w)$ denotes the stat
 \label{d:delta_star}
 \end{definition}
 
-\towrite{introduction to accepted words}
-
 \begin{definition}
 We say the language accepted by a DFA $D=(Q,q_0,\Sigma,\delta,F)$ consists of all the words that start in the begin state and finish in any final state. Thus $L(D)=\{w\in\Sigma^*\mid \delta^*(q_0,w)\in F\}$.
 \label{d:accepted_language}
 \end{definition}
 
 
+\subsection{Moore machine}
+\towrite{why what how}
+Based on the definition as presented in \cite{p:moore}.
+\begin{definition}
+	A Moore machine is a tuple $(Q,q_0,\Sigma,O,\delta,\sigma)$ where
+	\begin{itemize}
+		\item $Q$, the finite set of states;
+		\item $q_0\in Q$, the initial state;
+		\item $\Sigma$, the finite set of input characters - the input alphabet;
+		\item $O$, the finite set of output characters - the output alphabet;
+		\item $\delta: Q\times \Sigma\to Q$, the input transition function, and;
+		\item $\sigma : Q\to O$, the output transition function.
+	\end{itemize}
+\end{definition}
+\subsection*{Example}
+\towrite{example moore machine -- traditional sense}
 
-\section{Markov decision processes}
+\section{Markov Processes}
+Some processes are not deterministic, but instead rely on probabilities.
+\towrite{specifically markovian -- only The probability of the next event is only dependent on the current event. } 
+
+\towrite{introduction..}
+
+
+\subsection{Markov decision processes}
 
 \towrite{introduction to MDP}
 \begin{definition}[MDP]
@@ -52,7 +93,7 @@ The \textit{available actions} for a state $s$ are given by $A(s)=\{a\in A\mid \
 
 A finite \textit{trajectory} or \textit{run} $\pi$ of an MDP is realization of the stochastic process performed by the MDP denoted by the finite sequence $s_1 a_1 s_2 a_2\dots s_{n-1} a_{n-1} s_n \in (S\times A)^*\times S$. To obtain the last state of a trajectory we can use the following \[last(\pi)=last(s_1 a_1 s_2 a_2\dots s_{n-1} a_{n-1} s_n)=s_n\].
 
-\subsection*{Reward function}
+\subsubsection*{Rewards}
 We can extend MDPs with a \textit{reward function} $R$ which assign a reward - usually in $\mathbb{R}$ for taking a certain action $a$ in a state $s$. 
 
 \towrite{Intuitive explanation for reward function - including cost function, including a real-world example}
@@ -73,7 +114,7 @@ The reward function we will be using is the Non-Markovian reward function which 
 \towrite{Increasing k creates increased reward}
 
 
-\subsection*{Policy}
+\subsubsection*{Policy}
 As stated above, we use reward functions over a MDP to usually argue over an optimized expected reward. After retrieving such an optimum, the question remains on how to actually obtain this value. We wish to know what strategy to apply path to take to obtain this value. For this we use strategies, or often called policies. 
 
 \begin{definition}
@@ -82,9 +123,7 @@ As stated above, we use reward functions over a MDP to usually argue over an opt
 
 We call a policy \textit{memoryless} if the function only considers $last(\pi)$ in deciding the actions. 
 
-\towrite{induced markov chain for removing non-determinism}
-
-\section{Partial observability}
+\subsection{Partial observability}
 \towrite{Introduce pomdp}
 
 \begin{definition}[POMDP]
@@ -92,7 +131,7 @@ We call a policy \textit{memoryless} if the function only considers $last(\pi)$ 
 	\begin{itemize}
 		\item $M=(S,s_I,A,T)$, the hidden MDP;
 		\item $\Omega$, the finite set of observations;
-		\item $O:S\to \Omega$, the observation function. %or use O: S x A -> \Omega ?
+		\item $O:S\to \Omega$, the observation function. 
 	\end{itemize}
 \end{definition}
 
@@ -104,27 +143,36 @@ Since the actual states in a trajectory of the hidden MDP are not visible to the
 We can argue about the observed trajectory through the observation function, which will be extended over trajectories, like so
 \[O(\pi)=O(s_1 a_1 s_2 a_2\dots s_{n-1} a_{n-1} s_n) = O(s_1) a_1 O(s_2) a_2\dots O(s_{n-1}) a_{n-1} O(s_n)\]
 
-\subsection*{Policy}
+\towrite{pomdp with reward}
+
+\subsubsection*{Policy}
 \begin{definition}
 	An observation-based strategy of a POMDP $\mathcal{M}$ is a function $\sigma:ObsSeq^{\mathcal{M}}\to\Pi(A)$ such that $supp(\sigma(O(\pi)))\subseteq A (last(\pi))\ \forall \pi\in(S\times A)^*\times S$.
 \end{definition}
 
-\section{Belief MDP}
+\subsection{Belief MDP}
 
-
-
-\section{Moore machine}
-Based on the definition as presented in \cite{p:moore}.
-\begin{definition}
-	A Mealy machine is a tuple $(Q,q_0,\Sigma,O,\delta,\sigma)$ where
-	\begin{itemize}
-		\item $Q$, the finite set of states;
-		\item $q_0\in Q$, the initial state;
-		\item $\Sigma$, the finite set of input characters - the input alphabet;
-		\item $O$, the finite set of output characters - the output alphabet;
-		\item $\delta: Q\times \Sigma\to Q$, the input transition function, and;
-		\item $\sigma : Q\to O$, the output transition function.
-	\end{itemize}
+\begin{definition}[Belief state]
+A belief state $b:S\to [0,1]$ is a probability distribution over $S$. For every state $s$, $b(s)$ denotes the probability of currently being in state $s$.
 \end{definition}
-\subsection*{Example}
-\towrite{example moore machine -- traditional sense}
+
+\towrite{introduction to beflief update}
+\begin{definition}[Belief update]
+Given the current belief state $b$, then after performing action $a\in A$ and then observing observation $o$, we update the belief state. The updated belief state $b^{a,o}$ can be calculated as
+\[b^{a,o}(s')= \frac{\text{Pr}(o\mid s',a)}{\text{Pr}(o\mid a,b)}\sum\limits_{s\in S}T(s,a,s')b(s)\]
+\end{definition}
+\towrite{connection to belief mdp}
+
+\begin{definition}[Belief MDP]
+For a POMDP $\mathcal{M}=(M,\Omega,O)$ where $M=(S,s_I,A,T)$ as defined above, the associated belief MDP is a tuple $(B,A,\tau,\rho)$ where 
+\begin{itemize}
+\item $B=\Pi(S)$, the set of belief states;
+\item $A$, the set of actions;
+\item $\tau:B\times A\times B$, the transition function where 
+\[\tau(b,a,b')= \text{Pr}(b'\mid a,b)=\sum\limits_{o\in\Omega}\text{Pr}(b'\mid a,b,o)\cdot \text{Pr}(o\mid a,b)\]
+\end{itemize}
+\end{definition}
+
+\subsubsection*{Reward}
+If the POMDP is extended with a reward function $R$, the belief MDP will obtain a reward function $\rho$. If $R:S\times A\to \mathbb{R}$, then $\rho:B\times A\to \sum\limits_{s\in S}b(s)R(s,a)$. 
+
