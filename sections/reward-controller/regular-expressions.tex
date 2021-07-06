@@ -148,9 +148,9 @@ R_A(q_{1,2})&=15
 \begin{figure}[H]
 	\centering
 		\begin{tikzpicture}[node distance=4cm,on grid,auto]
-			\node[initial,state] (1) 			{$\langle q_{0,1}, q_{0,2} \rangle /25$};
+			\node[initial,state] (1) 			{$\langle q_{0,1}, q_{0,2} \rangle /10$};
 			\node[state] (2) [right=of 1]		{$\langle q_{1,1}, q_{0,2} \rangle /0$};
-			\node[state] (3) [below=of 1]		{$\langle q_{0,1}, q_{1,2} \rangle /10$};
+			\node[state] (3) [below=of 1]		{$\langle q_{0,1}, q_{1,2} \rangle /25$};
 			\node[state] (4) [right=of 3]		{$\langle q_{1,1}, q_{1,2} \rangle /15$};
 			\path[->] 	(1) edge[bend left] 	node [above] {$\square$}			(2)
 							edge[bend left] 	node [left] {$\blacksquare$}			(3)
