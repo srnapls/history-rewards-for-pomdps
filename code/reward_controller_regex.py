@@ -7,77 +7,68 @@ from dfa.draw import write_dot
 from DFA import DFA as DFA2
 import RegexToDFA
 
-rewards_regex = [10,15]
-
-def T1(s,a):
-    if a=='b':
-        return s
-    if s==0:
-        return 1
-    else :
-        return 0
-
-dfa_even_a =  DFA(
-    start = 0,
-    inputs={'a','b'},
-    label = lambda s: s==0,
-    transition = T1,
-    )
-    
-def T2(s,a):
-    if a=='a':
-        return s
-    if s==0:
-        return 1
-    else :
-        return 0
-
-
-dfa_odd_b = DFA(
-    start = 0,
-    inputs={'a','b'},
-    label = lambda s: s==1,
-    transition = T2,
-   )
-
-machines = [dfa_even_a, dfa_odd_b]
-
-write_dot(dfa_even_a, "dot/dfa3.dot")
-write_dot(dfa_odd_b,"dot/dfa4.dot")
-
-combined = dfa_even_a | dfa_odd_b
-
-def R(s):
-    reward = 0
-    for i in range(len(machines)):
-        if machines[i]._label(s[i]): #if accepting, add the reward
-            reward+=rewards_regex[i]
-    return reward
-
-reward_controller = DFA(
-    start = combined.start,
-    inputs = combined.inputs,
-    label = R, 
-    transition = combined._transition,
-    outputs = set.union({0},rewards_regex),
-    )
-
 def old_to_new(D):
     N = list(D.Q)
-    delta = D.δ_dict
+    F = D.F
+    print(F)
+    print(N)
     
+    def accepting(n):
+        test = n in F
+        print(n)
+        print(F)
+        print(n in F)
+        for q in n:
+            test = test | (q in F)
+        return test
+         
     D2 = DFA(
-    start = 0,
-    inputs = D.Σ,
-    label = lambda n: N[n] in D.F, 
-    transition = lambda n,a: N.index(D.δ(N[n],a)),
-   )
+        start = N.index(D.q_0),
+        inputs = D.Σ,
+        label = lambda n: accepting(frozenset(N[n])), 
+        transition = lambda n,a: N.index(D.δ(N[n],a)),
+    )
     return D2
 
 def regex_to_dfa(regex):
-    return old_to_new(RegexToDFA.obtain_dfa_from_regex(regex))
+    D1 = RegexToDFA.obtain_dfa_from_regex(regex)
+    return old_to_new(D1)
 
-D2= regex_to_dfa("aa")
+def R(machines,rewards,n):
+    reward = 0
+    for i in range(len(machines)):
+        if machines[i]._label(n[i]): #if accepting, add the reward
+            reward+=rewards[i]
+    return reward
 
-write_dot(reward_controller,"dot/rc.dot")
-write_dot(D2,"dot/aa.dot")
+def location(i):
+    return "dot/m" + str(i+1) + ".dot"
+
+def combined_reward_controller(info):
+    sequences = list(info.keys())
+    rewards = list(info.values())
+    machines = []
+    for seq in sequences:
+        new_dfa = regex_to_dfa(seq)
+        machines.append(new_dfa)
+        write_dot(new_dfa, location(sequences.index(seq)))
+    if len(machines) == 0:
+        return "error"
+    product_automaton = machines[0]
+    for i in range(1,len(machines)):
+        product_automaton = product_automaton | machines[i]
+    reward_controller = DFA(
+    start = product_automaton.start,
+    inputs = product_automaton.inputs,
+    label = lambda n: R(machines,rewards,n) ,
+    transition = product_automaton._transition,
+    outputs = set.union({0},rewards),
+    )
+    return reward_controller
+
+info = {"(b*ab*a)*b*" : 10, "a*ba*(ba*ba*)*" :15}
+
+#D = regex_to_dfa("a*ba*(ba*ba*)*")
+D = combined_reward_controller(info)
+
+write_dot(D,"dot/RC1.dot")

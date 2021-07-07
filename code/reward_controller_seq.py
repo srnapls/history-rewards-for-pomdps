@@ -29,9 +29,6 @@ def CreateRewardController(seq,rew):
     nodes = list(N.keys())
     n_I = nodes[0]
     delta = list(N.values())
-    print(nodes)
-    print(delta)
-    print(sigma)
     
     reward_controller = DFA(
         start = n_I,
