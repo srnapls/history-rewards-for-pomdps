@@ -10,14 +10,9 @@ import RegexToDFA
 def old_to_new(D):
     N = list(D.Q)
     F = D.F
-    print(F)
-    print(N)
     
     def accepting(n):
         test = n in F
-        print(n)
-        print(F)
-        print(n in F)
         for q in n:
             test = test | (q in F)
         return test
