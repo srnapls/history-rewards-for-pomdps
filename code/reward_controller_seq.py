@@ -3,8 +3,8 @@ from dfa.draw import write_dot
 
 omega = ['a','b']
 
-def CreateRewardController(seq,rew):
-    assert len(seq) == len(rew)
+def CreateRewardController(sequences):
+    seq = list(sequences.keys())
     N = {0:[None,None]}
     sigma = [None]
     for i in range(len(seq)):
@@ -16,7 +16,7 @@ def CreateRewardController(seq,rew):
                 N[n][omega.index(o)] = n_new
                 sigma.append(None)
             n = N[n][omega.index(o)]
-        sigma[n] = rew[i]
+        sigma[n] = sequences[seq[i]]
     n_F = len(N)
     N[n_F] = [None,None]
     sigma.append(None)
@@ -40,8 +40,7 @@ def CreateRewardController(seq,rew):
     return reward_controller
 
 
-sequences = ["aa","bab","aaba","b"]
-r = [15,20,12,2] 
+sequences = {"aa":15,"bab":20,"aaba":12,"b":2}
 
-rc = CreateRewardController(sequences,r)
+rc = CreateRewardController(sequences)
 write_dot(rc,"dot/rc2.dot")

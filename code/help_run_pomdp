@@ -1,0 +1,1 @@
+robin@robin-ideapad:~/storm/build/bin$ ./storm-pomdp --prism "/home/robin/Documents/thesis/code/prism/pomdp_e1.prism" --prop "/home/robin/Documents/thesis/code/prism/properties.pctl" --belief-exploration

@@ -1,0 +1,62 @@
+pomdp
+
+observables
+	o,e
+endobservables
+
+const double a00 = 0.5;
+const double a02 = 0.5;
+const double b01 = 0.25;
+const double b02 = 0.75;
+const double a11 = 0.25;
+const double a12 = 0.75;
+const double b11 = 0.25;
+const double b10 = 0.75;
+const double c21 = 0.1;
+const double c22 = 0.9;
+
+const int N = 2;
+const int T = 100;
+
+
+module maintenance
+    t : [1 .. T] 		init 1;
+    n : [0 .. N-1] 		init 1;
+    s : [0 .. 2] 		init 0;
+    e : bool 			init false; //end ?
+    o : [0 .. 2] 		init 0;  //observation
+	
+	
+	[] (e=true)&(t!=T) -> 1:(t'=t+1);
+	[] (e=true)&(t=T)    -> 1:true;
+	
+	
+	[a] (o=0) & (s=0) & (e=false) -> a00:(n'=mod(n+1,N))&(t'=t+1) + a02:(o'=1)&(s'=2)&(t'=t+1);
+	[b] (o=0) & (s=0) & (e=false) -> b01:(n'=mod(n+1,N))&(s'=1)&(t'=t+1) + b02:(o'=1)&(s'=2)&(t'=t+1);
+	
+	[a] (o=0) & (s=1) & (e=false) -> a11:(n'=mod(n+1,N))&(t'=t+1) + a12:(o'=1)&(s'=2)&(t'=t+1);
+	[b] (o=0) & (s=1) & (e=false) -> b11:(n'=mod(n+1,N))&(t'=t+1) + b10:(n'=mod(n+1,N))&(s'=0)&(t'=t+1);
+	
+	[c] (o=1) & (s=2) & (e=false)-> c21:(o'=0)&(s'=1)&(t'=t+1) + c22:(t'=t+1);
+	
+	[end] (e=false)&(t!=T) -> 1:(e'=true)&(o'=2)&(t'=t+1);
+	[end] (e=false)&(t=T)  -> 1:(e'=true)&(o'=2);
+endmodule
+
+formula r = 15;
+label "end" = e=true;
+
+rewards "profit"
+	[end]  	(e=false)&(n=0): 	r; 
+	[a] 	true: 	0;
+	[b] 	true: 	0;
+	[c] 	true: 	0;
+endrewards
+
+rewards "steps"
+	[end]       true: 1;
+	[a]         true: 1;
+	[b]         true: 1;
+	[c]         true: 1;
+	[]          true: 0;
+endrewards
