@@ -1,0 +1,54 @@
+mdp
+
+const double a00 = 0.5;
+const double a02 = 0.5;
+const double b01 = 0.25;
+const double b02 = 0.75;
+const double a11 = 0.25;
+const double a12 = 0.75;
+const double b11 = 0.25;
+const double b10 = 0.75;
+const double c21 = 0.1;
+const double c22 = 0.9;
+
+module nodes
+	n : [0 .. 1] init 1;
+	
+	[a] (n=0) -> 1:(n=1);
+	[a] (n=1) -> 1:(n=0);
+	
+	[b] true -> 1:true;
+endmodule 
+
+module system
+	s : [0..2] init 0;
+	e: bool init false;
+	
+	[a] (s=0) & (e=true) -> a00:true + a02:(s'=2);
+	[b] (s=0) & (e=true) -> b01:(s'=1) + b02:(s'=2);
+	
+	[a] (s=1) & (e=true) -> a11:true + a12:(s'=2);
+	[b] (s=1) & (e=true) -> b11:true + b10:true;
+	
+	[c] (s=2) & (e=true) -> c21:(s'=1) + c22:true;
+	
+	[end] (e=false) -> 1:(e'=true);
+endmodule
+
+formula r = 15;
+label "end" = e=true;
+
+rewards "profit"
+	[end]  	(n=0): 	r; 
+	[a] 		true: 	0;
+	[b] 		true: 	0;
+	[c] 		true: 	0;
+endrewards
+
+rewards "steps"
+	[end]    true: 1;
+	[a]         true: 1;
+	[b]         true: 1;
+	[c]         true:1;
+endrewards
+
