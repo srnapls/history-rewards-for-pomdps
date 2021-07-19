@@ -1,4 +1,3 @@
-
 *.toc
 *.gz
 *.out
@@ -6,3 +5,4 @@
 *.aux
 *.log
 *.bbl
+*.pyc
