@@ -3,7 +3,6 @@ import stormpy.core
 
 from MDP import MDP
 
-                        
 class POMDP:
 
     counter = 0
@@ -44,15 +43,18 @@ class POMDP:
                 start = transitional_matrix.get_row_group_start(s)
                 end = transitional_matrix.get_row_group_end(s)
                 assert len(range(start,end)) == len(actions)
-                for i in range(0,len(actions)):
+                for i in range(0, len(actions)):
                     T[state][actions[i]] = {}
-                    for entry in transitional_matrix.get_row(i+start):
+                    for entry in transitional_matrix.get_row(i + start):
                         T[state][actions[i]][entry.column] = entry.value()
-            s_0 = model.initial_states
-            self.M = MDP(S,s_0,A,T)
+            s_0 = model.initial_states[0]
+            self.M = MDP(S, s_0, A, T)
             self.Omega = Omega
             self.O = O
-            
+     
+    def __iter__(self):
+        return iter((self.M, self.Omega, self.O))
+    
     def fresh_actions_name(self):
         self.counter += 1
         return "action" + str(self.counter)
@@ -61,7 +63,3 @@ class POMDP:
         string = ""
         string += str(self.M)
         return string
-            
-if __name__ == '__main__':
-    model = POMDP(prism="prism/simple_pomdp.prism")
-    print(model)

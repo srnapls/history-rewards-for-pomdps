@@ -1,0 +1,9 @@
+pomdp
+
+observables
+	 o
+endobservables
+
+const int T = 10;
+
+module model:

@@ -4,6 +4,9 @@ class MDP:
         self.s_0 = s_0
         self.A = A
         self.T = T
+    
+    def __iter__(self):
+        return iter((self.S, self.s_0, self.A, self.T))
         
     def prob(self,s_I, a, s_N):
         info = self.T[s_I]

@@ -1,9 +1,6 @@
 from dfa import DFA 
-from dfa.draw import write_dot
 
-omega = ['a','b']
-
-def CreateRewardController(sequences):
+def create_reward_controller(sequences,omega):
     seq = list(sequences.keys())
     N = {0:[None,None]}
     sigma = [None]
@@ -38,9 +35,3 @@ def CreateRewardController(sequences):
         outputs = set(sigma),
      )
     return reward_controller
-
-
-sequences = {"aa":15,"bab":20,"aaba":12,"b":2}
-
-rc = CreateRewardController(sequences)
-write_dot(rc,"dot/rc2.dot")
