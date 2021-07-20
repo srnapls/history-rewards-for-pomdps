@@ -47,7 +47,7 @@ formula r = 15;
 label "end" = e=true;
 
 rewards "profit"
-	[end]  	(e=false)&(n=0): 	r; 
+	[end]  	(n=0): 	r; 
 	[a] 	true: 	0;
 	[b] 	true: 	0;
 	[c] 	true: 	0;

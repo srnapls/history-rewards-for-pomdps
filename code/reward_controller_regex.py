@@ -6,13 +6,23 @@ from dfa import DFA,dfa2dict
 from DFA import DFA as DFA2
 import RegexToDFA
 
-def old_to_new(D):
+def rename(D):
+    N = list(D.states())
+    return DFA(
+        start = N.index(D.start),
+        inputs = D.inputs,
+        label = lambda n: D._label(N[n]), 
+        transition = lambda n, a: N.index(D._transition(N[n], a)),
+        outputs = D.outputs
+    )
+
+def regex_to_dfa(regex, omega):
+    D = RegexToDFA.obtain_dfa_from_regex(regex,omega)
     N = list(D.Q)
-    F = D.F
     def accepting(n):
-        test = n in F
+        test = n in D.F
         for q in n:
-            test = test or (q in F)
+            test = test or (q in D.F)
         return test
          
     D2 = DFA(
@@ -21,10 +31,8 @@ def old_to_new(D):
         label = lambda n: accepting(frozenset(N[n])), 
         transition = lambda n,a: N.index(D.δ(N[n],a)),
     )
-    return D2
-
-def regex_to_dfa(regex, omega):
-    return old_to_new(RegexToDFA.obtain_dfa_from_regex(regex,omega))
+    return rename(D2)
+    
 
 def union(machines,rewards):
     assert len(machines)==len(rewards)
@@ -33,7 +41,7 @@ def union(machines,rewards):
         transitions = []
         for i in range(len(machines)):
             transitions.append(machines[i]._transition(s[i],c))
-        return transitions
+        return tuple(transitions)
         
     def R(s):
         reward = 0
@@ -65,9 +73,9 @@ def combined_reward_controller(info,omega):
     rewards = list(info.values())
     machines = []
     for seq in sequences:
-        new_dfa = regex_to_dfa(seq, omega)
+        new_dfa = rename(regex_to_dfa(seq, omega))
         machines.append(new_dfa)
-    reward_controller = union(machines, rewards)
+    reward_controller = rename(union(machines, rewards))
     #write_dot(reward_controller, "dot/RC_test.dot")
     return reward_controller
     
