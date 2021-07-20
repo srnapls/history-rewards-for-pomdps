@@ -113,14 +113,15 @@ class history_POMDP(POMDP):
         
         content += "rewards \"profit\"\n"
         visited_nodes = []
-        for (s, n) in self.product_prism.M.S:
-            if n in visited_nodes:
+        for s in self.product_prism.M.S:
+            (s_, n_) = s
+            if  n_ in visited_nodes:
                 continue 
-            r = self.N._label(n)
-            visited_nodes.append(n)
+            r = self.product_prism.R[s]
+            visited_nodes.append(n_)
             if r == 0:
                 continue 
-            content += "\t[end]\t (n = " + str(n) + "): " + str(r) + ";\n" 
+            content += "\t[end]\t (n = " + str(n_) + "): " + str(r) + ";\n" 
         content += "\t[final]\t true:0;\n"
         for a in self.product_prism.M.A:
             content += "\t[" + a + "]\t true:\t 0;\n"
@@ -137,5 +138,6 @@ if __name__ == '__main__':
     R = {"aa":15,"bab":20,"aaba":12,"b":2}
     R2 = {"(b*ab*a)*b*" : 10, "a*ba*(ba*ba*)*" :15}
     R3 = {"(1*01*0)*1*" :10, "0*10*(10*10*)*" :15}
-    model = history_POMDP("prism/simple_pomdp.prism", R3, True, 10)
+    R4= {"(1*01*0)*1*" :10}
+    model = history_POMDP("prism/simple_pomdp.prism", R4, True, 10)
     model.create_prism_file()
