@@ -1,0 +1,128 @@
+Say we are given the following sequences and rewards
+\begin{enumerate}
+	\item $\square\ \square\  $ with a reward of 15
+	\item $\blacksquare\ \square\ \blacksquare\ $ with a reward of 20
+	\item $\square\ \square\ \blacksquare\ \square\ $ with a reward of 12
+	\item  $\blacksquare\ $ with a reward of 2
+\end{enumerate}
+
+Following the procedure~\ref{procedure:into_reward_controller} we create the associated reward controller. To show how the procedure works, we will show you the intermediate reward controller after processing every sequence. 
+
+\subsubsection*{After sequence (1)}
+\begin{figure}[H]
+	\centering
+		\begin{tikzpicture}[node distance=3cm,on grid,auto,shorten >=1pt,thick]
+			\node[initial,state] (1) 				{$n_I$};
+			\node[state] (2) [above right=of 1]		{$n_1$};
+			\node[state] (3) [above right=of 2]		{$n_2/15$};
+			\node[state] (9) [right=of 3]            {$n_F$};
+			\path[->] 	(1) edge 	node [above] {$\square$}			(2)
+						(2) edge 	node [above] {$\square$}			(3);
+	\end{tikzpicture}
+\caption{Reward controller after sequence (1)}
+\end{figure}
+
+\subsubsection*{After sequence (2)}
+\begin{figure}[H]
+	\centering
+		\begin{tikzpicture}[node distance=3cm,on grid,auto,shorten >=1pt]
+			\node[initial,state] (0) 				{$n_I$};
+			\node[state] (1) [above right=of 0]		{$n_1$};
+			\node[state] (2) [above right=of 1]		{$n_2/15$};
+			\node[state] (3) [below right=of 0]      {$n_3$};
+			\node[state] (4) [above right=of 3]      {$n_4$};
+			\node[state] (5) [below right=of 4]      {$n_5/20$};
+			\node[state] (8) [right=of 5]            {$n_F$};
+			\path[->] 	(0) edge 	node [above] {$\square$}			(1)
+							edge    node [above] {$\blacksquare$}	(3)
+						(1) edge 	node [above] {$\square$}			(2)
+						(3) edge    node [above] {$\square$}        	(4)
+						(4) edge		node [above] {$\blacksquare$}	(5);
+	\end{tikzpicture}
+\caption{Reward controller after sequence (1) and (2)}
+\end{figure}
+
+\subsubsection*{After sequence (3)}
+\begin{figure}[H]
+	\centering
+		\begin{tikzpicture}[node distance=3cm,on grid,auto,shorten >=1pt]
+			\node[initial,state] (0) 				{$n_I$};
+			\node[state] (1) [above right=of 0]		{$n_1$};
+			\node[state] (2) [above right=of 1]		{$n_2/15$};
+			\node[state] (3) [below right=of 0]      {$n_3$};
+			\node[state] (4) [above right=of 3]      {$n_4$};
+			\node[state] (5) [below right=of 4]      {$n_5/20$};
+			\node[state] (6) [below right=of 2]      {$n_6$};
+			\node[state] (7) [above right=of 6]      {$n_7/12$};
+			\node[state] (8) [right=of 7]            {$n_F$};
+			\path[->] 	(0) edge 	node [above] {$\square$}			(1)
+							edge    node [above] {$\blacksquare$}	(3)
+						(1) edge 	node [above] {$\square$}			(2)
+						(2) edge		node [above] {$\blacksquare$}	(6)
+						(3) edge    node [above] {$\square$}        	(4)
+						(4) edge		node [above] {$\blacksquare$}	(5)
+						(6) edge		node [above] {$\square$}			(7)
+						;
+	\end{tikzpicture}
+\caption{Reward controller after sequence (1), (2) and (3)}
+\end{figure}
+
+\subsubsection*{After sequence (4)}
+\begin{figure}[H]
+	\centering
+		\begin{tikzpicture}[node distance=3cm,on grid,auto,shorten >=1pt]
+			\node[initial,state] (0) 				{$n_I$};
+			\node[state] (1) [above right=of 0]		{$n_1$};
+			\node[state] (2) [above right=of 1]		{$n_2/15$};
+			\node[state] (3) [below right=of 0]      {$n_3/2$};
+			\node[state] (4) [above right=of 3]      {$n_4$};
+			\node[state] (5) [below right=of 4]      {$n_5/20$};
+			\node[state] (6) [below right=of 2]      {$n_6$};
+			\node[state] (7) [above right=of 6]      {$n_7/12$};
+			\node[state] (8) [right=of 7]            {$n_F$};
+			\path[->] 	(0) edge 	node [above] {$\square$}			(1)
+							edge    node [above] {$\blacksquare$}	(3)
+						(1) edge 	node [above] {$\square$}			(2)
+						(2) edge		node [above] {$\blacksquare$}	(6)
+						(3) edge    node [above] {$\square$}        	(4)
+						(4) edge		node [above] {$\blacksquare$}	(5)
+						(6) edge		node [above] {$\square$}			(7)
+						;
+	\end{tikzpicture}
+\caption{Reward controller after sequence (1), (2) and (3)}
+\end{figure}
+
+\subsubsection*{Finalized Reward Controller}
+Now we complete the reward controller by completing the rest of the transitions. Note that \texttt{path} was only used for proving \lemref{lem:reward_sequence}, so it is not included in any of the figures. 
+In \figureref{f:final_reward_controller_regex} the dashed line denotes all the other possible letters for which the transition function $\lambda$ wasn't defined. 
+\begin{figure}[H]
+	\centering
+		\begin{tikzpicture}[node distance=3cm,on grid,auto,shorten >=1pt]
+			\node[initial,state] (0) 				{$n_I/0$};
+			\node[state] (1) [above right=of 0]		{$n_1/0$};
+			\node[state] (2) [above right=of 1]		{$n_2/15$};
+			\node[state] (3) [below right=of 0]      {$n_3/2$};
+			\node[state] (4) [above right=of 3]      {$n_4/0$};
+			\node[state] (5) [below right=of 4]      {$n_5/20$};
+			\node[state] (6) [below right=of 2]      {$n_6/0$};
+			\node[state] (7) [above right=of 6]      {$n_7/12$};
+			\node[state] (8) [right=of 7]            {$n_F/0$};
+			\path[->] 	(0) edge 	node [above] {$\square$}			(1)
+							edge    node [above] {$\blacksquare$}	(3)
+						(1) edge 	node [above] {$\square$}			(2)
+						(2) edge		node [above] {$\blacksquare$}	(6)
+						(3) edge    node [above] {$\square$}        	(4)
+						(4) edge		node [above] {$\blacksquare$}	(5)
+						(6) edge		node [above] {$\square$}			(7)
+						;
+			\path[->,dashed] (1) edge [bend right]		node {} (8)
+							 (2) edge [bend left]		node {} (8)
+							 (3) edge [bend right]		node {} (8)
+							 (4) edge [bend right]		node {} (8)
+							 (5) edge [bend right]		node {} (8)
+							 (6) edge		node {} (8)
+							 (7) edge 		node {} (8)
+							 (8) edge[loop above] node  {}   ();	\end{tikzpicture}
+\caption{Final reward controller}
+\label{f:final_reward_controller_regex}
+\end{figure}

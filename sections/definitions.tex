@@ -91,7 +91,7 @@ Note that given $s\in S,a\in A$, we assign a probability distribution over $S$ t
 
 The \textit{available actions} for a state $s$ are given by $A(s)=\{a\in A\mid \exists s'\in S: T(s,a,s')>0\}$. We can give the \textit{possible successors} of state $s$ in a similar matter through $Succ(s)=\{s\in S\mid\exists a\in A : T(s,a,s')>0\}$.
 
-A finite \textit{trajectory} or \textit{run} $\pi$ of an MDP is realization of the stochastic process performed by the MDP denoted by the finite sequence $s_1 a_1 s_2 a_2\dots s_{n-1} a_{n-1} s_n \in (S\times A)^*\times S$. To obtain the last state of a trajectory we can use the following \[last(\pi)=last(s_1 a_1 s_2 a_2\dots s_{n-1} a_{n-1} s_n)=s_n\].
+A finite \textit{trajectory} or \textit{run} $\pi$ of an MDP is realization of the stochastic process performed by the MDP denoted by the finite sequence $s_1 a_1 s_2 a_2\dots s_{n-1} a_{n-1} s_n \in (S\times A)^*\times S$. To obtain the last state of a trajectory we can use the following \[last(\pi)=last(s_1 a_1 s_2 a_2\dots s_{n-1} a_{n-1} s_n)=s_n\]
 
 \subsubsection*{Rewards}
 We can extend MDPs with a \textit{reward function} $R$ which assign a reward - usually in $\mathbb{R}$ for taking a certain action $a$ in a state $s$. 

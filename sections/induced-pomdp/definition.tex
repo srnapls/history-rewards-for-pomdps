@@ -1,0 +1,37 @@
+\begin{definition}
+	\label{def:reward-mdp}
+	The induced POMDP for reward controller $\mathcal{F}=(N, n_I, \Omega, \mathcal{R}, \delta, \lambda)$ on a POMDP $\mathcal{M}=(M,\Omega,O)$ where $M=(S,s_I,A,T_{M})$ is a tuple $\mathcal{M_\mathcal{F}}=(M_\mathcal{F},\Omega',O')$ where 
+	\begin{itemize}
+		\item $M_\mathcal{F} = (S',s'_I,A',T_{M_\mathcal{F}},\mathcal{R})$, the hidden MDP where:
+		\begin{itemize}
+			\item $S'=S\times N \cup \{s_F\}$, the finite set of states;
+			\item $s'_I = \langle s_I, \delta(n_I, O(s_I))\rangle$, the initial state;
+			\item $A'=A\cup \{\texttt{end}\}$, the finite set of actions;
+			\item $T_{M_\mathcal{F}}:S'\times A' \to \Pi(S')$, the probabilistic transition function defined as:
+				\begin{align*}				
+					T_{M_\mathcal{F}}(s,\texttt{end},s_F) &= 1 \text{ for all } s\in S'\\
+					T_{M_\mathcal{F}}(\langle s,n\rangle,a,\langle s',n'\rangle) &= \begin{cases}
+						T_M(s,a,s') & \text{if } \delta(n,O(s')=n') \\
+						0 & \text{otherwise}
+					\end{cases}
+				\end{align*}
+			\item $\mathcal{R}:S'\times A'\times S' \to \mathbb{R}$ where 
+                \begin{equation*}
+					R(s,a,s') = \begin{cases}
+					\sigma(n) & \text{if } a=\texttt{end} \text{ and } s=\langle s'',n\rangle \text{ and } s'=s_F\\
+					0 & \text{otherwise} 
+					\end{cases}
+				\end{equation*}
+		\end{itemize}
+		\item $\Omega'=\Omega \cup \{o_F\}$, the observation spate
+		\item $O':S'\to \Omega'$, the observation function where
+			\begin{equation*}
+				O'(s)= \begin{cases}
+				O(s') & \text{if } s=\langle s',n\rangle\\
+				o_F & \text{if } s=s_F
+				\end{cases}
+			\end{equation*}
+		\end{itemize}
+\end{definition}
+
+Note that for the POMDP $\mathcal{M}$ we could only calculate the reward after we were done with the process. However, for the newly obtained POMDP $\mathcal{M}_{\mathcal{F}}$ we obtain the reward as the process continues, since it is now dependent only on the state and action.

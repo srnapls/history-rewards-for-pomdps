@@ -14,7 +14,8 @@ class history_POMDP(POMDP):
         else:
             self.N = create_reward_controller(R,Omega)
         self.product_prism = self.build_product_pomdp()
-    
+ 
+ #todo: product_prism -->> product_pomdp of induced_pomdp
     def build_product_pomdp(self):
         (M, Omega, orig_O, _) = self.original_POMDP
         Omega = {str(o) for o in Omega}
@@ -106,8 +107,8 @@ class history_POMDP(POMDP):
                 content += line1 + ";\n" + line2 + ";\n"
             content += "\n"
         
-        content += "\t[end] true -> 1:(o' = "+ str(len(self.product_prism.Omega)) + ");\n\n"
-        content += "\t[final] (o = " + str(len(self.product_prism.Omega)) + ") -> 1:true;\n\n"
+        content += "\t[end] (o != " + str(len(self.product_prism.Omega)) +") -> 1:(o' = "+ str(len(self.product_prism.Omega)) + ");\n\n"
+        
         content += "endmodule\n\n"
         content += "label \"end\" = o=2;\n\n"
         
@@ -122,7 +123,6 @@ class history_POMDP(POMDP):
             if r == 0:
                 continue 
             content += "\t[end]\t (n = " + str(n_) + "): " + str(r) + ";\n" 
-        content += "\t[final]\t true:0;\n"
         for a in self.product_prism.M.A:
             content += "\t[" + a + "]\t true:\t 0;\n"
         content += "endrewards"
@@ -139,5 +139,5 @@ if __name__ == '__main__':
     R2 = {"(b*ab*a)*b*" : 10, "a*ba*(ba*ba*)*" :15}
     R3 = {"(1*01*0)*1*" :10, "0*10*(10*10*)*" :15}
     R4= {"(1*01*0)*1*" :10}
-    model = history_POMDP("prism/simple_pomdp.prism", R4, True, 10)
+    model = history_POMDP("prism/simple_pomdp.prism", R3, True, 10)
     model.create_prism_file()
