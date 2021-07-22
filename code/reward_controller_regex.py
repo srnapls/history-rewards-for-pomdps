@@ -3,8 +3,11 @@ import sys
 sys.path.append('regex-to-dfa')
 
 from dfa import DFA,dfa2dict
+from dfa.draw import write_dot
 from DFA import DFA as DFA2
 import RegexToDFA
+
+counter = 0
 
 def rename(D):
     N = list(D.states())
@@ -32,57 +35,45 @@ def regex_to_dfa(regex, omega):
         transition = lambda n,a: N.index(D.δ(N[n],a)),
     )
     return rename(D2)
-    
 
-def union(machines,rewards):
+def union(machines, rewards):
     assert len(machines)==len(rewards)
-    
-    def T(s,c):
-        transitions = []
-        for i in range(len(machines)):
-            transitions.append(machines[i]._transition(s[i],c))
-        return tuple(transitions)
-        
-    def R(s):
-        reward = 0
-        for i in range(len(machines)):
-            if machines[i]._label(s[i]):
-                reward += rewards[i]
-        return reward 
     
     if len(machines)==1:
         D = machines[0]
-        r = rewards[0]
         return DFA(
             start = D.start,
             inputs = D.inputs,
             transition = D._transition,
-            label = lambda s: r if D._label(s) else 0,
+            label = lambda s: rewards[0] if D._label(s) else 0,
             outputs = set.union({0},rewards),
         )
     return DFA(
         start=tuple([m.start for m in machines]),
         inputs = machines[0].inputs,
-        transition = T,
-        label = lambda s: R(s),
+        transition = lambda s,c: tuple([machines[i]._transition(s[i],c) for i in range(len(machines))]),
+        label = lambda s: sum([rewards[i] for i in range(len(machines)) if machines[i]._label(s[i])]),
         outputs = set.union({0},rewards),
     )
 
+def fresh():
+    global counter
+    counter += 1
+    return "dot/m" + str(counter) + ".dot"
+
 def combined_reward_controller(info,omega):
-    sequences = list(info.keys())
-    rewards = list(info.values())
-    machines = []
-    for seq in sequences:
-        new_dfa = rename(regex_to_dfa(seq, omega))
-        machines.append(new_dfa)
-    reward_controller = rename(union(machines, rewards))
-    #write_dot(reward_controller, "dot/RC_test.dot")
-    return reward_controller
+    machines = [rename(regex_to_dfa(seq, omega)) for seq in list(info.keys())]
+    for m in machines:
+        write_dot(m, fresh())
+    tmp = rename(union(machines, list(info.values())))
+    write_dot(tmp, "dot/RC2_test.dot")
+    return tmp
     
 if __name__ == '__main__':
-    R = {"aa":15,"bab":20,"aaba":12,"b":2}
+    R = {"aaba" :15}
     R2 = {"(b*ab*a)*b*" : 10, "a*ba*(ba*ba*)*" :15}
     R4 = {"a*bcc*" :12}
-    omega = {'0','1'}
+    omega = {'1','0'}
     R3 = {"(1*01*0)*1*" :10}
-    combined_reward_controller(R3,omega)
+    
+    write_dot(combined_reward_controller(R,{'a','b'}),"dot/RC_test.dot")

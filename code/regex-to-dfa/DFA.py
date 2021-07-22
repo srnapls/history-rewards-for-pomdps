@@ -103,32 +103,30 @@ class DFA(FA):
         state_pairs = {frozenset({x, y}) for x in self.Q for y in self.Q if x != y}
         non_distinguishable_pairs = set()
         non_distinguishable_states = set()
-        distinguishable_pairs = {x for x in state_pairs if len(set(x).intersection(self.F)) == 1}
-
-        def is_distinguishable(pair):
-            # Recursive Discovery of Distinguishable Pairs with Memory Function
-            if len(pair) == 1:
-                return False
-            if pair in distinguishable_pairs:
-                return True
-            else:
-                distinguishable = False
-                for a in self.Σ:
-                    next_pair = frozenset(map(lambda x: self.δ(x, a), pair))
-                    distinguishable = distinguishable or (len(next_pair.difference(pair)) == 0)
-                if distinguishable:
-                    distinguishable_pairs.update({pair})
-                    return True 
-                for a in self.Σ:
-                    next_pair = frozenset(map(lambda x: self.δ(x, a), pair))
-                    if is_distinguishable(next_pair):
-                        distinguishable_pairs.update({pair})
-                        return True
-                return False
-
+        D = {}
+        S = {}
+        
+        def DIST(pair):
+            D[pair] = 1
+            for next_pair in S[pair]:
+                DIST(next_pair)
+        
         for pair in state_pairs:
-            bb = is_distinguishable(pair)
-            if not bb:
+            D[pair] = 1 if len(pair.intersection(self.F)) == 1 else 0
+            S[pair] = set()
+        for pair in state_pairs:
+            already_updated = False 
+            for a in self.Σ:
+                next_pair = frozenset(map(lambda x: self.δ(x, a), pair))
+                if len(next_pair)==1 or D[next_pair]==1:
+                    already_updated = True
+                    DIST(pair)
+            if not already_updated:
+                for a in self.Σ:
+                    next_pair = frozenset(map(lambda x: self.δ(x, a), pair))
+                    if len(next_pair)!=1 and pair is not next_pair:
+                        S[next_pair].add(pair)
+            if len(pair) != 1 and D[pair] == 0:
                 non_distinguishable_pairs.update({pair})
                 non_distinguishable_states.update(pair)
 
@@ -136,7 +134,6 @@ class DFA(FA):
             if len(array) == 0:
                 return set()
             new_list = [frozenset(array.pop(0))]  # initialize first set with value of index `0`
-
             for item in array:
                 for i, s in enumerate(new_list):
                     if any(x in s for x in item):
@@ -145,40 +142,29 @@ class DFA(FA):
                 else:
                     new_list.append(frozenset(item))
             return set(new_list)
-
+            
         non_distinguishable_pairs = transitive_closure(list(non_distinguishable_pairs))
         
-
         Q = non_distinguishable_pairs.union({frozenset(x) for x in set(self.Q) - non_distinguishable_states})
         delta_dict = defaultdict(dict)
         for q in Q:
             for a in self.Σ:
                 if len(self.δ_dict[q]) == len(self.Σ):
-                    intermediate = {x for x in Q if  self.δ(q, a) in x}
-                    if len(intermediate) == 0:
-                        delta_dict[q][a] = self.δ(q, a)
-                    else:
-                        delta_dict[q][a] = list(intermediate)[0]
+                    intermediate = {x for x in Q if self.δ(q, a) in x}
+                    delta_dict[q][a] = self.δ(q, a) if len(intermediate) == 0 else list(intermediate)[0]
                 else:
                     S = set()
                     for q1 in q:
-                        q2 = self.δ(q1, a)
-                        if q2 not in q:
-                            S.add(frozenset(q2))
+                        if self.δ(q1, a) not in q:
+                            S.add(frozenset(self.δ(q1, a)))
                     S = frozenset(S)
                     if len(S) == 0:
                         delta_dict[q][a] = q
                     elif len(S) == 1:
                         S = list(S)[0]
-                        if S in Q:
-                            delta_dict[q][a] = S
-                        else: 
-                            delta_dict[q][a] = list({q_n for q_n in Q if S in q_n})[0]
+                        delta_dict[q][a] = S if S in Q else list({q_n for q_n in Q if S in q_n})[0]
                     else:
                         delta_dict[q][a] = list({q_n for q_n in Q if S.issubset(q_n)})[0]
-        if self.q_0 in Q:
-            q_0 = self.q_0
-        else:
-            q_0 = [x for x in Q if self.q_0 in x][0]
+        q_0 = self.q_0 if self.q_0 in Q else [x for x in Q if self.q_0 in x][0]
         D = DFA(Q, self.Σ, delta_dict, q_0, self.F)
         return D

@@ -1,37 +1,32 @@
 from dfa import DFA 
+from dfa.draw import write_dot
 
 def create_reward_controller(sequences,omega):
-    seq = list(sequences.keys())
-    N = {0:[None,None]}
-    sigma = [None]
-    for i in range(len(seq)):
-        n = list(N.keys())[0]
-        for o in seq[i]:
-            if N[n][omega.index(o)] is None:
+    n_I = 0
+    N = {n_I: {}}
+    sigma = {}
+    for seq in list(sequences.keys()):
+        n = n_I
+        for o in seq:
+            if N[n].get(o) is None:
                 n_new = len(N)
-                N[n_new] = [None,None]
-                N[n][omega.index(o)] = n_new
-                sigma.append(None)
-            n = N[n][omega.index(o)]
-        sigma[n] = sequences[seq[i]]
+                N[n_new] = {}
+                N[n][o] = n_new
+            n = N[n][o]
+        sigma[n] = sequences[seq]
     n_F = len(N)
-    N[n_F] = [None,None]
-    sigma.append(None)
+    N[n_F] = {}
     for n in N:
         for o in omega:
-            if N[n][omega.index(o)] is None:
-                N[n][omega.index(o)] = n_F
-        if sigma[n] is None:
+            if N[n].get(o) is None:
+                N[n][o] = n_F
+        if sigma.get(n) is None:
             sigma[n] = 0
-    nodes = list(N.keys())
-    n_I = nodes[0]
-    delta = list(N.values())
-    
-    reward_controller = DFA(
+            
+    return DFA(
         start = n_I,
         inputs = omega,
         label = lambda n: sigma[n], 
-        transition = lambda n, a: delta[n][omega.index(a)],
-        outputs = set(sigma),
+        transition = lambda n, o: N[n][o],
+        outputs = set(sigma.values()),
      )
-    return reward_controller
