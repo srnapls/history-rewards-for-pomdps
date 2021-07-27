@@ -1,0 +1,154 @@
+A machine is not always defined deterministically. Instead, a process can transition from one state to another by a given probability. In this section we will take a look at some discrete-time stochastic processes, but only those who adhere to the Markov property. 
+
+\begin{definition}[Markov property]
+For any $s_0, s_1, \dots, s_{n-1}, s_n \in S$ :
+\[P(X_n = s_n \mid X_0=s_0, X_1=s_1,\dots, X_{n-1}=s_{n-1}) = P(X_n =s_n | X_{n-1} = s_{n-1}\]
+\label{d:markov}
+\end{definition}
+
+This property states that the probability distribution of $X_n$ is only dependent on its immediate past, namely $X_{n-1}$. So for any stochastic process, given the current state we know that the future state is not dependent on the past states.
+
+Note that in the entirety of this thesis, we will only be discudding discrete-time Markov processes. 
+
+\subsection{Markov chain}
+
+Given a simple stochastic process, that conforms to the Markov property as seen in \defref{d:markov} is called a Markov chain. This is simply a set of events, which are connected by some given probabilities.
+\begin{definition}[MC]
+A Markov chain consists of a set of states $S$, and initial state $s_I\in S$ and a probabilistic transition function $T:S\to\Pi(S)$. 
+\end{definition}
+Note that $P$ ,the probabilistic transition function, can also be represented as a matrix. 
+\subsubsection*{Example}
+\begin{figure}[H]
+	\centering
+		\begin{tikzpicture}[node distance=3cm,on grid,auto,shorten >=1pt]
+			\node[state] (0) 		{$s_0$};
+			\node[state] (1) [right=of 0]		{$s_1$};
+			\path[->] 	(0) edge [bend left] 	node [above] {$0.4$}	(1)
+							edge [loop above]   node [above] {$0.6$}	(0)
+						(1) edge [loop above] 	node [above] {$0.2$}	(1)
+							edge [bend left]   node [above] {$0.8$}	(0);
+	\end{tikzpicture}
+	\caption{A simple Markov chain}
+\end{figure}
+The transition matrix for this Markov chain is $\begin{pmatrix}
+0.6 & 0.4 \\
+0.8 & 0.2 
+\end{pmatrix}$. 
+
+\subsection{Markov decision processes}
+While we can see Markov chains as stochastic processes without outside influence, we can also take a look at these processes where we allow outside influence. This is done by extending the Markov chain with a set of actions, allowing for this influence. 
+\begin{definition}[MDP]
+	A Markov decision process is a tuple $M=(S,s_I,A,T)$ where 
+	\begin{itemize}
+		\item $S$, the finite set of states;
+		\item $s_I\in S$, the initial state;
+		\item $A$, the finite set of actions;
+		\item $T:S\times A\to \Pi(S)$, the probabilistic transition function.
+	\end{itemize}
+\end{definition}
+
+Note that given $s\in S,a\in A$, we assign a probability distribution over $S$ through $T(s,a)$. To obtain the probability of ending up in a certain state $s'$ when starting in state $s$ and performing action $a$, we simply calculate $T(s,a,s')$ which we obtain through $T(s,a)(s')$.\\
+
+The \textit{available actions} for a state $s$ are given by $A(s)=\{\,a\in A\mid \exists s'\in S: T(s,a,s')>0\}$. We can give the \textit{possible successors} of state $s$ in a similar matter through $Succ(s)=\{s\in S\mid\exists a\in A : T(s,a,s')>0\}$.
+
+A finite \textit{trajectory} or \textit{run} $\pi$ of a MDP is realization of the stochastic process performed by the MDP denoted by the finite sequence $s_1 a_1 s_2 a_2\dots s_{n-1} a_{n-1} s_n \in (S\times A)^*\times S$. To obtain the last state of a trajectory we can use the following \[last(\pi)=last(s_1 a_1 s_2 a_2\dots s_{n-1} a_{n-1} s_n)=s_n\]
+
+\subsubsection*{Example}
+\todo{write a nice example}
+
+\subsubsection*{Rewards}
+We can extend MDPs with a \textit{reward function} $R$ which assign a reward - usually in $\mathbb{R}$ - for taking some action in state. Let us first look at simple reward functions which can determine a reward based on the current state, action and obtained state, independent of its history. The most conventional notation is $R:S\times A\to \mathbb{R}$, where we consider the current state and the taken action. Another possible definition is $R:S\times A\times S\to\mathbb{R}$, where  in $R(s,a,s')$ we consider the specific transition from $s$ to $s'$ by using action $a$, or $R:S\to\mathbb{R}$ where in $R(s)$ we only consider the visited state $s$. 
+
+When modeling complex systems drawn from real world problems, we often encounter that obtaining a certain reward is not only dependent on the current events but also on the states (and actions) that were seen previously. These history-based reward functions are just as versatile as simple reward functions. A few examples are
+\begin{itemize}
+	\item $R:S^*\to\mathbb{R}$ - which only looks at the finite states visited, or;
+	\item $R:(S\times A)^*\to\mathbb{R}$ - which looks at the finite (sub)trajectory without the last state, or;
+	\item $R:(S\times A)^*\times S\to \mathbb{R}$ - which looks at the finite (sub)trajectory.
+\end{itemize}
+
+\subsubsection*{Policy}
+As stated above, we can extend MDPs with reward functions. Now when modeling a system, we usually want to obtain the maximum reward (or minimize the costs involved). However, just obtaining the optimized expected reward is not enough without knowing how to obtain this. We wish to know what strategy we need to apply to obtain this optimal value. For this we use strategies, also known as policies. 
+
+\begin{definition}[Policy]
+	A policy for a MDP $M$ is a function $\sigma:(S\times A)^*\times S \to \Pi(A)$, which maps a trajectory $\pi$ to a probability distribution over all actions. 
+\end{definition}
+
+We call a policy \textit{memoryless} if the function only considers $last(\pi)$ in deciding the actions. 
+
+
+\towrite{this only works for simple reward functions}
+\towrite{where does gamma come from}
+\begin{flalign*}
+V_0(s) & = 0 \\
+V_n(s) &= \max\limits_{a\in A} \big[R(s,a) + \gamma\sum\limits_{s'\in S}T(s,a,s')V_{n-1}(s')\big]
+\end{flalign*}
+
+\subsection{Partial observability}
+\towrite{Introduce pomdp}
+
+\begin{definition}[POMDP]
+	A partially observable Markov decision process (POMDP) is a tuple $\mathcal{M}=(M, \Omega, O)$ where 
+	\begin{itemize}
+		\item $M=(S,s_I,A,T)$, the hidden MDP;
+		\item $\Omega$, the finite set of observations;
+		\item $O:S\to \Omega$, the observation function. 
+	\end{itemize}
+\end{definition}
+
+Let $O^{-1}:\Omega\to 2^S$ be the inverse function of the observation function - $O^{-1}(o)=\{s\in \mid O(s)=o\}$ - in which we simply obtain all states in $S$ that have observation $o$.
+Without loss of generality we assume that states with the same observations have the same set of available actions, thus $O(s_1)=O(s_2)\Rightarrow A(s_1)=A(s_2)$.
+
+Since the actual states in a trajectory of the hidden MDP are not visible to the observes, we argue about an \textit{observed trajectory} of the POMDP $\mathcal{M}$. This is not consist of a sequence of states and actions, but instead a sequence of observations are actions, thus an element of $(\Omega\times A)^*\times \Omega$. The set of all possible finite observed trajectories of will be denoted as $ObsSeq^{\mathcal{M}}$.
+
+We can argue about the observed trajectory through the observation function, which will be extended over trajectories, like so
+\[O(\pi)=O(s_1 a_1 s_2 a_2\dots s_{n-1} a_{n-1} s_n) = O(s_1) a_1 O(s_2) a_2\dots O(s_{n-1}) a_{n-1} O(s_n)\]
+
+\subsubsection*{Rewards}
+\towrite{pomdp with reward, different kind of rewards}
+
+\subsubsection*{Policy}
+
+\towrite{since we now only know the observation we change the policy}
+\begin{definition}
+	An observation-based strategy of a POMDP $\mathcal{M}$ is a function $\sigma:ObsSeq^{\mathcal{M}}\to\Pi(A)$ such that $supp(\sigma(O(\pi)))\subseteq A (last(\pi))\ \forall \pi\in(S\times A)^*\times S$.
+\end{definition}
+
+\subsubsection*{Solving for optimal reward}
+\towrite{refer to belief mdp}
+
+\subsection{Belief MDP}
+
+\begin{definition}[Belief state]
+A belief state $b:S\to [0,1]$ is a probability distribution over $S$. For every state $s$, $b(s)$ denotes the probability of currently being in state $s$.
+\end{definition}
+
+\towrite{introduction to beflief update}
+\begin{definition}[Belief update]
+Given the current belief state $b$, then after performing action $a\in A$ and then observing observation $o$, we update the belief state. The updated belief state $b^{a,o}$ can be calculated as
+\[b^{a,o}(s')= \frac{\text{Pr}(o\mid s',a)}{\text{Pr}(o\mid a,b)}\sum\limits_{s\in S}T(s,a,s')b(s)\]
+\end{definition}
+\towrite{connection to belief mdp}
+
+\begin{definition}[Belief MDP]
+For a POMDP $\mathcal{M}=(M,\Omega,O)$ where $M=(S,s_I,A,T)$ as defined above, the associated belief MDP is a tuple $(B,A,\tau,\rho)$ where 
+\begin{itemize}
+\item $B=\Pi(S)$, the set of belief states;
+\item $A$, the set of actions;
+\item $\tau:B\times A\times B$, the transition function where 
+\[\tau(b,a,b')= \text{Pr}(b'\mid a,b)=\sum\limits_{o\in\Omega}\text{Pr}(b'\mid a,b,o)\cdot \text{Pr}(o\mid a,b)\]
+\end{itemize}
+\end{definition}
+
+\towrite{note that belief mdp are continuous time and not discrete}
+
+\subsubsection*{Reward}
+If the POMDP is extended with a reward function $R$, the belief MDP will obtain a reward function $\rho$. If $R:S\times A\to \mathbb{R}$, then $\rho:B\times A\to \mathbb{R}$ where $\rho(b,a) = \sum\limits_{s\in S}b(s)R(s,a)$. 
+
+\subsubsection*{Solving for optimal reward}
+$Pr(o\mid a,b) = \sum\limits_{s\in S} \sum\limits_{s'\in O^{-1}(o)}T(s,a,s')b(s)$
+
+\begin{flalign*}
+V_0(b) & = 0 \\
+V_n(b) & = \max\limits_{a\in A} \big[\rho(b,a) + \gamma \sum\limits_{o \in \Omega} Pro(o\mid a,b) V_{n-1}(b^{a,o})\big]
+\end{flalign*}
+

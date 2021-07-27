@@ -2,8 +2,8 @@ from POMDP import POMDP
 from MDP import MDP
 from dfa import DFA, dfa2dict
 
-from reward_controller_regex import combined_reward_controller
-from reward_controller_seq import create_reward_controller
+from reward_controller_regex import reward_controller_from_regex
+from reward_controller_seq import reward_controller_from_sequences
 
 class induced_POMDP(POMDP):
     def __init__(self, prism, R,regex,T):
@@ -11,9 +11,9 @@ class induced_POMDP(POMDP):
         self.original_POMDP = POMDP(self, prism=prism)
         Omega = {str(o) for o in self.original_POMDP.Omega}
         if regex:
-            self.N = combined_reward_controller(R, Omega)
+            self.N = reward_controller_from_regex(R, Omega)
         else:
-            self.N = create_reward_controller(R, Omega)
+            self.N = reward_controller_from_sequences(R, Omega)
         self.product_pomdp = self.build_product_pomdp()
  
     def build_product_pomdp(self):

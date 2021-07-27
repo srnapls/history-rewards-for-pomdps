@@ -1,7 +1,7 @@
 from dfa import DFA 
 from dfa.draw import write_dot
 
-def create_reward_controller(sequences,omega):
+def reward_controller_from_sequences(sequences,omega):
     n_I = 0
     N = {n_I: {}}
     sigma = {}

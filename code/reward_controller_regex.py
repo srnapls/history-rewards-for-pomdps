@@ -61,7 +61,7 @@ def fresh():
     counter += 1
     return "dot/m" + str(counter) + ".dot"
 
-def combined_reward_controller(info,omega):
+def reward_controller_from_regex(info,omega):
     machines = [rename(regex_to_dfa(seq, omega)) for seq in list(info.keys())]
     for m in machines:
         write_dot(m, fresh())
@@ -76,4 +76,4 @@ if __name__ == '__main__':
     omega = {'1','0'}
     R3 = {"(1*01*0)*1*" :10}
     
-    write_dot(combined_reward_controller(R,{'a','b'}),"dot/RC_test.dot")
+    write_dot(reward_controller_from_regex(R,{'a','b'}),"dot/RC_test.dot")
