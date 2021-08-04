@@ -1,2 +1,0 @@
-robin@robin-ideapad:~/storm/build/bin$ 
-./storm-pomdp --prism "/home/robin/Documents/thesis/code/prism/reward_controlled_pomdp.prism" --prop "/home/robin/Documents/thesis/code/prism/properties.pctl" --belief-exploration

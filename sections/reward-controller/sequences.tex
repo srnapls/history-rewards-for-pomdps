@@ -1,15 +1,15 @@
 \section{From a list of sequences}
 \label{sec:rc-sequences}
-Let's say we are designing a model for an engineer and they want certain observation sequences to connect to a reward. Thus we are given a number of observation sequences $\pi_1,\pi_2,\dots,\pi_n$ together with their associated real valued rewards $r_1,r_2,\dots,r_n$.
+Let's say we are designing a model for an engineer and they want certain observation sequences to connect to a reward. Thus we are given a number of observation sequences $\texttt{seq}_1,\texttt{seq}_2,\dots,\texttt{seq}_n$ together with their associated real valued rewards $r_1,r_2,\dots,r_n$.
 \begin{definition}
-Given the observation sequences $\pi_1,\pi_2,\dots,\pi_n$ and their associated rewards $r_1,r_2,\dots,r_n$ we define the history-based reward function $R:\Omega^*\to\mathbb{R}$, which we create as follows
+Given the observation sequences $\texttt{seq}_1,\texttt{seq}_2,\dots,\texttt{seq}_n$ and their associated rewards $r_1,r_2,\dots,r_n$ we define the history-based reward function $R:\Omega^*\to\mathbb{R}$, which we create as follows
 \[R(w) = \begin{cases}
-	r_i &\text{ if } w=\pi_i \text { for } i\in \{1,\dots,n\} \\
+	r_i &\text{ if } w=\texttt{seq}_i \text { for } i\in \{1,\dots,n\} \\
 	0   &\text{ otherwise}
 	\end{cases}\]
 	\label{d:created_reward_function}
 \end{definition}
-In $R$ we simply connect the observation sequence $\pi_i$ to their respective reward $r_i$ and every other sequence is connected to zero.\\
+In $R$ we simply connect the observation sequence $\texttt{seq}_i$ to their respective reward $r_i$ and every other sequence is connected to zero.\\
 
 We only want to obtain any of the rewards if their associated observation sequence has been observed in its entirety. Thus we create a reward controller in which we encode the reward in the state we end up in after reading the entire sequence. The idea is as follows: if we read the observation sequence and we end up in a certain state $n$, we obtain the reward $\sigma(n)$ in that state. It's important to note that if we, for example, have $R(\blacksquare\blacksquare)=2$ and $R(\blacksquare\blacksquare\square)=3$ and we read $\blacksquare\blacksquare\square$ we will only obtain reward $3$. 
 
@@ -21,9 +21,9 @@ Given all the sequences over which the Non-Markovian reward function is defined,
 		\Require $R : \Omega^* \to \mathbb{R}$
 		\State $n_I \gets $ \code{new Node()} \Comment{initial node} \label{l:initial_node}
 		\State $n_F \gets $ \code{new Node()} \Comment{dump node}  \label{l:dump_node}
-		\State \texttt{path}$(n_I)=\epsilon$ \label{l:empty_path}
+		\State \texttt{path}$(n_I)=\lambda$ \label{l:empty_path}
 		\State $N\gets\{n_I,n_F\}$
-		\ForAll{$\pi=o_1 o_2\dots o_k$ in sequences}
+		\ForAll{$\texttt{seq}=o_1 o_2\dots o_k$ in sequences}
 			\State $n \gets n_I$
 			\For{$i\gets 1,\dots, k$}
 				\If{$\delta(n,o_i)$ is undefined}
@@ -34,7 +34,7 @@ Given all the sequences over which the Non-Markovian reward function is defined,
 				\EndIf 
 				\State $n \gets \delta(n,o_i)$     \Comment{update memory node}
 			\EndFor
-			\State $\sigma(n) \gets R(\pi)$ \Comment{set reward} \label{l:set_reward}
+			\State $\sigma(n) \gets R(\texttt{seq})$ \Comment{set reward} \label{l:set_reward}
 		\EndFor
 		\ForAll{$n\in N$} \Comment{makes $\delta$ and $\sigma$ deterministic}
 			\ForAll{$o\in\Omega$}
@@ -66,11 +66,11 @@ Note that the set of nodes $N$ without $n_F$ together with the memory update fun
 
 \begin{lemma}
 \todo{let maarten read this}
-For any sequence $\pi\in\Omega^*$, let $r=R(\pi)$ be its associated reward. Then $\sigma(\delta^*(n_I,\pi))=r$.
+For any sequence $\texttt{seq}\in\Omega^*$, let $r=R(\texttt{seq})$ be its associated reward. Then $\sigma(\delta^*(n_I,\texttt{seq}))=r$.
 \begin{proof}
-Let us state that after reading $\pi$, we end up in state $n$, i.e. $n = \delta^*(n_I,\pi)$. \\
+Let us state that after reading $\texttt{seq}$, we end up in state $n$, i.e. $n = \delta^*(n_I,\texttt{seq})$. \\
 Now if $n=n_F$, we know that the associated reward is zero since $\sigma(n_F)=0$ per construction. A sequence can only end up in $n_F$ if it was not a part of the pre-defined sequences and following \defref{d:created_reward_function} the reward is then zero. \\
-If $n\in N\setminus \{n_F\}$, we can obtain the unique path to node $n$ through $\texttt{path}(n)$. We know that this is equal to $\pi$, so the associated reward is thus $R(\texttt{path}(n))=R(\pi)=r$.
+If $n\in N\setminus \{n_F\}$, we can obtain the unique path to node $n$ through $\texttt{path}(n)$. We know that this is equal to $\texttt{seq}$, so the associated reward is thus $R(\texttt{path}(n))=R(\texttt{seq})=r$.
 \end{proof}
 \label{lem:reward_sequence}
 \end{lemma}

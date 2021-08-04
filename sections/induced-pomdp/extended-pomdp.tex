@@ -1,0 +1,34 @@
+Given a POMDP with has a history-based reward function, we want to obtain the related reward at any certain moment. But there is not a action in the model that ensures that the model stops and we can obtain the reward. 
+
+This can be solved by adding an action to actively end the model and this can be done by extending the model with the action \texttt{end} together with a final state.
+
+\begin{definition}
+	The extended POMDP for a given POMDP $\mathcal{M}=(M,\Omega,O)$ where $M=(S,s_I,A,T_{M})$ is a new POMDP $\widetilde{\mathcal{M}} = (\widetilde{M},\Omega',O')$ where
+		\begin{itemize}
+		\item $\widetilde{M} = (S',s_I,A',T_{M_t})$, the hidden MDP where:
+		\begin{itemize}
+			\item $S'=S\cup \{s_F\}$, the finite set of states;
+			\item $A'=A\cup \{\texttt{end}\}$, the finite set of actions;
+			\item $T_{M_t}:S'\times A' \to \Pi(S')$, the probabilistic transition function defined as:
+			\[ T_{M_t}(s,a,s') = \begin{cases}
+						1 & \text{if } s'=s_F \text{ and } a = \texttt{end}\\
+						T_M(s,a,s') & \text{otherwise} 
+					\end{cases} \]
+		\end{itemize}
+	\item $\Omega'= \Omega\cup \{o_F\}$
+	\item $O' : S' \to \Omega'$ where 
+		\[ O'(s) = \begin{cases}
+			o_F & \text{if } s=s_F \\
+			O(s) & \text{otherwise} 
+			\end{cases} \]
+	\end{itemize}
+	\label{d:extended-pomdp}
+\end{definition}
+
+We now also need to adjust the reward function for the extended POMDP, to accomodate for the new information.
+\begin{definition}
+	\label{def:reward-mdp}
+	Given the extended POMDP $\widetilde{\mathcal{M}}$ and the original history-based reward function $R:\Omega^*\to \mathbb{R}$, we obtain the new reward funtion $\widetilde{R}:\Omega^*\times A\to\mathbb{R}$  where 
+	\[\widetilde{R}(o_1 o_2\dots o_n,\texttt{end}) = 
+		R(o_1 o_2 \dots o_{n})\]
+\end{definition}

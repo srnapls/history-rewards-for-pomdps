@@ -47,7 +47,7 @@ Given all the sequences over which the Non-Markovian reward function is defined,
 		\Require $R : \Omega^* \to \mathbb{R}$
 		\State $n_I \gets $ \code{new Node()} \Comment{initial node} \label{l:initial_node}
 		\State $n_F \gets $ \code{new Node()} \Comment{dump node}  \label{l:dump_node}
-		\State \texttt{path}$(n_I)=\epsilon$ \label{l:empty_path}
+		\State \texttt{path}$(n_I)=\lambda$ \label{l:empty_path}
 		\State $N\gets\{n_I,n_F\}$
 		\ForAll{$\pi=o_1 o_2\dots o_k$ in sequences}
 			\State $n \gets n_I$

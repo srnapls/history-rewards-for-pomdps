@@ -9,8 +9,14 @@ The resulting POMDP is a product construction between the original POMDP and the
 
 Since the reward in encoded in the states themself in $\mathcal{F}$, we dont want to just simple encode them in the POMDP in the state as well. If we were to do this, then we'd get the reward every time we passed over the state. We only want to obtain the relevant reward when we are \textit{finished} with the process. This is why we used the extra action \texttt{end} to mark the end of the process. Then, when we wish the process to end, we simply execute the action \texttt{end} and will then obtain the reward that was encoded in the relevant state from $\mathcal{F}$ where we finished upon. This new state $s_F$ only contains deterministic loops, ensuring that the process ends there. 
 
-\section{Definition}
+\section{Extended POMDP}
+\input{sections/induced-pomdp/extended-pomdp.tex}
+
+\section{Induced POMDP}
 \input{sections/induced-pomdp/definition.tex}
+
+\section{Limiting the observation sequence}
+\input{sections/induced-pomdp/counter.tex}
 
 \section{Implementation}
 \input{sections/induced-pomdp/implementation.tex}

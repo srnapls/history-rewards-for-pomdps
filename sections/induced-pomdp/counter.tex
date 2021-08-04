@@ -1,0 +1,17 @@
+However, when we try to calculate $P[[ \texttt{F}\:s=s_F]]$, this will not equate to 1 because there is no absolutely certainty that \texttt{end} will ever be performed. We can enforce the model to allow observation sequences up to a certain natural number $T$, such that every observation sequence $o_1 o_2 \dots o_n$ we know that $n\leq T$. 
+
+\begin{definition}
+We can extend a the underlying MDP $M=(S\cup\{s_F\}, s_I, A, T_M)$ with the given counter $T$, we create a limited MDP $(S',s'_I,A,T_M')$ where
+\begin{itemize}
+	\item $S' = S\times \{0,\dots, T\}$
+	\item $s'_I = \langle s_I,0\rangle$
+	\item $:S'\times A \to \Pi(S')$ where 
+	\[T_M'(\langle s_1,t_1\rangle,a,\langle s_2,t_2\rangle) = \begin{cases}
+	T_M(s_1,a,s_2) & \text{ if } t_2 = t_1 + 1 \text{ and } t_2 \neq T\\
+	1 & \text{ if } t_2 = T \text{ and } s_2 = s_F \\
+	0 & \text{ otherwise }
+	\end{cases}\]
+\end{itemize}
+\end{definition}
+
+In other words, we add a simple counter that keeps track of the number of actions allowed. At any point we are allowed to go to the final state, but when the counter reaches $T$, we force the model to enter the final state. This method enforces the process to always finish in the final state. 

@@ -1,1 +1,31 @@
-\todo{talk about this}
+We used \cite{g:regex-to-dfa} as a base for creating a DFA from a given regular expression. The regular expression needs to have the following grammar (this can also be seen in \texttt{code/regex-to-dfa/grammar/RegEx.g4}):
+\begin{alltt}
+prog : (regex newline)*;
+
+regex : regex '*'      #kleene-star
+  | regex regex	       #concatenation
+  | regex '|' regex    #alternation
+  | ID         	       #identifier
+  | '\(\lambda\)'	   #epsilon
+  | '(' regex ')'      #parenthesis
+  ;
+
+newline : '\(\backslash\)n{}';
+
+ID: [a-zA-Z0-9];
+WS: [\(\backslash\)t\(\backslash\)r ]->skip;
+\end{alltt}
+
+In \href{https://gitlab.science.ru.nl/srietbergen/thesis/-/blob/master/code/reward_controller_regex.py}{\texttt{code/reward\textunderscore controller\textunderscore regex.py}} we have the following:\\
+
+\texttt{rename(D)}\\
+Transform the given reward controller $D$ into one that ensures that the states are labeled with numbers from $0$ to $|D|-1$. \\
+
+\texttt{regex\textunderscore to\textunderscore dfa(regex, omega)}:\\
+Given a regular expression conform to the syntax as defined above and the input language $\Omega$ over which it is defined, we transform it into a DFA.\\
+
+\texttt{union(machines, rewards)}:\\
+Given a list $n$ of \texttt{machines} ($D_1,D_2,\dots, D_n$) and a list or $n$ rewards ($r_1,r_2,\dots, r_n$), we create the induced product DFA according to \defref{d:product_automaton}. Then we (create and) return the induced reward controller as defined in \defref{d:reward_controller_regex}.\\
+
+\texttt{reward\textunderscore controller\textunderscore from\textunderscore regex(info,omega):}:\\
+Given $n$ regular expressions together with their associated reward in dictionary ($\{e_1 :r_1, e_2:r_2, \dots e_n:r_n\}$), together with the input language $\Omega$ specified, we return the reward controller representing the information given. 

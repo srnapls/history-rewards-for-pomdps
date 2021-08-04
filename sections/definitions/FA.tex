@@ -36,7 +36,7 @@ Since we are interested in wether an input string should be accepted or not, we 
 We define $\delta^*:Q\times\Sigma^*\to Q$ where $\delta^*(q,w)$ denotes the state we end up after reading word $w$ starting from state $q$ as follows
 \begin{equation*}
 \delta^*(q,w)=\begin{cases}
-	q &\text{if } w=\epsilon \\
+	q &\text{if } w=\lambda \\
 	\delta^*(\delta(q,a_1),a_2\dots a_n) & \text{if } w=a_1a_2\dots a_n
 	\end{cases}
 \end{equation*}

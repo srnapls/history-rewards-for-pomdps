@@ -2,7 +2,7 @@ grammar RegEx;
 
 prog : (regex newline)*;
 
-regex : regex '*'      #klnee
+regex : regex '*'      #klene
   | regex regex	       #concatenation
   | regex '|' regex    #alternation
   | ID         	       #identifier

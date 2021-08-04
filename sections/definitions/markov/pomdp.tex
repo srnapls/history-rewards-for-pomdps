@@ -1,0 +1,36 @@
+\subsection{Partial observability}
+\towrite{rewrite introduction}
+Having full observability over a system makes it simple to calculate the optimal policy, but usually in the real world we don't know all the information of a system at any point. 
+
+Take for example a machine that breaks down \todo{cite maintenance paper}, we know that parts in a machine deteriorate at different rates, but we don't know how badly deteriorated a part is unless we call in a specialist. We do however, \textit{observe} how the entire system is functioning. This only provides up with partial observability of the entire model. 
+
+\begin{definition}[POMDP]
+	A partially observable Markov decision process (POMDP) is a tuple $\mathcal{M}=(M, \Omega, O)$ where 
+	\begin{itemize}
+		\item $M=(S,s_I,A,T)$, the hidden MDP;
+		\item $\Omega$, the finite set of observations;
+		\item $O:S\to \Omega$, the observation function. 
+	\end{itemize}
+\end{definition}
+
+Let $O^{-1}:\Omega\to 2^S$ be the inverse function of the observation function - $O^{-1}(o)=\{s\in \mid O(s)=o\}$ - in which we simply obtain all states in $S$ that have observation $o$.
+Without loss of generality we assume that states with the same observations have the same set of available actions, thus $O(s_1)=O(s_2)\Rightarrow A(s_1)=A(s_2)$.
+
+Since the actual states in a trajectory of the hidden MDP are not visible to the observes, we argue about an \textit{observed trajectory} of the POMDP $\mathcal{M}$. This is not consist of a sequence of states and actions, but instead a sequence of observations are actions, thus an element of $(\Omega\times A)^*\times \Omega$. The set of all possible finite observed trajectories of will be denoted as $ObsSeq^{\mathcal{M}}$.
+
+We can argue about the observed trajectory through the observation function, which will be extended over trajectories, like so
+\[O(s_1 a_1 s_2 a_2\dots s_{n-1} a_{n-1} s_n) = O(s_1) a_1 O(s_2) a_2\dots O(s_{n-1}) a_{n-1} O(s_n)\]
+
+\subsubsection*{Rewards}
+Just like for MDPs, we can extend POMDPs with a reward function. These can be function over the hidden MDP, and thus the reward function will remain an extension of the MDP. Or, the function can be based on the observations of the states instead of the states themselves. So instead of $R:S\times A\times S\to\mathbb{R}$, we can have that $R:\Omega\times A\times\Omega\to\mathbb{R}$. This way we only base the reward function on the observation of the current and future state together with the action taken. 
+
+\subsubsection*{Policy}
+Defining a policy over a POMDP is a trickier, since we only obtain the observation of a state and not all the information. So now we have to make a decision over what action to take, given only the observations. This provides us with observation-based trategies. 
+
+\begin{definition}
+	An observation-based strategy of a POMDP $\mathcal{M}$ is a function $\pi:ObsSeq^{\mathcal{M}}\to\Pi(A)$ such that 
+	\[supp(\pi(O(s_1 a_1 \dots s_{n-1} a_{n-1} s_n)))\subseteq A (last(s_1 a_1 \dots s_{n-1} a_{n-1} s_n))\] for all $s_1 a_1 \dots s_{n-1} a_{n-1} s_n\in(S\times A)^*\times S$.
+\end{definition}
+
+\subsubsection*{Solving for optimal reward}
+\towrite{refer to belief mdp}
