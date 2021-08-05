@@ -1,22 +1,27 @@
 \towrite{introduction}
-%add extra final state, in which we encode the actual transitions, the end state will be used to marked you are done. 
-
-%if take product construction over only S and N without the s_f, o_f and and, we would get a reward every time we go accross that specific state, but! we only want reward when we are done.
 
 \towrite{please not that all the text here is placeholder, just notes that need to be processed}
 
-The resulting POMDP is a product construction between the original POMDP and the reward controller representing the history-based reward function. 
+\towrite{proof of policy obtained from $\widetilde{\mathcal{M_\mathcal{F}}}$ is the same as for $\mathcal{F}$ but without the end action etc.}
 
-Since the reward in encoded in the states themself in $\mathcal{F}$, we dont want to just simple encode them in the POMDP in the state as well. If we were to do this, then we'd get the reward every time we passed over the state. We only want to obtain the relevant reward when we are \textit{finished} with the process. This is why we used the extra action \texttt{end} to mark the end of the process. Then, when we wish the process to end, we simply execute the action \texttt{end} and will then obtain the reward that was encoded in the relevant state from $\mathcal{F}$ where we finished upon. This new state $s_F$ only contains deterministic loops, ensuring that the process ends there. 
 
+Since the reward in encoded in the states themself in $\mathcal{F}$, we dont want to just simple encode them in the POMDP in the state as well. If we were to do this, then we'd get the reward every time we passed over the state. We only want to obtain the relevant reward when we are \textit{finished} with the process. This is why we used the extra action \texttt{end} to mark the end of the process. Then, when we wish the process to end, we simply execute the action \texttt{end} and will then obtain the reward that was encoded in the relevant state from $\mathcal{F}$ where we finished upon. This new state $s_F$ only contains deterministic loops, ensuring that the process ends there. \todo{read and place this somewhere}
+
+\towrite{rename sections/subsections etc}
 \section{Extended POMDP}
 \input{sections/induced-pomdp/extended-pomdp.tex}
 
 \section{Induced POMDP}
 \input{sections/induced-pomdp/definition.tex}
 
+\section{Optimal policy}
+\input{sections/induced-pomdp/policy.tex}
+
 \section{Limiting the observation sequence}
 \input{sections/induced-pomdp/counter.tex}
+
+\section{Example}
+\input{sections/induced-pomdp/example.tex}
 
 \section{Implementation}
 \input{sections/induced-pomdp/implementation.tex}

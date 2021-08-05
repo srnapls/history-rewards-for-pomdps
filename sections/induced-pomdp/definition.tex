@@ -1,13 +1,13 @@
-We will now combine the reward controller $\mathcal{F}$ with the given related PODMP to obtain an induced POMDP where we map the memory into the system. This ensures that we don't have to keep the observation sequence in memory. 
+We will now combine the reward controller $\mathcal{F}$ - representing the history-based reward function - with the given related PODMP to obtain an induced POMDP where we map the memory into the system. This ensures that we don't have to keep the observation sequence in memory. 
+
 
 \begin{definition}
-	\label{def:induced-pomdp}
 	The induced POMDP for reward controller $\mathcal{F}=(N, n_I, \Omega, \mathcal{R}, \delta, \sigma)$ on a POMDP $\mathcal{M}=(M,\Omega,O)$ where $M=(S,s_I,A,T_{M})$ is a tuple $\mathcal{M_\mathcal{F}}=(M_\mathcal{F},\Omega,O_\mathcal{F})$ where 
 	\begin{itemize}
 		\item $M_\mathcal{F} = (S_\mathcal{F},s_{I,\mathcal{F}}, A, T_{M_\mathcal{F}})$, the hidden MDP where:
 		\begin{itemize}
 			\item $S_\mathcal{F}=S\times N$, the finite set of states;
-			\item $s_{I,\mathcal{F}} = \langle s_I, \delta(n_I, O(s_I))\rangle$, the initial state;
+			\item $s_{I,\mathcal{F}} = \langle s_I, \delta(n_I, O(s_I))\rangle$, the initial state;\todo{explain this}
 			\item $T_{M_\mathcal{F}}:S_\mathcal{F}\times A \to \Pi(S_\mathcal{F})$, the probabilistic transition function defined as:
 				\begin{align*}				
 					T_{M_\mathcal{F}}(\langle s,n\rangle,a,\langle s',n'\rangle) &= \begin{cases}
@@ -19,9 +19,10 @@ We will now combine the reward controller $\mathcal{F}$ with the given related P
 		\item $O_\mathcal{F}:S_\mathcal{F}\to \Omega$, the observation function where 
 		\[O_\mathcal{F}(\langle s,n \rangle) = O(s)\]
 		\end{itemize}
+	\label{d:induced_pomdp}
 \end{definition}
 
-Now we can extend this induced POMDP $\mathcal{M}_\mathcal{F}$ as presented in \defref{d:extended-pomdp}, yielding $\widetilde{\mathcal{M}_\mathcal{F}}$, with the adjusted reward function in which we obtain the related reward when we enter the final state through action \texttt{end}.
+Now we can extend this induced POMDP $\mathcal{M}_\mathcal{F}$ as presented in \defref{d:extended_pomdp}, yielding $\widetilde{\mathcal{M}_\mathcal{F}}$, with the adjusted reward function in which we obtain the related reward when we enter the final state through action \texttt{end}.
 
 \begin{definition}
 	\label{def:reward-fuction-extended-induced-pomdp}

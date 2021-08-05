@@ -7,12 +7,11 @@ class POMDP:
 
     counter = 0
     
-    def __init__(self, M=None, Omega=None, O=None,prism=None, R = None):
+    def __init__(self, M=None, Omega=None, O=None,prism=None):
         if prism == None:
             self.M = M
             self.Omega = Omega
             self.O = O
-            self.R = R
         else:
             program = stormpy.parse_prism_program(prism)
             model = stormpy.build_model(program)
@@ -52,7 +51,6 @@ class POMDP:
             self.M = MDP(S, s_0, A, T)
             self.Omega = Omega
             self.O = O
-            self.R = {}
      
     def __iter__(self):
         return iter((self.M, self.Omega, self.O, self.R))

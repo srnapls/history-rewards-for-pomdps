@@ -1,7 +1,12 @@
-\towrite{the python part, where we simple combine the information of the reward controller together with the pomdp (without reward) together to create a new pomdp}
+In \href{https://gitlab.science.ru.nl/srietbergen/thesis/-/blob/master/code/POMDP.py}{\texttt{code/POMDP.py}} we have the folowing\\
 
-remove the end action from prism and code it into the pomdp in python. check if this is possible. 
-\towrite{
-the transformation to prism where we then add the extra \texttt{end} actions with the last state added.\\
-- for the end action, we only need to observation 
-}
+\texttt{\textunderscore\textunderscore init\textunderscore\textunderscore (M, Omega, O, prism)}\\
+We either initialize a POMDP with $M, \Omega, O$, where $M$ is a \href{https://gitlab.science.ru.nl/srietbergen/thesis/-/blob/master/code/MDP.py}{MDP} or with a \texttt{prism}-file. When only given the \texttt{prism}-file as argument, we build the model with the help of stormpy\cite{g:stormpy}. Then we obtain all information about the hidden MDP $M$, the observation space and the observation function from this model. \\
+
+In \href{https://gitlab.science.ru.nl/srietbergen/thesis/-/blob/master/code/induced_POMDP.py}{\texttt{code/induced\textunderscore POMDP.py}} we have the folowing functions \\
+
+\texttt{\textunderscore\textunderscore init\textunderscore\textunderscore (prism, R, regex, T)}\\
+Given the \texttt{prism}-file of the original POMDP, reward function $R$, \texttt{regex} indicating wether $R$ is defined over regular expression (and thus having the value \texttt{true}) or over sequences (having the value \texttt{false}) and the counter $T$ as seen in definition \defref{d:limited_pomdp}. It then creates the induced POMDP as defined in \defref{d:induced_pomdp}. This induced POMDP is then extending according to \defref{d:extended_pomdp}. Finally, to be able to compute nice properties we finally limit the model using \defref{d:limited_pomdp}.\\
+
+\texttt{create\textunderscore prism\textunderscore file()}\\
+After inializing the induced POMDP with the constructor, we can then obtain the information of said POMDP. This function transform this POMDP into a \texttt{prism}-file, such that we among others can check properties over this model through \texttt{storm}\cite{g:storm}.

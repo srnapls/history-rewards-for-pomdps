@@ -1,11 +1,17 @@
-\par
-\section*{Motivating Example}
+History based rewards for mdp have been studied a lot. 
+\towrite{relate to the papers you read, both of them and tell a little bit about them}
+However for POMDPs, the task of obtaining an policy that ensures the maximum reward (or minimum cost) for history-based reward functions, is quite computative heavy. 
+- belief mdp are already big
+- storing the history in memory drains memory
+- it's unknown how long the sequence needs to be, so we need to check for every new sequence. 
+would be better to do it step by step and remove the extra memory space needed for storing the optimal reward for 
+
 
 \section*{Problem Formulation}
 Given a POMDP with a history-based reward function, obtain a policy that maximizes the expected reward.
 
-\section*{Contribution}
 
 \section*{Structure}
 first preliminaries, then definitions 
-chapter 4 we present reward controllers, i.e. give a structure on how to model the reward function. in chapter 5 we combine the original pomdp with the created reward controller to obtain an markov model again. 
+In chapter 2 we present the preliminaries. In chapter 3 we define all the definitions and show the background information used in this thesis.
+In chapter 4 we present the Reward Controllers which is a finite automaton representing the history-based reward function used for POMDP and how to obtain them. In chapter 5 we show the newly induced POMDP which is obtained from the original POMDP together with the Reward Controller that represents the related history-based reward function. 
