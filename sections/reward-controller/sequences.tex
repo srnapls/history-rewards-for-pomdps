@@ -72,7 +72,7 @@ Let us state that after reading $\texttt{seq}$, we end up in state $n$, i.e. $n 
 Now if $n=n_F$, we know that the associated reward is zero since $\sigma(n_F)=0$ per construction. A sequence can only end up in $n_F$ if it was not a part of the pre-defined sequences and following \defref{d:created_reward_function} the reward is then zero. \\
 If $n\in N\setminus \{n_F\}$, we can obtain the unique path to node $n$ through $\texttt{path}(n)$. We know that this is equal to $\texttt{seq}$, so the associated reward is thus $R(\texttt{path}(n))=R(\texttt{seq})=r$.
 \end{proof}
-\label{lem:reward_sequence}
+\label{lem:proof_seq}
 \end{lemma}
 
 \subsection*{Example}

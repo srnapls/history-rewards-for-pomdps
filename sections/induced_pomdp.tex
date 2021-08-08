@@ -1,27 +1,20 @@
-\towrite{introduction}
-
-\towrite{please not that all the text here is placeholder, just notes that need to be processed}
-
-\towrite{proof of policy obtained from $\widetilde{\mathcal{M_\mathcal{F}}}$ is the same as for $\mathcal{F}$ but without the end action etc.}
+In this chapter we combine the obtained reward controller $\mathcal{F}$, which is based on the history-based reward function, together with the original POMDP. This allows us to remove the history-based aspect of the reward function, allowing us to calculate the reward step-by-step. This can be seen in \secref{s:induced_pomdp}. Firstly, since there is no method to ending the process we add another action to forcibly \textit{end} the process in \secref{s:extended_pomdp}. In \secref{s:induced_example} we will show an example. In \secref{s:induced_policy}. In \secref{s:induced_limit} we talk about on how to limit the computational process by only allowing sequences up to a certain length. In \secref{s:induced_implementation} we talk a bit about the implementation regarding this new induced POMDP.
 
 
-Since the reward in encoded in the states themself in $\mathcal{F}$, we dont want to just simple encode them in the POMDP in the state as well. If we were to do this, then we'd get the reward every time we passed over the state. We only want to obtain the relevant reward when we are \textit{finished} with the process. This is why we used the extra action \texttt{end} to mark the end of the process. Then, when we wish the process to end, we simply execute the action \texttt{end} and will then obtain the reward that was encoded in the relevant state from $\mathcal{F}$ where we finished upon. This new state $s_F$ only contains deterministic loops, ensuring that the process ends there. \todo{read and place this somewhere}
-
-\towrite{rename sections/subsections etc}
 \section{Extended POMDP}
 \input{sections/induced-pomdp/extended-pomdp.tex}
 
 \section{Induced POMDP}
 \input{sections/induced-pomdp/definition.tex}
 
+\section{Example}
+\input{sections/induced-pomdp/example.tex}
+
 \section{Optimal policy}
 \input{sections/induced-pomdp/policy.tex}
 
 \section{Limiting the observation sequence}
 \input{sections/induced-pomdp/counter.tex}
-
-\section{Example}
-\input{sections/induced-pomdp/example.tex}
 
 \section{Implementation}
 \input{sections/induced-pomdp/implementation.tex}

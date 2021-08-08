@@ -78,6 +78,7 @@ Given $e_1,e_2,\dots,e_n$ a sequence of regular expression together with their a
 For \equref{p:r_l1} we simply use \defref{d:delta_star_rc} and the fact that $D$ is deterministic, so it ends up in an unique state after reading $\texttt{seq}$.
 For \equref{p:r_l2} we use the definition for $\sigma$ as seen in \defref{d:reward_controller_regex}. For \equref{p:r_l3} we use that fact that in \defref{d:associated_reward} we observe that $R_A(q_i)$ is equal to zero if $q_i\notin F_i$ and only produces a non-zero value for all $q_i\in F_i$. Thus we only look at the $q_i$ which return a non-zero value. Since we now know we only look at the non-zero reward values, we can use \defref{d:associated_reward} again in \equref{p:r_l4}. From \defref{d:delta_star} we can rewrite the equation in \equref{p:r_l5}. For \equref{p:r_l6} we use \defref{d:accepted_language}. Since per construction $L(e_i)=L(D_i)$ for all $i\in\{1,\dots,n\}$, we rewrite the term in \equref{p:r_l7}. Finally in \equref{p:r_l8} we simply rewrite the term under the sum.
 \end{proof}
+\label{lem:proof_regex}
 \end{lemma}
 
 \subsection*{Example}

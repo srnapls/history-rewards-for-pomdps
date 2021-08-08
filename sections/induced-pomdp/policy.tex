@@ -1,6 +1,47 @@
-\towrite{tikz graph thing w/ 4 blocks}
+\label{s:induced_policy}
+\towrite{rework obtaining policy for original pomdp}
 
+See \figureref{f:overview} for an overview of all the definition presented previously. Note that for the creation of $\mathcal{M}_\mathcal{F}$ both $\mathcal{M}$ and $\mathcal{F}$ are needed. 
+\begin{figure}[H]
+\center
+\begin{tikzpicture}
+  \matrix (m) [matrix of math nodes,row sep=3em,column sep=5em,minimum width=6em,nodes={
+                    text width=1cm,
+                    align=center
+             }]
+  {
+     \mathcal{M} & \mathcal{F} &\mathcal{M}_\mathcal{F} \\
+     \widetilde{\mathcal{M}} & & \widetilde{\mathcal{M}_\mathcal{F}} \\};
+  \path[->]
+    (m-1-1) edge node [left] {\defref{d:extended_pomdp}} (m-2-1)
+            edge node [above] {\defref{d:reward_controller_regex}} 
+            		 node [below] {or \algorithmref{procedure:into_reward_controller}}(m-1-2)
+            edge[dashed,bend left] node [] {} (m-1-3)
+    (m-1-2) edge[dashed] node[above] {\defref{d:induced_pomdp}} (m-1-3)
+    (m-1-3) edge node [right] {\defref{d:extended_pomdp}} (m-2-3);
+\end{tikzpicture}
+\caption{Overview}
+\label{f:overview}
+\end{figure}
+
+If we can obtain an optimal policy for $\widehat{\mathcal{M}_\mathcal{F}}$ we automatically obtain the optimal policy for $\widehat{\mathcal{M}}$. This can then be easily transformed into an optimal policy for $\mathcal{M}$.
+
+The optimal policy of $\widehat{\mathcal{M}_\mathcal{F}}$
 optimal policy $\pi$ for $\widetilde{\mathcal{M}_\mathcal{F}}$ also works for $\widetilde{\mathcal{M}}$. something with same observation sequences, for all actions.
 
+\towrite{rewrite this, that it's the sum over all rewards (still works since the only non-zero reward is the final transition}
+\begin{lemma}
+Let $R:\Omega^*\to\mathbb{R}$ be the original history-based reward function of POMDP $\mathcal{M}$. Then let $\widetilde{\mathcal{M}_\mathcal{F}}$ be the extended (\defref{d:extended_pomdp}) induced(\defref{d:induced_pomdp}) POMDP associated. Let this new POMDP have the reward function as defined in \defref{d:reward-fuction-extended-induced-pomdp}. Then for all $\langle s,n\rangle \in S_\mathcal{F}$ 
+\[ \widetilde{\mathcal{R}_\mathcal{F}}(\langle s,n\rangle,\texttt{end}) = R(o_1 o_2 \dots o_n \]
+where $o_1 o_2 \dots o_n$ is the observation sequence observed up untill that point. 
+\end{lemma}
+\begin{proof}
+	\begin{flalign*}
+	R(o_1 o_2 \dots o_n) &= \sigma(\delta*(n_I, o_1 o_2 \dots o_n))  \hfill \text{\lemref{lem:proof_seq} and \lemref{proof_regex}} \\
+	&= \sigma(n) \\
+	&= \widetilde{\mathcal{R}_\mathcal{F}}(\langle s, n \rangle,\texttt{end}) \hfill \text{\defref{d:reward-fuction-extended-induced-pomdp}}
+	\end{flalign*}
+Note that furthermore the only requirement of $s$ is that $O(s) = o_n$.
+\end{proof}
 
-to get the optimal policy for $\mathcal{M}$ we remove the end action. 
+Note that the original POMDP $\mathcal{M}$ does not have the action \texttt{end}, which does exist for every extended POMDP used for obtaining the optimal policy. 

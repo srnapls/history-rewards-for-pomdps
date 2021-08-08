@@ -25,10 +25,9 @@ A finite \textit{trajectory} or \textit{run} of a MDP is realization of the stoc
 			\node[dot]  (0b) [right=of 0] {};
 			\node[state] (1) [right= 7cm of 0]		{$s_1$};
 			\node[dot] (1a) [below=of 1] {};
-			\node[dot] (1b) [above=of 1] {};
 			\node[state] (2) [below right= 5 cm of 0]		{$s_2$};
 			\node[dot] (2c) [above=of 2] {};
-			\path[-]    (0) edge [] node[right] {$a$} (0a)
+			\path[-,blue]    (0) edge [] node[right] {$a$} (0a)
                             edge [] node[above] {$b$} (0b)
                         (1) edge [] node[left]  {$a$} (1a)
                         (2) edge [] node[right] {$c$} (2c);
@@ -42,7 +41,6 @@ A finite \textit{trajectory} or \textit{run} of a MDP is realization of the stoc
 			                edge[]    node [right] {$0.1$}  (1);
 	\end{tikzpicture}
 \caption{MDP}
-	\label{f:pomdp}
 \end{figure}
 
 \subsubsection*{Rewards}
@@ -51,8 +49,8 @@ We can extend MDPs with a \textit{reward function} $R$ which assign a reward for
 When modeling complex systems drawn from real world problems, we often encounter that obtaining a certain reward is not only dependent on the current events but also on the states (and actions) that were seen previously. These history-based reward functions are just as versatile as simple reward functions. A few examples are
 \begin{itemize}
 	\item $R:S^*\to\mathbb{R}$ - which only looks at the finite states visited, or;
-	\item $R:(S\times A)^*\to\mathbb{R}$ - which looks at the finite (sub)trajectory without the last obtained state, or;
-	\item $R:(S\times A)^*\times S\to \mathbb{R}$ - which looks at the finite (sub)trajectory.
+	\item $R:(S A)^*\to\mathbb{R}$ - which looks at the finite (sub)trajectory without the last obtained state, or;
+	\item $R:(S A)^* S\to \mathbb{R}$ - which looks at the finite (sub)trajectory.
 \end{itemize}
 
 \subsubsection*{Policy}
@@ -69,36 +67,28 @@ Given a MDP $M=(S_M,s_I,A,T_M)$ and a memoryless policy $\pi:S\to\Pi(A)$, we obt
 \end{definition}
 
 \subsubsection*{Solving for optimal reward}
-For simple reward functions, we can solve the problem of how to obtain a policy for the optimal expected reward iteratively, using the Bellman equation \todo{quote, etc}
+We introduce a discounting factor $\gamma\in[0,1]$. This factor determines how interesting the immediate reward is. The closer $\gamma$ is to zero, we are mainly interested in the immedate rewards. However, the closer $\gamma$ is to one, we are more interested in all the future rewards. 
 
-We introduce a discounting factor $\gamma\in[0,1]$
-\towrite{why do we use gamma, talk about model mortality etc}
-%The fact that the discount rate is bounded to be smaller than 1 is a mathematical trick to make an infinite sum finite. This helps proving the convergence of certain algorithms.
-
-%In practice, the discount factor could be used to model the fact that the decision maker is uncertain about if in the next decision instant the world (e.g., environment / game / process ) is going to end.
-
-The optimal expected reward at time $n$ can be calculated iteratively as follows:
-
- $\rho_t$ be the expected immediate reward obtained at a certain step $t$, then the expected cumulative reward is defined as
+Let $\rho_t$ be the expected immediate reward obtained at a moment $t$ in the timeline used. The expected cumulative reward for simple reward functions with an undefined horizon starting in state $s$s, given a policy $pi$, is defined as
 
 \[
 	J^\pi(s)=E \big[\sum_{t=0}^{\infty}\gamma \rho_t\mid s,\pi\big]
 \]
 
-With this information, we can calculate the optimal policy 
+With this information, we can obtain the optimal policy through
 \begin{equation}
 \pi^* = \argmax_{\pi\in \Pi(A)^S} J^\pi(s_I)
 \end{equation}
 
-\towrite{where does gamma come from}
+We can solve the problem of how to obtain a policy for the optimal expected reward recursively, due to Bellman's principle of optimality\cite{p:bellman}.
 \begin{flalign*}
 V_0(s) & = 0 \\
 V_n(s) &= \max\limits_{a\in A} \big[R(s,a) + \gamma\sum\limits_{s'\in S}T(s,a,s')V_{n-1}(s')\big]
 \end{flalign*}
-The value $J^{\pi^*}(s_I)$ can be computed recursively through the value function $V_n$ defined over $S$, due to Bellman's principle of optimality\cite{p:bellman}. If we let $H$ be the possible infinite horizon of the problem, the optimal value can be concluded from $J^{\pi^*}(s)=V_{n=H}(s)$.
+If we let $H$ be the possible infinite horizon of the problem, the optimal value can be concluded from $J^{\pi^*}(s)=V_{n=H}(s)$.
 
-We can also calculate the value function given a policy. 
+We can also apply a policy to the value function, to obtain the expected reward using policy $\pi$ as follows
 \begin{flalign*}
 V_{\pi,0}(s) & = 0 \\
-V_{\pi,n}(s) &= \sum\limits_{a\in A}\pi(s,a) \big( R(s,a) + \gamma\sum\limits_{s'\in S}T(s,a,s')V_{n-1}(s')\big)
+V_{\pi,n}(s) &= \sum\limits_{a\in A}\pi(s,a) \big( R(s,a) + \gamma\sum\limits_{s'\in S}T(s,a,s')V_{\pi, n-1}(s')\big)
 \end{flalign*}

@@ -1,10 +1,7 @@
-History based rewards for mdp have been studied a lot. 
-\towrite{relate to the papers you read, both of them and tell a little bit about them}
-However for POMDPs, the task of obtaining an policy that ensures the maximum reward (or minimum cost) for history-based reward functions, is quite computative heavy. 
-- belief mdp are already big
-- storing the history in memory drains memory
-- it's unknown how long the sequence needs to be, so we need to check for every new sequence. 
-would be better to do it step by step and remove the extra memory space needed for storing the optimal reward for 
+In reinforced learning we are often shown models in which the agent gets a reward for certain behavior. This behavior can also include a reward that will given only after a certain time or only given a certain history. These history-based reward functions have been studies quite a lot. More specifically, a number of results have been found to obtain a policy concerning the expected optimal reward for these history-based reward functions for MDPs\cite{p:jirp}\cite{p:rdp}.\todo{talk a bit about these?}
+However for POMDPs, the task of obtaining an policy that ensures the maximum reward (or minimum cost) for history-based reward functions, is computative heavy. The belief MDP representing a POMDP can be continuous, storing the history observed for sequences and not knowing how long the sequence needs to be can be memory intensive.
+
+Removing the history-based function would remove some of this memory intensive process. For this we present so-called Reward Controllers, which are finite automata which represent the history-based reward function used for the POMDP. This reward controller can then be combined with the original POMDP, to create an induced POMDP. This induced POMDP doesn't need to store the relevant history anymore, which was necessary for the original POMDP. The new reward function is then only based on the current state and the action, allowing us to use known methods to calculate the optimal expected reward and to find a policy.
 
 
 \section*{Problem Formulation}
@@ -12,6 +9,5 @@ Given a POMDP with a history-based reward function, obtain a policy that maximiz
 
 
 \section*{Structure}
-first preliminaries, then definitions 
-In chapter 2 we present the preliminaries. In chapter 3 we define all the definitions and show the background information used in this thesis.
-In chapter 4 we present the Reward Controllers which is a finite automaton representing the history-based reward function used for POMDP and how to obtain them. In chapter 5 we show the newly induced POMDP which is obtained from the original POMDP together with the Reward Controller that represents the related history-based reward function. 
+In chapter 2 we present the preliminaries. Chapter 3 portrays all relevant definitions and shows the background information used.
+In chapter 4 we present the Reward Controllers and how to obtain them from a given history-based reward function. In chapter 5 we show the newly induced POMDP which is obtained from the original POMDP together with the Reward Controller that represents the related history-based reward function. 

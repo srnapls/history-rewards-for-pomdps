@@ -1,6 +1,7 @@
+\label{s:extended_pomdp}
 Given a POMDP with has a history-based reward function, we want to obtain the related reward at any certain moment. But there is not a action in the model that ensures that the model stops and we can obtain the reward. 
 
-This can be solved by adding an action to actively end the model and this can be done by extending the model with the action \texttt{end} together with a final state.
+This can be solved by adding an action to actively end the model and this can be done by extending the model with the action \texttt{end} together with a final state. This final state then should only consist of deterministic loops.
 
 \begin{definition}
 	The extended POMDP for a given POMDP $\mathcal{M}=(M,\Omega,O)$ where $M=(S,s_I,A,T_{M})$ is a new POMDP $\widetilde{\mathcal{M}} = (\widetilde{M},\Omega',O')$ where

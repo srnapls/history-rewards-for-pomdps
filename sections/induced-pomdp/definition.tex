@@ -1,3 +1,4 @@
+\label{s:induced_pomdp}
 We will now combine the reward controller $\mathcal{F}$ - representing the history-based reward function - with the given related PODMP to obtain an induced POMDP where we map the memory into the system. This ensures that we don't have to keep the observation sequence in memory. 
 
 
@@ -7,7 +8,7 @@ We will now combine the reward controller $\mathcal{F}$ - representing the histo
 		\item $M_\mathcal{F} = (S_\mathcal{F},s_{I,\mathcal{F}}, A, T_{M_\mathcal{F}})$, the hidden MDP where:
 		\begin{itemize}
 			\item $S_\mathcal{F}=S\times N$, the finite set of states;
-			\item $s_{I,\mathcal{F}} = \langle s_I, \delta(n_I, O(s_I))\rangle$, the initial state;\todo{explain this}
+			\item $s_{I,\mathcal{F}} = \langle s_I, \delta(n_I, O(s_I))\rangle$, the initial state;
 			\item $T_{M_\mathcal{F}}:S_\mathcal{F}\times A \to \Pi(S_\mathcal{F})$, the probabilistic transition function defined as:
 				\begin{align*}				
 					T_{M_\mathcal{F}}(\langle s,n\rangle,a,\langle s',n'\rangle) &= \begin{cases}
@@ -22,12 +23,15 @@ We will now combine the reward controller $\mathcal{F}$ - representing the histo
 	\label{d:induced_pomdp}
 \end{definition}
 
+The new set of states is a product of the set of states $S$ and the set of memory nodes $N$. We only allow a transition between the new states if they align properly with regards to the transitions of the reward controller $\mathcal{F}$. We always look at the observation of the state we reach when transitioning between states. This is also the reason why the initial state $s_{I,\mathcal{F}}$ is not $\langle s_I, n_I\rangle$, but instead $\langle s_I, \delta(n_I,O(s_I))\rangle$. This is because when we start with this process, we always start in a state.  will always look at the observation of the \textbf{next} state.\\
+
+
 Now we can extend this induced POMDP $\mathcal{M}_\mathcal{F}$ as presented in \defref{d:extended_pomdp}, yielding $\widetilde{\mathcal{M}_\mathcal{F}}$, with the adjusted reward function in which we obtain the related reward when we enter the final state through action \texttt{end}.
 
 \begin{definition}
-	\label{def:reward-fuction-extended-induced-pomdp}
+	\label{d:reward-fuction-extended-induced-pomdp}
 	The reward function $\mathcal{R}:S_\mathcal{F}'\times A\to \mathbb{R}$ for the extended induced POMDP $\widetilde{\mathcal{M}_{\mathcal{F}}}$ is defined as follows:
-	\[\mathcal{R}(s,a) = \begin{cases}
+	\[\widehat{\mathcal{R}_\mathcal{F}}(s,a) = \begin{cases}
 		\sigma(n) & \text{if } a=\texttt{end} \text{ and } s=\langle s'',n\rangle \\
 		0 & \text{otherwise} 
 		\end{cases}

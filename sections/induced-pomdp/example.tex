@@ -1,3 +1,4 @@
+\label{s:induced_example}
 Let us observe the POMDP as seen in \figureref{f:pomdp_example} over which we have the history-based reward function $R(\texttt{even number of }\square)=10$. The corresponding reward controller can be seen in \figureref{f:RC_example}.
 \begin{figure}[H]
 	\centering
@@ -44,60 +45,60 @@ Let us observe the POMDP as seen in \figureref{f:pomdp_example} over which we ha
 \label{f:RC_example}
 \end{figure}
 
-The induced POMDP corresponding with \defref{d:induced_pomdp} can be seen in \figureref{f:induced_pomdp_example}.\todo{make it pretty somehow}
+The induced POMDP corresponding with \defref{d:induced_pomdp} can be seen in \figureref{f:induced_pomdp_example}. If we \texttt{end} the process in state $\langle s_0,n_0\rangle$, $\langle s_1,n_0 \rangle$ or $\langle s_2,n_0 \rangle$ we then obtain a reward of 10, otherwise we obtain a reward of zero. Only in those states we have met the requirement of having an even number of observation $\square$.
 
 \begin{figure}[H]
 	\centering
-		\begin{tikzpicture}[node distance=1cm,on grid,auto]
-			\node[state] (00) {$\langle s_0,0\rangle$};
+		\begin{tikzpicture}[node distance=1.5cm,on grid,auto]
+			\node[state] (00) {$\langle s_0,n_0\rangle$};
 			\node[dot]  (0a0) [below=of 00] {};
 			\node[dot]  (0b0) [below right=of 00] {};
-			\node[state] (10) [below= 4cm of 00]		{$\langle s_1,0\rangle$};
+			\node[state] (10) [below= 4cm of 00]		{$\langle s_1,n_0\rangle$};
 			\node[dot] (1b0) [above=of 10] {};
 			\node[dot] (1a0) [below=of 10] {};
-			\node[state,fill=black,text=white] (20) [below= 4cm of 10] {$\langle s_2,0\rangle$};
+			\node[state,fill=black,text=white] (20) [below= 4cm of 10] {$\langle s_2,n_0\rangle$};
 			\node[dot] (2c0) [right=of 20] {};
-			\node[state,initial right] (01) [right=5cm of 00]	 {$\langle s_0,1\rangle$};
+			\node[state,initial right] (01) [right=8cm of 00]	 {$\langle s_0,n_1\rangle$};
 			\node[dot]  (0a1) [below=of 01] {};
 			\node[dot]  (0b1) [below left=of 01] {};
-			\node[state] (11) [below= 4cm  of 01]		{$\langle s_1,1\rangle$};
+			\node[state] (11) [below= 4cm  of 01]		{$\langle s_1,n_1\rangle$};
 			\node[dot] (1b1) [above=of 11] {};
 			\node[dot] (1a1) [below=of 11] {};
-			\node[state,fill=black,text=white] (21) [below= 4cm of 11] {$\langle s_2,1\rangle$};
+			\node[state,fill=black,text=white] (21) [below= 4cm of 11] {$\langle s_2,n_1\rangle$};
 			\node[dot] (2c1) [left=of 21] {};
-			\path[-]    (00) edge [] node[left] {$a$} (0a0)
+			\path[-,red]    (00) edge [] node[left] {$a$} (0a0)
                              edge [] node[right] {$b$} (0b0)
                         (10) edge [] node[left]  {$a$} (1a0)
                              edge [] node[left]  {$b$} (1b0)
                         (20) edge [] node[below] {$c$} (2c0);
                         
-			\path[-]    (01) edge [] node[right] {$a$} (0a1)
+			\path[-,red]    (01) edge [] node[right] {$a$} (0a1)
                              edge [] node[left] {$b$} (0b1)
                         (11) edge [] node[right]  {$a$} (1a1)
                              edge [] node[right]  {$b$} (1b1)
-                        (21) edge [] node[below] {$c$} (2c1);
-			\path[->] (0a0) 	edge[] 				node [above]  {$0.5$}  (01)
-			                edge[bend right=50] 	node [left]  {$0.5$}  (20)
-			          (0b0) 	edge[]             	node [below] {$0.25$} (11)
+                        (21) edge [] node[below] {$c$} (2c1); 
+			\path[->] (0a0) 	edge[] 				node [above,pos=0.8,sloped]  {$0.5$}  (01)
+			                edge[bend right=50] 	node [left,pos=0.8]  {$0.5$}  (20)
+			          (0b0) 	edge[]             	node [below,pos=0.15,sloped] {$0.25$} (11)
 			                edge[bend right]    	node [left] {$0.75$} (20)
-			          (1a0) 	edge[]   			node [below] {$0.25$} (11)
-			                edge[]    			node [right]  {$0.75$} (20)
-			          (1b0) edge[]    			node [below] {$0.25$} (11)
-			                	edge[]    			node [above] {$0.75$} (01)
+			          (1a0) 	edge[]   			node [below,pos=0.3,sloped] {$0.25$} (11)
+			                edge[]    			node [right,pos=0.4]  {$0.75$} (20)
+			          (1b0) edge[]    			node [above,pos=0.45,sloped] {$0.25$} (11)
+			                	edge[]    			node [above,pos=0.1,sloped] {$0.75$} (01)
 			          (2c0) 	edge[bend right]   	node [right]  {$0.9$}  (20)
-			                edge[bend right]    	node [right] {$0.1$}  (11);
-			\path[->,blue] (0a1) 	edge[] 	node [above]  {$0.5$}  (00)
-			                edge[bend left=50] 	node [right] {$0.5$}  (21)
-			          (0b1) 	edge[]              	node [below] {$0.25$} (10)
+			                edge[bend right]    	node [above,sloped,pos=0.7] {$0.1$}  (11);
+			\path[->,blue] (0a1) 	edge[] 	node [above,pos=0.8,sloped]  {$0.5$}  (00)
+			                edge[bend left=50] 	node [right,pos=0.8] {$0.5$}  (21)
+			          (0b1) 	edge[]              	node [below,pos=0.15,sloped] {$0.25$} (10)
 			                edge[bend left]    	node [right] {$0.75$} (21)
-			          (1a1) 	edge[]    			node [below] {$0.25$} (10)
-			                edge[]    			node [left]  {$0.75$} (21)
-			          (1b1) 	edge[]    			node [below] {$0.25$} (10)
-			                edge[]    			node [above] {$0.75$} (00)
+			          (1a1) 	edge[]    			node [below,pos=0.3,sloped] {$0.25$} (10)
+			                edge[]    			node [left,pos=0.4]  {$0.75$} (21)
+			          (1b1) 	edge[]    			node [above,pos=0.45,sloped] {$0.25$} (10)
+			                edge[]    			node [above,pos=0.15,sloped] {$0.75$} (00)
 			          (2c1) 	edge[bend left]    	node [left]  {$0.9$}  (21)
-			                edge[bend left]    	node [left] {$0.1$}  (10);
+			                edge[bend left]    	node [above,sloped,pos=0.7] {$0.1$}  (10);
 	\end{tikzpicture}
 \caption{POMDP with $\Omega=\{\square,\blacksquare\}$}
-	\label{f:induced_pomdp}
-\end{figure}
+	\label{f:induced_pomdp_example}
+\end{figure}\todo{ensure for better readability}
 

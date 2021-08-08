@@ -2,11 +2,11 @@ A machine is not always defined deterministically. Instead, a process can transi
 
 \begin{definition}[Markov property]
 For any $s_0, s_1, \dots, s_{n-1}, s_n \in S$ :
-\[P(X_n = s_n \mid X_0=s_0, X_1=s_1,\dots, X_{n-1}=s_{n-1}) = P(X_n =s_n | X_{n-1} = s_{n-1}\]
+\[P(X_n = s_n \mid X_0=s_0, X_1=s_1,\dots, X_{n-1}=s_{n-1}) = P(X_n =s_n | X_{n-1} = s_{n-1})\]
 \label{d:markov}
 \end{definition}
 
-This property states that the probability distribution of $X_n$ is only dependent on its immediate past, namely $X_{n-1}$. So for any stochastic process, given the current state we know that the future state is not dependent on the past states.
+This property states that the probability distribution of $X_n$ is only dependent on its immediate past, namely $X_{n-1}$. So for any stochastic process, given the current state, we know that the future state is not dependent on the past states.
 
 Note that in the entirety of this thesis, we will only be discudding discrete-time Markov processes. 
 
