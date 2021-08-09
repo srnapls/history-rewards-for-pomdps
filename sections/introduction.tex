@@ -1,4 +1,7 @@
 In reinforced learning we are often shown models in which the agent gets a reward for certain behavior. This behavior can also include a reward that will given only after a certain time or only given a certain history. These history-based reward functions have been studies quite a lot. More specifically, a number of results have been found to obtain a policy concerning the expected optimal reward for these history-based reward functions for MDPs\cite{p:jirp}\cite{p:rdp}.\todo{talk a bit about these?}
+%rdp:
+%- model with NM dynamics and rewards
+% pomdp can be approximated and learned from observations only
 However for POMDPs, the task of obtaining an policy that ensures the maximum reward (or minimum cost) for history-based reward functions, is computative heavy. The belief MDP representing a POMDP can be continuous, storing the history observed for sequences and not knowing how long the sequence needs to be can be memory intensive.
 
 Removing the history-based function would remove some of this memory intensive process. For this we present so-called Reward Controllers, which are finite automata which represent the history-based reward function used for the POMDP. This reward controller can then be combined with the original POMDP, to create an induced POMDP. This induced POMDP doesn't need to store the relevant history anymore, which was necessary for the original POMDP. The new reward function is then only based on the current state and the action, allowing us to use known methods to calculate the optimal expected reward and to find a policy.

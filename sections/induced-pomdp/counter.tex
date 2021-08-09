@@ -1,5 +1,5 @@
 \label{s:induced_limit}
-However, when we try to calculate $P[[ \texttt{F}\:s=s_F]]$, this will not equate to 1 because there is no absolutely certainty that \texttt{end} will ever be performed. We can enforce the model to allow observation sequences up to a certain natural number $T$, such that every observation sequence $o_1 o_2 \dots o_n$ we know that $n\leq T$. 
+However, when we try to calculate the probability for which we end up in $s_F$ ($P[ \texttt{F}\:s=s_F]$), we notice that this probability is not equal to 1, because there is no absolutele certainty that \texttt{end} will ever be performed and thus no certainty that we end up in $s_F$. Luckily, we can enforce that the model only allows observation sequences up to a certain natural number $T$, such that for every observation sequence $o_1 o_2 \dots o_n$ we know that $n\leq T$. 
 
 \begin{definition}
 We can extend the underlying MDP $M=(S\cup\{s_F\}, s_I, A, T_M)$ of the extended POMDP $\widetilde{M}=(M,\Omega,O)$ with some given counter $T$, creating a limited underlying MDP $(S',s'_I,A,T_M')$ where
@@ -21,4 +21,4 @@ The reward function $R:S'\times A\times S' \to \mathbb{R}$ will only look at the
 
 In other words, we add a simple counter that keeps track of the number of actions allowed. At any point we are allowed to go to the final state, but when the counter reaches $T$, we force the model to enter the final state. This method enforces the process to always finish in the final state. \\
 
-\towrite{this way the probability of reaching $s_F$ is one so we can calculate the r max to s ewual to $S_F$}
+Now since that we know that $P[ \texttt{F}\:s=s_F]=1$, we can calculate the expected maximum reward for when we enter that state. In other words, we can use model checking tools like \texttt{PRISM} to calculate $R_{max}[\texttt{F}\:s=s_F]$.

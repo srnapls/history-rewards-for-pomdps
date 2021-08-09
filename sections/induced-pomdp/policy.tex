@@ -33,8 +33,7 @@ optimal policy $\pi$ for $\widetilde{\mathcal{M}_\mathcal{F}}$ also works for $\
 \begin{lemma}
 Let $R:\Omega^*\to\mathbb{R}$ be the original history-based reward function of POMDP $\mathcal{M}$. Then let $\widetilde{\mathcal{M}_\mathcal{F}}$ be the extended (\defref{d:extended_pomdp}) induced(\defref{d:induced_pomdp}) POMDP associated. Let this new POMDP have the reward function as defined in \defref{d:reward-fuction-extended-induced-pomdp}. Then for all $\langle s,n\rangle \in S_\mathcal{F}$ 
 \[ \widetilde{\mathcal{R}_\mathcal{F}}(\langle s,n\rangle,\texttt{end}) = R(o_1 o_2 \dots o_n \]
-where $o_1 o_2 \dots o_n$ is the observation sequence observed up untill that point. 
-\end{lemma}
+where $o_1 o_2 \dots o_n$ is the observation sequence observed up untill that point.
 \begin{proof}
 	\begin{flalign*}
 	R(o_1 o_2 \dots o_n) &= \sigma(\delta*(n_I, o_1 o_2 \dots o_n))  \hfill \text{\lemref{lem:proof_seq} and \lemref{proof_regex}} \\
@@ -43,5 +42,6 @@ where $o_1 o_2 \dots o_n$ is the observation sequence observed up untill that po
 	\end{flalign*}
 Note that furthermore the only requirement of $s$ is that $O(s) = o_n$.
 \end{proof}
+\end{lemma}
 
 Note that the original POMDP $\mathcal{M}$ does not have the action \texttt{end}, which does exist for every extended POMDP used for obtaining the optimal policy. 

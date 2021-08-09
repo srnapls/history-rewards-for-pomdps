@@ -10,4 +10,9 @@ In \href{https://gitlab.science.ru.nl/srietbergen/thesis/-/blob/master/code/indu
 Given the \texttt{prism}-file of the original POMDP, reward function $R$, \texttt{regex} indicating wether $R$ is defined over regular expression (and thus having the value \texttt{true}) or over sequences (having the value \texttt{false}) and the counter $T$ as seen in definition \defref{d:limited_pomdp}. It then creates the induced POMDP as defined in \defref{d:induced_pomdp}. This induced POMDP is then extending according to \defref{d:extended_pomdp}. Finally, to be able to compute nice properties we finally limit the model using \defref{d:limited_pomdp}.\\
 
 \texttt{create\textunderscore prism\textunderscore file()}\\
-After inializing the induced POMDP with the constructor, we can then obtain the information of said POMDP. This function transform this POMDP into a \texttt{prism}-file, such that we among others can check properties over this model through \texttt{storm}\cite{g:storm}.
+After inializing the induced POMDP with the constructor, we can then obtain the information of said POMDP. This function transform this POMDP into a \texttt{prism}-file. This also includes the \texttt{rewards} which are defined in \defref{d:limited_pomdp}. \\
+
+
+After we have executed the function \texttt{create\textunderscore prism\textunderscore file()}, we can run \texttt{storm} with the following property
+\[ \texttt{Rmax=? [F "end"]} \]
+to obtain the maximum expected reward. 
