@@ -110,6 +110,13 @@ class DFA(FA):
             D[pair] = 1
             for next_pair in S[pair]:
                 DIST(next_pair)
+                
+        def is_not_same(pair, next_pair):
+            check = False
+            for i in pair:
+                if i not in next_pair:
+                    check = True
+            return check 
         
         for pair in state_pairs:
             D[pair] = 1 if len(pair.intersection(self.F)) == 1 else 0
@@ -124,8 +131,9 @@ class DFA(FA):
             if not already_updated:
                 for a in self.Σ:
                     next_pair = frozenset(map(lambda x: self.δ(x, a), pair))
-                    if len(next_pair)!=1 and pair is not next_pair:
+                    if len(next_pair)!=1 and is_not_same(pair, next_pair):
                         S[next_pair].add(pair)
+        for pair in state_pairs:
             if len(pair) != 1 and D[pair] == 0:
                 non_distinguishable_pairs.update({pair})
                 non_distinguishable_states.update(pair)

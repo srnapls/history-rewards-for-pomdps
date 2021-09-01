@@ -81,7 +81,8 @@ class induced_POMDP(POMDP):
             string += "(t' = t + 1) + "
             return string 
         
-        (s0, n0) = self.product_pomdp.M.s_0
+        s_0 = self.product_pomdp.M.s_0
+        (s0, n0) = s_0
         content += variable_declaration('t', 1, 'T', 1)
         content += variable_declaration('n', 0, len(self.N.states()) - 1, n0)
         content += variable_declaration('s', 0, len(self.original_POMDP.M.S) - 1, s0)
@@ -120,7 +121,7 @@ class induced_POMDP(POMDP):
             content += "\n"
             
         content += "endmodule\n\n"
-        content += "label \"end\" = o=2;\n\n"
+        content += "label \"end\" = o = "+ str(len(self.product_pomdp.Omega)) + ";\n\n"
         
         content += "rewards \"profit\"\n"
         
@@ -151,5 +152,7 @@ if __name__ == '__main__':
     R2 = {"(b*ab*a)*b*" : 10, "a*ba*(ba*ba*)*" :15}
     R3 = {"(1*01*0)*1*" :10, "0*10*(10*10*)*" :15}
     R4= {"(1*01*0)*1*" :10}
-    model = induced_POMDP("prism/simple_pomdp.prism", R , True, 10)
+    
+    R_example = {"(0|1|3)*":100, "(0|1|3)*2(0|1|3)*":50, "(0|1|3)*2(0|1|3)*2(0|1|3)*":25, "(0|1|3)*2(0|1|3)*2(0|1|3)*2(0|1|3)*": 10}
+    model = induced_POMDP("prism/obstacle.prism", R_example, True, 15)
     model.create_prism_file()
