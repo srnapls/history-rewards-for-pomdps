@@ -1,0 +1,563 @@
+Write to file temp.drn.
+N = 5
+===============================
+T =125
+reading prism file finished
+Building model from temp.drn
+number of pomdp parameters=34
+number of pmc states=248207
+Number of pmc states: 248207
+Number of pmc transitions: 484377
+Labels: {'init', 'memstate_0', 'memstate_1', 'end', 'deadlock'}
+ModelType.DTMC
+Number of states: 248207
+region check
+;
+total model check time: 1.6373391151428223
+model checking ans:
+0.22168863988946763
+Academic license - for non-commercial use only - expires 2021-10-27
+Using license file /home/robin/gurobi.lic
+Parameter OutputFlag unchanged
+   Value: 1  Min: 0  Max: 1  Default: 1
+Encoding through states 0
+Encoding through states 10000
+Encoding through states 20000
+Encoding through states 30000
+Encoding through states 40000
+Encoding through states 50000
+Encoding through states 60000
+Encoding through states 70000
+Encoding through states 80000
+Encoding through states 90000
+Encoding through states 100000
+Encoding through states 110000
+Encoding through states 120000
+Encoding through states 130000
+Encoding through states 140000
+Encoding through states 150000
+Encoding through states 160000
+Encoding through states 170000
+Encoding through states 180000
+Encoding through states 190000
+Encoding through states 200000
+Encoding through states 210000
+Encoding through states 220000
+Encoding through states 230000
+Encoding through states 240000
+Solving...
+Solver time :23.324896574020386
+total solver time: 23.324896574020386
+total encoding time: 51.526341915130615
+num iteration 1
+total model check time: 1.6373391151428223
+Encoding through states 0
+Encoding through states 10000
+Encoding through states 20000
+Encoding through states 30000
+Encoding through states 40000
+Encoding through states 50000
+Encoding through states 60000
+Encoding through states 70000
+Encoding through states 80000
+Encoding through states 90000
+Encoding through states 100000
+Encoding through states 110000
+Encoding through states 120000
+Encoding through states 130000
+Encoding through states 140000
+Encoding through states 150000
+Encoding through states 160000
+Encoding through states 170000
+Encoding through states 180000
+Encoding through states 190000
+Encoding through states 200000
+Encoding through states 210000
+Encoding through states 220000
+Encoding through states 230000
+Encoding through states 240000
+Solving...
+Solver time :0.6923336982727051
+total solver time: 24.01723027229309
+total encoding time: 101.81223440170288
+num iteration 2
+total model check time: 1.6373391151428223
+Encoding through states 0
+Encoding through states 10000
+Encoding through states 20000
+Encoding through states 30000
+Encoding through states 40000
+Encoding through states 50000
+Encoding through states 60000
+Encoding through states 70000
+Encoding through states 80000
+Encoding through states 90000
+Encoding through states 100000
+Encoding through states 110000
+Encoding through states 120000
+Encoding through states 130000
+Encoding through states 140000
+Encoding through states 150000
+Encoding through states 160000
+Encoding through states 170000
+Encoding through states 180000
+Encoding through states 190000
+Encoding through states 200000
+Encoding through states 210000
+Encoding through states 220000
+Encoding through states 230000
+Encoding through states 240000
+Solving...
+Solver time :0.6978411674499512
+total solver time: 24.715071439743042
+total encoding time: 153.65736746788025
+num iteration 3
+total model check time: 1.6373391151428223
+Encoding through states 0
+Encoding through states 10000
+Encoding through states 20000
+Encoding through states 30000
+Encoding through states 40000
+Encoding through states 50000
+Encoding through states 60000
+Encoding through states 70000
+Encoding through states 80000
+Encoding through states 90000
+Encoding through states 100000
+Encoding through states 110000
+Encoding through states 120000
+Encoding through states 130000
+Encoding through states 140000
+Encoding through states 150000
+Encoding through states 160000
+Encoding through states 170000
+Encoding through states 180000
+Encoding through states 190000
+Encoding through states 200000
+Encoding through states 210000
+Encoding through states 220000
+Encoding through states 230000
+Encoding through states 240000
+Solving...
+Solver time :0.7784883975982666
+total solver time: 25.49355983734131
+total encoding time: 208.40516757965088
+num iteration 4
+total model check time: 1.6373391151428223
+Encoding through states 0
+Encoding through states 10000
+Encoding through states 20000
+Encoding through states 30000
+Encoding through states 40000
+Encoding through states 50000
+Encoding through states 60000
+Encoding through states 70000
+Encoding through states 80000
+Encoding through states 90000
+Encoding through states 100000
+Encoding through states 110000
+Encoding through states 120000
+Encoding through states 130000
+Encoding through states 140000
+Encoding through states 150000
+Encoding through states 160000
+Encoding through states 170000
+Encoding through states 180000
+Encoding through states 190000
+Encoding through states 200000
+Encoding through states 210000
+Encoding through states 220000
+Encoding through states 230000
+Encoding through states 240000
+Solving...
+Solver time :0.7234227657318115
+total solver time: 26.21698260307312
+total encoding time: 263.29954409599304
+num iteration 5
+total model check time: 1.6373391151428223
+Encoding through states 0
+Encoding through states 10000
+Encoding through states 20000
+Encoding through states 30000
+Encoding through states 40000
+Encoding through states 50000
+Encoding through states 60000
+Encoding through states 70000
+Encoding through states 80000
+Encoding through states 90000
+Encoding through states 100000
+Encoding through states 110000
+Encoding through states 120000
+Encoding through states 130000
+Encoding through states 140000
+Encoding through states 150000
+Encoding through states 160000
+Encoding through states 170000
+Encoding through states 180000
+Encoding through states 190000
+Encoding through states 200000
+Encoding through states 210000
+Encoding through states 220000
+Encoding through states 230000
+Encoding through states 240000
+Solving...
+Solver time :0.7059087753295898
+total solver time: 26.92289137840271
+total encoding time: 316.68565821647644
+num iteration 6
+total model check time: 1.6373391151428223
+Encoding through states 0
+Encoding through states 10000
+Encoding through states 20000
+Encoding through states 30000
+Encoding through states 40000
+Encoding through states 50000
+Encoding through states 60000
+Encoding through states 70000
+Encoding through states 80000
+Encoding through states 90000
+Encoding through states 100000
+Encoding through states 110000
+Encoding through states 120000
+Encoding through states 130000
+Encoding through states 140000
+Encoding through states 150000
+Encoding through states 160000
+Encoding through states 170000
+Encoding through states 180000
+Encoding through states 190000
+Encoding through states 200000
+Encoding through states 210000
+Encoding through states 220000
+Encoding through states 230000
+Encoding through states 240000
+Solving...
+Solver time :0.7022466659545898
+total solver time: 27.6251380443573
+total encoding time: 370.6439609527588
+num iteration 7
+total model check time: 1.6373391151428223
+Encoding through states 0
+Encoding through states 10000
+Encoding through states 20000
+Encoding through states 30000
+Encoding through states 40000
+Encoding through states 50000
+Encoding through states 60000
+Encoding through states 70000
+Encoding through states 80000
+Encoding through states 90000
+Encoding through states 100000
+Encoding through states 110000
+Encoding through states 120000
+Encoding through states 130000
+Encoding through states 140000
+Encoding through states 150000
+Encoding through states 160000
+Encoding through states 170000
+Encoding through states 180000
+Encoding through states 190000
+Encoding through states 200000
+Encoding through states 210000
+Encoding through states 220000
+Encoding through states 230000
+Encoding through states 240000
+Solving...
+Solver time :0.7032766342163086
+total solver time: 28.32841467857361
+total encoding time: 423.8049671649933
+num iteration 8
+total model check time: 1.6373391151428223
+Encoding through states 0
+Encoding through states 10000
+Encoding through states 20000
+Encoding through states 30000
+Encoding through states 40000
+Encoding through states 50000
+Encoding through states 60000
+Encoding through states 70000
+Encoding through states 80000
+Encoding through states 90000
+Encoding through states 100000
+Encoding through states 110000
+Encoding through states 120000
+Encoding through states 130000
+Encoding through states 140000
+Encoding through states 150000
+Encoding through states 160000
+Encoding through states 170000
+Encoding through states 180000
+Encoding through states 190000
+Encoding through states 200000
+Encoding through states 210000
+Encoding through states 220000
+Encoding through states 230000
+Encoding through states 240000
+Solving...
+Solver time :0.7631304264068604
+total solver time: 29.09154510498047
+total encoding time: 477.8422441482544
+num iteration 9
+total model check time: 1.6373391151428223
+Encoding through states 0
+Encoding through states 10000
+Encoding through states 20000
+Encoding through states 30000
+Encoding through states 40000
+Encoding through states 50000
+Encoding through states 60000
+Encoding through states 70000
+Encoding through states 80000
+Encoding through states 90000
+Encoding through states 100000
+Encoding through states 110000
+Encoding through states 120000
+Encoding through states 130000
+Encoding through states 140000
+Encoding through states 150000
+Encoding through states 160000
+Encoding through states 170000
+Encoding through states 180000
+Encoding through states 190000
+Encoding through states 200000
+Encoding through states 210000
+Encoding through states 220000
+Encoding through states 230000
+Encoding through states 240000
+Solving...
+Solver time :0.7242670059204102
+total solver time: 29.81581211090088
+total encoding time: 529.8844134807587
+num iteration 10
+total model check time: 1.6373391151428223
+Encoding through states 0
+Encoding through states 10000
+Encoding through states 20000
+Encoding through states 30000
+Encoding through states 40000
+Encoding through states 50000
+Encoding through states 60000
+Encoding through states 70000
+Encoding through states 80000
+Encoding through states 90000
+Encoding through states 100000
+Encoding through states 110000
+Encoding through states 120000
+Encoding through states 130000
+Encoding through states 140000
+Encoding through states 150000
+Encoding through states 160000
+Encoding through states 170000
+Encoding through states 180000
+Encoding through states 190000
+Encoding through states 200000
+Encoding through states 210000
+Encoding through states 220000
+Encoding through states 230000
+Encoding through states 240000
+Solving...
+Solver time :0.7527697086334229
+total solver time: 30.5685818195343
+total encoding time: 581.8399939537048
+num iteration 11
+total model check time: 1.6373391151428223
+Encoding through states 0
+Encoding through states 10000
+Encoding through states 20000
+Encoding through states 30000
+Encoding through states 40000
+Encoding through states 50000
+Encoding through states 60000
+Encoding through states 70000
+Encoding through states 80000
+Encoding through states 90000
+Encoding through states 100000
+Encoding through states 110000
+Encoding through states 120000
+Encoding through states 130000
+Encoding through states 140000
+Encoding through states 150000
+Encoding through states 160000
+Encoding through states 170000
+Encoding through states 180000
+Encoding through states 190000
+Encoding through states 200000
+Encoding through states 210000
+Encoding through states 220000
+Encoding through states 230000
+Encoding through states 240000
+Solving...
+Solver time :0.7115435600280762
+total solver time: 31.280125379562378
+total encoding time: 633.7099599838257
+num iteration 12
+total model check time: 1.6373391151428223
+Encoding through states 0
+Encoding through states 10000
+Encoding through states 20000
+Encoding through states 30000
+Encoding through states 40000
+Encoding through states 50000
+Encoding through states 60000
+Encoding through states 70000
+Encoding through states 80000
+Encoding through states 90000
+Encoding through states 100000
+Encoding through states 110000
+Encoding through states 120000
+Encoding through states 130000
+Encoding through states 140000
+Encoding through states 150000
+Encoding through states 160000
+Encoding through states 170000
+Encoding through states 180000
+Encoding through states 190000
+Encoding through states 200000
+Encoding through states 210000
+Encoding through states 220000
+Encoding through states 230000
+Encoding through states 240000
+Solving...
+Solver time :0.7025370597839355
+total solver time: 31.982662439346313
+total encoding time: 685.0703241825104
+num iteration 13
+total model check time: 1.6373391151428223
+Encoding through states 0
+Encoding through states 10000
+Encoding through states 20000
+Encoding through states 30000
+Encoding through states 40000
+Encoding through states 50000
+Encoding through states 60000
+Encoding through states 70000
+Encoding through states 80000
+Encoding through states 90000
+Encoding through states 100000
+Encoding through states 110000
+Encoding through states 120000
+Encoding through states 130000
+Encoding through states 140000
+Encoding through states 150000
+Encoding through states 160000
+Encoding through states 170000
+Encoding through states 180000
+Encoding through states 190000
+Encoding through states 200000
+Encoding through states 210000
+Encoding through states 220000
+Encoding through states 230000
+Encoding through states 240000
+Solving...
+Solver time :0.7486364841461182
+total solver time: 32.73129892349243
+total encoding time: 736.8808121681213
+num iteration 14
+total model check time: 1.6373391151428223
+Encoding through states 0
+Encoding through states 10000
+Encoding through states 20000
+Encoding through states 30000
+Encoding through states 40000
+Encoding through states 50000
+Encoding through states 60000
+Encoding through states 70000
+Encoding through states 80000
+Encoding through states 90000
+Encoding through states 100000
+Encoding through states 110000
+Encoding through states 120000
+Encoding through states 130000
+Encoding through states 140000
+Encoding through states 150000
+Encoding through states 160000
+Encoding through states 170000
+Encoding through states 180000
+Encoding through states 190000
+Encoding through states 200000
+Encoding through states 210000
+Encoding through states 220000
+Encoding through states 230000
+Encoding through states 240000
+Solving...
+Solver time :0.7172386646270752
+total solver time: 33.44853758811951
+total encoding time: 788.5403261184692
+num iteration 15
+total model check time: 1.6373391151428223
+Encoding through states 0
+Encoding through states 10000
+Encoding through states 20000
+Encoding through states 30000
+Encoding through states 40000
+Encoding through states 50000
+Encoding through states 60000
+Encoding through states 70000
+Encoding through states 80000
+Encoding through states 90000
+Encoding through states 100000
+Encoding through states 110000
+Encoding through states 120000
+Encoding through states 130000
+Encoding through states 140000
+Encoding through states 150000
+Encoding through states 160000
+Encoding through states 170000
+Encoding through states 180000
+Encoding through states 190000
+Encoding through states 200000
+Encoding through states 210000
+Encoding through states 220000
+Encoding through states 230000
+Encoding through states 240000
+Solving...
+Solver time :0.7196693420410156
+total solver time: 34.16820693016052
+total encoding time: 840.2623462677002
+num iteration 16
+total model check time: 1.6373391151428223
+Encoding through states 0
+Encoding through states 10000
+Encoding through states 20000
+Encoding through states 30000
+Encoding through states 40000
+Encoding through states 50000
+Encoding through states 60000
+Encoding through states 70000
+Encoding through states 80000
+Encoding through states 90000
+Encoding through states 100000
+Encoding through states 110000
+Encoding through states 120000
+Encoding through states 130000
+Encoding through states 140000
+Encoding through states 150000
+Encoding through states 160000
+Encoding through states 170000
+Encoding through states 180000
+Encoding through states 190000
+Encoding through states 200000
+Encoding through states 210000
+Encoding through states 220000
+Encoding through states 230000
+Encoding through states 240000
+Solving...
+Solver time :0.7218911647796631
+total solver time: 34.890098094940186
+total encoding time: 891.9275994300842
+num iteration 17
+total model check time: 1.6373391151428223
+Encoding through states 0
+Encoding through states 10000
+Encoding through states 20000
+Encoding through states 30000
+Encoding through states 40000
+Encoding through states 50000
+Encoding through states 60000
+Encoding through states 70000
+Encoding through states 80000
+Encoding through states 90000
+Encoding through states 100000
+Encoding through states 110000
+Encoding through states 120000
+Write to file temp.drn.

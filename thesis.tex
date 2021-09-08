@@ -19,7 +19,12 @@
 \usepackage{subcaption}
 \usepackage{cleveref}
 \usepackage{alltt}
+\usepackage{rotating}
 \usepackage[noend]{algpseudocode}
+\usepackage{pgfplots}
+\pgfplotsset{width=8cm,compat=1.9}
+
+
 \graphicspath{{D:/Thesis/img/}}
 \usetikzlibrary{automata, positioning, arrows, matrix}
 \captionsetup[subfigure]{labelfont=rm}
@@ -86,6 +91,9 @@
 	
 	\chapter{Integrating the history}
 	\input{sections/induced_pomdp.tex}
+	
+	\chapter{Case Study}
+	\input{sections/case_study.tex}	
 	
 	\chapter{Conclusion}
 	\input{sections/conclusion.tex}

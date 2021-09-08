@@ -4,7 +4,7 @@ observables
 start
 endobservables
 
-const int N = 6;
+const int N = 5;
 const int axMAX = N-1;
 const int ayMAX = N-1;
 const int axMIN = 0;
@@ -35,8 +35,6 @@ module master
     [south] start  & !done -> true;
     [east] start  & !done-> true;
     [west] start & !done -> true;
-
-
 endmodule
 
 
@@ -52,7 +50,6 @@ module robot
     [south]  true -> (1-slippery): (ay'=min(ay+1,ayMAX)) + slippery: (ay'=min(ay+2,ayMAX));
     [north]  true -> (1-slippery): (ay'=max(ay-1,ayMIN)) + slippery: (ay'=max(ay-2,ayMIN));
 endmodule
-
 
 label "goal" = done;
 label "traps" = crash;

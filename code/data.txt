@@ -1,0 +1,205 @@
+gridworld van N=5 en ene van N=10
+tabelletjes met info van N=5,10,15
+en T=5,10,25,50,100,250,500 ?
+
+
+n=5
+t=5
+total solver time: 0.07061171531677246
+total encoding time: 5.124340295791626
+p[init] = 32.23052978515625
+Number of pmc states: 1044
+Number of pmc transitions: 2021
+
+t=10
+Number of pmc states: 3744
+Number of pmc transitions: 7290
+total solver time: 0.23369789123535156
+total encoding time: 17.73706078529358
+p[init] = 36.38576068456161
+
+t=25
+Number of pmc states: 11844
+Number of pmc transitions: 23100
+total solver time: 0.7551841735839844
+total encoding time: 57.91306495666504
+value at initial state=37.48626371721075
+
+t=50
+Number of pmc states: 25344
+Number of pmc transitions: 49496
+total solver time: 1.7855799198150635
+total encoding time: 116.62243914604187
+p[init] = 37.49999407905164
+
+t=100
+Number of pmc states: 52344
+Number of pmc transitions: 102246
+total solver time: 4.157400131225586
+total encoding time: 244.8014726638794
+value at initial state=37.499999999996064
+
+t=250
+Number of pmc states: 133344
+Number of pmc transitions: 260250
+total solver time: 15.06567931175232
+total encoding time: 667.6855957508087
+p[init] = 37.5
+
+
+t=500
+total solver time: 42.94426226615906
+total encoding time: 1208.9141011238098
+Number of pmc states: 268344
+Number of pmc transitions: 523750
+p[init]=37.5
+
+----
+
+t=50
+Number of pmc states: 25344
+Number of pmc transitions: 49496
+total solver time: 1.626060962677002
+total encoding time: 114.16867327690125
+p[init] = 37.49999360448241
+
+t=100
+Number of pmc states: 52344
+Number of pmc transitions: 102246
+total solver time: 4.037363529205322
+total encoding time: 235.7462432384491
+p[init] = 37.499999999998266
+
+t=150
+Number of pmc states: 79344
+Number of pmc transitions: 154996
+total solver time: 6.97564697265625
+total encoding time: 358.4442961215973
+p[init] = 37.5
+
+t=200
+Number of pmc states: 106344
+Number of pmc transitions: 207746
+total solver time: 10.402766227722168
+total encoding time: 479.32665252685547
+p[init] = 37.5
+
+t=250
+Number of pmc states: 133344
+Number of pmc transitions: 260496
+total solver time: 14.56370735168457
+total encoding time: 603.9462788105011
+p[init] = 37.5
+
+t=300
+Number of pmc states: 160344
+Number of pmc transitions: 313246
+total solver time: 19.258398056030273
+total encoding time: 719.2684214115143
+p[init] = 37.5
+
+t=350
+Number of pmc states: 187344
+Number of pmc transitions: 365996
+total solver time: 24.59371781349182
+total encoding time: 842.7630634307861
+p[init] = 37.5
+
+t=400
+Number of pmc states: 214344
+Number of pmc transitions: 418746
+total solver time: 30.307270288467407
+total encoding time: 972.8069229125977
+p[init] = 37.5
+
+t=450
+Number of pmc states: 241344
+Number of pmc transitions: 471496
+total solver time: 36.34933853149414
+total encoding time: 1085.677146911621
+p[init] = 37.5
+
+t=500
+Number of pmc states: 268344
+Number of pmc transitions: 524246
+total solver time: 44.51456022262573
+total encoding time: 1265.9246335029602
+p[init] = 37.5
+
+
+
+=======================================================================
+
+n=10
+t=5
+total solver time: 0.17404842376708984
+total encoding time: 12.538548469543457
+value at initial state=78.216552734375
+34 parameters
+Number of pmc states: 2738
+Number of pmc transitions: 5220
+
+t=10
+total solver time: 3.3380908966064453
+total encoding time: 195.9693148136139
+value at initial state=92.37639273739964
+34 parameters
+Number of pmc states: 44117
+Number of pmc transitions: 85941
+
+t=15
+value at initial state 94.22007166227232
+Number of pmc states: 105242
+Number of pmc transitions: 205715
+total solver time: 10.487053155899048
+total encoding time: 465.243195772171
+
+t=20
+Number of pmc states: 166367
+Number of pmc transitions: 325465
+total solver time: 20.382484197616577
+total encoding time: 729.490996837616
+p[init] = 94.98985781263083
+
+t=25 
+Number of pmc states: 227492
+Number of pmc transitions: 445131
+total solver time: 32.89199090003967
+total encoding time: 987.4284739494324
+value at initial state=96.08894586261405
+
+t=30
+total solver time: 48.775856494903564
+total encoding time: 1269.9478302001953
+Number of pmc states: 288617
+Number of pmc transitions: 564856
+p[init] = 96.04055000531682
+
+t=35
+Number of pmc states: 349742
+Number of pmc transitions: 684566
+total solver time: 67.23298954963684
+total encoding time: 1518.3129053115845
+p[init] = 95.88515735366772
+
+t=40
+Number of pmc states: 410867
+Number of pmc transitions: 804305
+total solver time: 92.38880252838135
+total encoding time: 1783.4360728263855
+p[init] = 94.82845089637681
+
+t=45
+Number of pmc states: 471992
+Number of pmc transitions: 924215
+95.42
+
+
+t=50
+Number of pmc states: 533117
+Number of pmc transitions: 1043756
+95.75
+
+
+
+

@@ -59,8 +59,6 @@ Then for every sequence which we are given, we walk through it. If we then come 
 
 Then since the reward controller needs to be deterministic, we set the other undefined values. Every other transition that hasn't been made yet, will be transferred to the dump node as mentioned above in \lineref{l:self_loop}. Furthermore, there are still nodes in which the reward is undefined. None of the given sequences ended up in these nodes, so per \defref{d:created_reward_function} we encode those to zero in \lineref{l:set_zero}.
 
-We observe that the number of memory nodes $|N|$ of the newly created reward controller $\mathcal{F}$ is bounded by $|\Omega|^k + 1$, where $k=\max\limits_{seq\in sequences} |seq|$.\\
-
 Note that the set of nodes $N$ without $n_F$ together with the memory update function is represents a directed acyclic graph. This indicates for every node $n$ there is an unique path from the initial node $n_I$ to node $n$. This unique path is encoded in the function \texttt{path}$:N\setminus\{n_F\}\to\Omega^*$. This function is well-defined, since it's defined for $n_I$ in \lineref{l:empty_path}. Every other time a new node is neccesary, it is created in \lineref{l:new_transition}, and \texttt{path} is then immediately defined for the new node. This \texttt{path} function is needed for proving the following lemma. 
 
 
@@ -73,6 +71,10 @@ If $n\in N\setminus \{n_F\}$, we can obtain the unique path to node $n$ through 
 \end{proof}
 \label{lem:proof_seq}
 \end{lemma}
+
+
+We observe that the number of memory nodes $|N|$ of the newly created reward controller $\mathcal{F}$ is bounded by $|\Omega|^k + 1$, where $k=\max\limits_{seq\in sequences} |seq|$.\\
+\towrite{state of the art automata learning could decrease this}
 
 \subsection*{Example}
 \input{sections/reward-controller/sequences/example.tex}

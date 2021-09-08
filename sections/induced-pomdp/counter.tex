@@ -22,3 +22,6 @@ The reward function $R:S'\times A\times S' \to \mathbb{R}$ will only look at the
 In other words, we add a simple counter that keeps track of the number of actions allowed. At any point we are allowed to go to the final state, but when the counter reaches $T$, we force the model to enter the final state. This method enforces the process to always finish in the final state. \\
 
 Now since that we know that $P[ \texttt{F}\:s=s_F]=1$, we can calculate the expected maximum reward for when we enter that state. In other words, we can use model checking tools like \texttt{PRISM} to calculate $R_{max}[\texttt{F}\:s=s_F]$.
+
+
+\towrite{size and complexity}

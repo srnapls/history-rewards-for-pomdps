@@ -1,0 +1,62 @@
+\section{Problem}
+
+As found in \cite{g:gridworld}, let there be a grid with five static obstacles (O) in which a robot needs to find the exit (F). The robot can only observe whether the current position is a trap or an exit when moving. The initial state of the robot is also uncertain, it has four possible initial positions (P). The size of the grid $N$ determines the actual positions of the obstacles and the possible initial positions of the robot. The exit will remain static in the north-east. The robot is allowed to move north, east, south or west. The robot also has a probability of $0.1$ of slipping. When the robot slips it will move two tiles at once, when possible. If the robot will encounter a border, it will not move past the border but simply stop there.
+
+In \figureref{f:n5grid} we have the view of the grid for $N=5$ and in \figureref{f:n10grid} we see the grid for $N=10$.
+
+\input{sections/case_study/figures.tex}
+
+The robot has a possibile of observing four different observations.
+\begin{enumerate}
+\item \texttt{start}: the robot is in the start position.
+\item \texttt{traps}: the robot has encountered an obstacle.
+\item \texttt{notbad}: the robot has encountered nothing of interest.
+\item \texttt{goal}: the robot has reached the final position.
+\end{enumerate} 
+
+Let us look at a specific history-based reward function for this grid. If the robot before reaching the exit encounters
+\begin{itemize}
+\item no obstacles, the reward is 100.
+\item one obstacle, the reward is 50.
+\item two obstacles, the reward is 25.
+\item move than three, the reward is zero.
+\end{itemize}
+
+\towrite{This figure needs to be reworked}
+These requirements can be transformed into five regular expressions. When combining them together with their respective rewards, we can create a reward controller as seen in \figureref{f:rc_gridworld}
+
+\begin{figure}[H]
+	\centering
+		\begin{tikzpicture}[node distance=3cm,on grid,auto]
+			\node[initial,state] (1) 			{$q_0/100$};
+			\node[state] (2) [right=of 1]		{$q_1/50$};
+			\node[state] (3) [right=of 2]		{$q_2/25$};
+			\node[state] (4) [right=of 3]		{$q_3/10$};
+			\node[state] (5) [right=of 4]		{$q_4/0$};
+			\path[->] 	(1) edge[loop above] 	node [above,text width=1.5cm,align=center] {\texttt{start, notbad, goal}}			()
+							edge[] 	node [above] {\texttt{traps}}			(2)
+						(2) edge[loop above] 	node [above,text width=1.5cm,align=center] {\texttt{start, notbad, goal}}			()
+							edge[] 	node [above] {\texttt{traps}}			(3)
+						(3) edge[loop above] 	node [above,text width=1.5cm,align=center] {\texttt{start, notbad, goal}}			()
+							edge[] 	node [above] {\texttt{traps}}			(4)
+						(4) edge[loop above] 	node [above,text width=1.5cm,align=center] {\texttt{start, notbad, goal}}			()
+							edge[] 	node [above] {\texttt{traps}}			(5)
+						(5) edge[loop above] node [above,text width=1.5cm,align=center] {\texttt{start, notbad, goal, traps}}			();
+	\end{tikzpicture}
+\caption{Reward Controller for given requirements}
+	\label{f:rc_gridworld}
+\end{figure}
+
+The goal for this situation is to find a policy that maximizes the expected reward given a maximum observation sequence $T$.
+
+\section{Results}
+For testing this scenario, we have to pick the maximum observation sequence length $T$ as we have seen in \defref{d:limited_pomdp}. 
+We have run the benchmark toolchain for creating policies for POMDPs\cite{g:toolchain} on a system which runs on \texttt{Ubuntu 20.04.3 LTS}. The system has a \texttt{Intel Core i3-6006U} processor and 4GB of RAM.
+
+This tool solves the POMDP given a specific property that we want to check. For our problem we want to find the maximum expected reward after reading a sequence up to length $T$, given the reward function as stated above. The tool finds this value and then finds a policy that complies with this value. A pMC will be generated for finding an optimal policy. The size of this is represented in number of states and number of transitions. 
+
+
+\input{sections/case_study/tables.tex}
+\input{sections/case_study/plots.tex}
+
+\towrite{remark}

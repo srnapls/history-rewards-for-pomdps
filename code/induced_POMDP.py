@@ -26,6 +26,11 @@ class induced_POMDP(POMDP):
         O = {}
         T = {}
         R = {}
+        for s in S:
+            T[s] = {}
+            (s_I, n) = s
+            O[s] = orig_O[s_I]
+            R[s] = self.N._label(n)
         for s1 in S:
             T[s1] = {}
             (s_1, n_1) = s1
@@ -39,7 +44,7 @@ class induced_POMDP(POMDP):
                     (s_2, n_2) = s2
                     if orig_T[s_1][a].get(s_2) is None:
                         continue
-                    if self.N._transition(n_1, str(O[s1])) is n_2 :
+                    if self.N._transition(n_1, str(O[s2])) is n_2 :
                         T[s1][a][s2] = orig_T[s_1][a][s_2]
         final_state = "s_F"
         S.add(final_state)
@@ -146,13 +151,3 @@ class induced_POMDP(POMDP):
         f = open("prism/properties.pctl", "w")
         f.write("R{\"profit\"}max=? [F \"end\"]")
         f.close()
-
-if __name__ == '__main__':
-    R = {"00":15,"101":20,"0010":12,"1":2}
-    R2 = {"(b*ab*a)*b*" : 10, "a*ba*(ba*ba*)*" :15}
-    R3 = {"(1*01*0)*1*" :10, "0*10*(10*10*)*" :15}
-    R4= {"(1*01*0)*1*" :10}
-    
-    R_example = {"(0|1|3)*":100, "(0|1|3)*2(0|1|3)*":50, "(0|1|3)*2(0|1|3)*2(0|1|3)*":25, "(0|1|3)*2(0|1|3)*2(0|1|3)*2(0|1|3)*": 10}
-    model = induced_POMDP("prism/obstacle.prism", R_example, True, 15)
-    model.create_prism_file()
