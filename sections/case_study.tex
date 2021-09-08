@@ -55,8 +55,11 @@ We have run the benchmark toolchain for creating policies for POMDPs\cite{g:tool
 
 This tool solves the POMDP given a specific property that we want to check. For our problem we want to find the maximum expected reward after reading a sequence up to length $T$, given the reward function as stated above. The tool finds this value and then finds a policy that complies with this value. A pMC will be generated for finding an optimal policy. The size of this is represented in number of states and number of transitions. 
 
-
+The empty slots depict the fact that the size of the pMC was too big to be solved. \todo{move tables to appendix?}
 \input{sections/case_study/tables.tex}
 \input{sections/case_study/plots.tex}
+For $N=5$ we observe that the maximum expected reward had been reached already when $T=50$.
 
-\towrite{remark}
+For $N=10$ we can see that the maximum expected reward has been reached for when $T=35$. This can be decreased if we allow for a certain error margin.
+
+The sizing of the pMC that is needed to solve for the policy for optaining the maximum expected reward seems to be linear, in terms of states as wel ass transitions. Since the solver for finding the optimal expected reward is a bit more than linear, it would be pertinent to find the smallest $T$ possible, given a certain error margin for the expected maximum reward.

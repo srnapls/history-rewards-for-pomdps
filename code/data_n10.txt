@@ -6251,3 +6251,79 @@ printing best values and seconds
 SOLVED
 number of iterations=21
 solver time=95.8552098274231
+
+t=5
+Number of pmc states: 2740
+Number of pmc transitions: 5223
+total solver time: 0.16350340843200684
+total encoding time: 11.946878671646118
+p[init] = 0.0347900390625
+
+t=10
+Number of pmc states: 39908
+Number of pmc transitions: 77819
+total solver time: 2.9486682415008545
+total encoding time: 172.79123997688293
+p[init] = 0.20539535549257765
+
+t=15
+Number of pmc states: 88268
+Number of pmc transitions: 172564
+total solver time: 8.208425998687744
+total encoding time: 383.88006138801575
+p[init] = 0.2151849933255181
+
+t=20
+Number of pmc states: 136628
+Number of pmc transitions: 267309
+total solver time: 15.119560718536377
+total encoding time: 595.1881530284882
+p[init] = 0.21620628664213737
+
+t=25
+Number of pmc states: 184988
+Number of pmc transitions: 362054
+total solver time: 24.176554203033447
+total encoding time: 805.5206866264343
+p[init] = 0.21636053862120946
+
+t=30
+Number of pmc states: 233348
+Number of pmc transitions: 456799
+total solver time: 35.22490167617798
+total encoding time: 1025.7139456272125
+p[init] = 0.21639257398410558
+
+t=35
+Number of pmc states: 281708
+Number of pmc transitions: 551544
+total solver time: 49.18992733955383
+total encoding time: 1232.1870255470276
+p[init] = 0.21640031659732145
+
+t=40
+Number of pmc states: 330068
+Number of pmc transitions: 646289
+total solver time: 61.069151639938354
+total encoding time: 1425.903594493866
+p[init] = 0.21640225503778288
+
+t=45
+Number of pmc states: 378428
+Number of pmc transitions: 741034
+total solver time: 77.37053346633911
+total encoding time: 1638.00467157363
+p[init] = 0.21640273575385782
+
+t=50
+Number of pmc states: 426788
+Number of pmc transitions: 835779
+total solver time: 95.8552098274231
+total encoding time: 1759.6427698135376
+0.21640285259995795
+
+2740 & 39908 & 88268 & 136628 & 184988 & 233348 & 281708 & 330068 & 378428 & 426788 \\
+5223 & 77819 & 172564 & 267309 & 362054 & 456799 & 551544 & 646289 & 741034 & 835779 \\
+0.16 & 2.95 & 8.21 & 15.11 & 24.17 & 35.22 & 49.19 & 61.07 & 77.37 \\
+11.95 & 172.79 & 383.88 & 595.19 & 805.52 & 1025.71 & 1232.19 & 1425.90 & 1638.00 \\
+0.034790 & 0.20539 & 0.21518 & 0.21620 & 0.21636 & 0.21639 & 0.21640 & 0.21640 & 0.21640 & 0.21640 \\

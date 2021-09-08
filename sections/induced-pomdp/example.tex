@@ -49,22 +49,22 @@ The induced POMDP corresponding with \defref{d:induced_pomdp} can be seen in \fi
 
 \begin{figure}[H]
 	\centering
-		\begin{tikzpicture}[node distance=1.5cm,on grid,auto]
+		\begin{tikzpicture}[node distance=1.25cm,on grid,auto]
 			\node[state] (00) {$\langle s_0,n_0\rangle$};
 			\node[dot]  (0a0) [below=of 00] {};
 			\node[dot]  (0b0) [below right=of 00] {};
-			\node[state] (10) [below= 4cm of 00]		{$\langle s_1,n_0\rangle$};
+			\node[state] (10) [below= 5cm of 00]		{$\langle s_1,n_0\rangle$};
 			\node[dot] (1b0) [above=of 10] {};
 			\node[dot] (1a0) [below=of 10] {};
-			\node[state,fill=black,text=white] (20) [below= 4cm of 10] {$\langle s_2,n_0\rangle$};
+			\node[state,fill=black,text=white] (20) [below= 5cm of 10] {$\langle s_2,n_0\rangle$};
 			\node[dot] (2c0) [right=of 20] {};
-			\node[state,initial right] (01) [right=8cm of 00]	 {$\langle s_0,n_1\rangle$};
+			\node[state,initial right] (01) [right=10cm of 00]	 {$\langle s_0,n_1\rangle$};
 			\node[dot]  (0a1) [below=of 01] {};
 			\node[dot]  (0b1) [below left=of 01] {};
-			\node[state] (11) [below= 4cm  of 01]		{$\langle s_1,n_1\rangle$};
+			\node[state] (11) [below= 5cm  of 01]		{$\langle s_1,n_1\rangle$};
 			\node[dot] (1b1) [above=of 11] {};
 			\node[dot] (1a1) [below=of 11] {};
-			\node[state,fill=black,text=white] (21) [below= 4cm of 11] {$\langle s_2,n_1\rangle$};
+			\node[state,fill=black,text=white] (21) [below= 5cm of 11] {$\langle s_2,n_1\rangle$};
 			\node[dot] (2c1) [left=of 21] {};
 			\path[-,red]    (00) edge [] node[left] {$a$} (0a0)
                              edge [] node[right] {$b$} (0b0)
