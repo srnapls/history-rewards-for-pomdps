@@ -16,8 +16,9 @@ def run_singular_pomdp(T, R):
     path = "prism/reward_controlled_pomdp.prism"
     prop = open("prism/properties.pctl", "r").read()
     policy = solve_pomdp(path, prop)
-    #for value in policy.parameter_values:
-    #    print("{}: {}".format(value, policy.parameter_values[value]))
+    print(policy)
+    for value in policy.parameter_values:
+        print("{}: {}".format(value, policy.parameter_values[value]))
 
 if __name__ == "__main__":
     
@@ -28,7 +29,4 @@ if __name__ == "__main__":
     #R = {"31*0":100, "31*21*0":50, "31*21*21*0":25}
     T = [20,40,60,80,100,120,140,160,180,200]
     #print("N=10")
-    for t in T:
-        print("===============================")
-        print("T =" + str(t))
-        run_singular_pomdp(t, R)
+    run_singular_pomdp(20,{"31*0":1})
